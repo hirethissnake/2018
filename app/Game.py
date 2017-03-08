@@ -166,13 +166,13 @@ class Game:
             if (head[1]) > 0 and [head[0], head[1] - 1] in self.food:
                 self.weightGrid.setWeight(tail, 0.0)
             # left by 1
-            if (head[0]) <= self.width and [head[0] + 1, head[1]] in self.food:
+            if (head[0]) < self.width-1 and [head[0] + 1, head[1]] in self.food:
                 self.weightGrid.setWeight(tail, 0.0)
             # right by 1
             if (head[0]) > 0 and [head[0] - 1, head[1]] in self.food:
                 self.weightGrid.setWeight(tail, 0.0)
             # below
-            if (head[1]) <= self.height and [head[0], head[1] + 1] in self.food:
+            if (head[1]) < self.height-1 and [head[0], head[1] + 1] in self.food:
                 self.weightGrid.setWeight(tail, 0.0)
 
 
