@@ -299,6 +299,43 @@ class Game:
                     else:
                         self.weightGrid.setWeights([[x, y+1]], 0)
 
+    def weightSafeTails(self):
+        #TODO
+        #For all snakes whose head is not adjacent to a food:
+        #Weight the space occupied by their tail as 50 (or other positive value)
+
+        for allSnakes in self.snakes:
+            if allSnakes != self.you:
+                #Run this code for ever snake that's not us
+                otherSnakePos = self.snakes[allSnakes].getAllPositions()
+                tailPos = otherSnakePos[-1]
+                headPos = otherSnakePos[0]
+                headX = headPos[0]
+                headY = headPos[1]
+                moveOptions = []
+                foodOpt = False
+
+                #Save posible moves that are within the board (including body)
+                if (headX - 1) >= 0:
+                    n.append([headX-1, headY])
+                if (headX + 1) < self.width:
+                    n.append([headX+1, headY])
+                if (headY + 1) < self.height:
+                    n.append([headX, headY+1])
+                if (headY - 1) >= 0:
+                    n.append([headX, headY-1])
+
+                #If any possible move is to food, tail is not safe
+                for coords in moveOptions:
+                    if coords in self.food:
+                        #Food is a possible movement
+                        foodOpt = True
+                        break
+
+                if foodOpt == False:
+                    self.weightGrid.setWeight(tailPos, 50)
+
+
     def weightEnclosedSpaces(self, u):
         """Negatively weight enclosed spaces to prevent us from going in."""
 
