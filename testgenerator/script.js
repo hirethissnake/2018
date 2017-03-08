@@ -18,33 +18,51 @@ function main(){
 
 }
 
+
 function cellClicked(elem){
+
   console.log(elem.id);
+
 }
 
+
 function tableCreate(tableSize, windowSize) {
-  var body = document.getElementsByTagName('body')[0];
-  var tbl = document.createElement('table');
-  var cellSize = (100 / tableSize) + '%';
-  console.log(windowSize);
-  tbl.style.width = (windowSize - 50) + 'px';
-  tbl.style.height = (windowSize - 50) + 'px';
+
+  var body = document.getElementsByTagName('body')[0];  // get body
+
+  var tbl = document.createElement('table');  // declare table
   tbl.setAttribute('border', '1');
   tbl.setAttribute('id', 'table');
-  var tbdy = document.createElement('tbody');
-  for (var row = 0; row < tableSize; row++) {
-    var tr = document.createElement('tr');
+  tbl.style.width = (windowSize - 50) + 'px';
+  tbl.style.height = (windowSize - 50) + 'px';
+
+  var tbdy = document.createElement('tbody');  // declare body
+
+  var cellSize = (100 / tableSize) + '%';  // declare cell size
+
+  for (var row = 0; row < tableSize; row++) {  // for table size
+
+    var tr = document.createElement('tr');  // declare row
+
     for (var col = 0; col < tableSize; col++) {
+
       var td = document.createElement('td');
-      td.setAttribute('id', row + ',' + col);
+      td.setAttribute('id', row + ',' + col);  // set name
+      td.setAttribute('onclick', 'cellClicked(this)');  // make clickable
       td.style.width = cellSize;
       td.style.height = cellSize;
-      td.setAttribute('onclick', 'cellClicked(this)');
-      td.appendChild(document.createTextNode('\u0020'))
-      tr.appendChild(td)
+
+      td.appendChild(document.createTextNode('\u0020'))  // add empty text
+
+      tr.appendChild(td)  // append cell to row
+
     }
-    tbdy.appendChild(tr);
+
+    tbdy.appendChild(tr);  // append row to table
+
   }
-  tbl.appendChild(tbdy);
-  body.appendChild(tbl)
+
+  tbl.appendChild(tbdy);  // add table to HTML
+  body.appendChild(tbl);
+
 }
