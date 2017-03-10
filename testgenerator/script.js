@@ -71,14 +71,13 @@ function tableCreate(tableSize) {
 
 function addSelector() {
 
-  var tbl = document.getElementById('table');
+  var tbl = document.getElementById("table");
   var cell = tbl.rows[0].insertCell(tbl.rows[0].cells.length);  // create cell
 
-  var div = document.createElement('div');  // create div
-  div.appendChild(document.createTextNode('\u0020'));  // add empty text
-  cell.setAttribute('rowspan', 20);  // spans entire height
-  div.style.width = (windowSize / 2) + "px";  // half table width
-  console.log(cell);
-  cell.appendChild(div);  // add to table
+  cell.setAttribute("id", "selector");
+  cell.setAttribute("rowspan", 20);  // spans entire height
+  cell.style.width = (windowSize / 2) + "px";  // half table width
+
+  cell.appendChild(document.createTextNode('\u0020'));  // add to table
 
 }
