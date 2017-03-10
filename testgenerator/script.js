@@ -1,3 +1,9 @@
+var wallColour = "#F44336";
+var foodColour = "#4CAF50";
+var youColor = "#E91E63";
+var snakeColours = ["#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548", "#607D8B"];
+
+
 function main(){
 
   var width = window.innerWidth;
@@ -12,16 +18,13 @@ function main(){
   tableCreate(20, boundary);
 
   //var table = document.getElementById("table");
-
-  console.log(table);
-
-
 }
 
 
 function cellClicked(elem){
 
-  console.log(elem.id);
+  //console.log(elem.id);
+  document.getElementById(elem.id).style.backgroundColor = snakeColours[Math.floor(Math.random() * snakeColours.length)];
 
 }
 
