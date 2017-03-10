@@ -16,7 +16,7 @@ function main(){
   }
 
   tableCreate(20);
-  appendColumn();
+  addSelector();
 
   //var table = document.getElementById("table");
 }
@@ -69,21 +69,16 @@ function tableCreate(tableSize) {
 
 }
 
-function createCell(cell) {
+function addSelector() {
 
-  var div = document.createElement('div'); // create DIV element
-  div.appendChild(document.createTextNode('\u0020'));  // append text node to the DIV
-  cell.setAttribute('rowspan', 20);
-  div.style.width = (windowSize / 2) + "px";
-  cell.appendChild(div);                   // append DIV to the table cell
+  var tbl = document.getElementById('table');
+  var cell = tbl.rows[0].insertCell(tbl.rows[0].cells.length);  // create cell
 
-}
+  var div = document.createElement('div');  // create div
+  div.appendChild(document.createTextNode('\u0020'));  // add empty text
+  cell.setAttribute('rowspan', 20);  // spans entire height
+  div.style.width = (windowSize / 2) + "px";  // half table width
+  console.log(cell);
+  cell.appendChild(div);  // add to table
 
-function appendColumn() {
-  var tbl = document.getElementById('table'), // table reference
-  // open loop for each row and append cell
-  i;
-  for (i = 0; i < tbl.rows.length; i++) {
-    if(i==0){createCell(tbl.rows[i].insertCell(tbl.rows[i].cells.length));}
-  }
 }
