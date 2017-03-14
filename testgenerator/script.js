@@ -1,6 +1,7 @@
 var snakeColours = ["#F44336","#4CAF50","#E91E63","#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548", "#607D8B"];
 
 var windowSize = 0;
+var currentSelected = 0;
 
 function main(){
 
@@ -21,7 +22,16 @@ function main(){
 
 function cellClicked(elem){
 
-  document.getElementById(elem.id).style.backgroundColor = snakeColours[Math.floor(Math.random() * snakeColours.length)];
+  document.getElementById(elem.id).style.backgroundColor = snakeColours[currentSelected];
+
+}
+
+
+function selected(elem){
+
+  elem.style.fontWeight = "bold";
+  var deBold = document.getElementById("colour" + currentSelected).style.fontWeight = "normal";  // get current bold
+  currentSelected = elem.id.split("colour")[1];  // store selected
 
 }
 
@@ -46,6 +56,7 @@ function tableCreate(tableSize) {
 
       var td = document.createElement("td");
       td.setAttribute("id", row + "," + col);  // set name
+
       td.setAttribute("onclick", "cellClicked(this)");  // make clickable
       td.style.width = ((100 / tableSize) / 2) + "%";
       td.style.height = (100 / tableSize) + "%";
@@ -95,7 +106,10 @@ function fillSelector(){
   for (var row = 0; row < snakeColours.length; row++) {  // for each colour
 
     var tr = document.createElement("tr");  // declare row
-    tr.setAttribute("id", row);  // make referenceable
+    tr.setAttribute("id", "colour" + row);  // make referenceable
+    if(row == 0){
+      tr.style.fontWeight = "bold";
+    }
     tr.setAttribute("onClick", "selected(this)");  // when clicked
 
     for (var col = 0; col < 2; col++) { // 2 columns
