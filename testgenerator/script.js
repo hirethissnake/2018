@@ -2,6 +2,7 @@ var snakeColours = ["#F44336","#4CAF50","#E91E63","#9C27B0", "#3F51B5", "#03A9F4
 
 var windowSize = 0;
 var currentSelected = 0;
+var tableSize = 20;
 
 function main(){
 
@@ -13,7 +14,7 @@ function main(){
     windowSize = height - 100;
   }
 
-  tableCreate(20);
+  tableCreate();
   addSelector();
   fillSelector();
 
@@ -39,7 +40,7 @@ function selected(elem){
 }
 
 
-function tableCreate(tableSize) {
+function tableCreate() {
 
   var body = document.getElementsByTagName("body")[0];  // get body
 
@@ -86,7 +87,7 @@ function addSelector() {
   var cell = tbl.rows[0].insertCell(tbl.rows[0].cells.length);  // create cell
 
   cell.setAttribute("id", "selector");
-  cell.setAttribute("rowspan", 20);  // spans entire height
+  cell.setAttribute("rowspan", tableSize);  // spans entire height
   cell.style.width = (windowSize / 2) + "px";  // half table width
 
   cell.appendChild(document.createTextNode("\u0020"));  // add to table
