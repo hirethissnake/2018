@@ -29,9 +29,12 @@ function cellClicked(elem){
 
 function selected(elem){
 
-  elem.style.fontWeight = "bold";
-  var deBold = document.getElementById("colour" + currentSelected).style.fontWeight = "normal";  // get current bold
-  currentSelected = elem.id.split("colour")[1];  // store selected
+  var currentId = elem.id.split("colour")[1];
+  if(currentSelected != currentId){
+    elem.style.fontWeight = "bold";
+    var deBold = document.getElementById("colour" + currentSelected).style.fontWeight = "normal";  // get current bold
+    currentSelected = currentId;  // store selected
+  }
 
 }
 
