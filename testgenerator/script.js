@@ -1,7 +1,4 @@
-var wallColour = "#F44336";
-var foodColour = "#4CAF50";
-var youColor = "#E91E63";
-var snakeColours = ["#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548", "#607D8B"];
+var snakeColours = ["#F44336","#4CAF50","#E91E63","#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548", "#607D8B"];
 
 var windowSize = 0;
 
@@ -19,13 +16,11 @@ function main(){
   addSelector();
   fillSelector();
 
-  //var table = document.getElementById("table");
 }
 
 
 function cellClicked(elem){
 
-  //console.log(elem.id);
   document.getElementById(elem.id).style.backgroundColor = snakeColours[Math.floor(Math.random() * snakeColours.length)];
 
 }
@@ -97,31 +92,61 @@ function fillSelector(){
 
   var tbdy = document.createElement("tbody");  // declare body
 
-  for (var row = 0; row < 3; row++) {  // for table size
+  for (var row = 0; row < snakeColours.length; row++) {  // for each colour
 
     var tr = document.createElement("tr");  // declare row
+    tr.setAttribute("id", row);  // make referenceable
+    tr.setAttribute("onClick", "selected(this)");  // when clicked
 
-    for (var col = 0; col < 2; col++) {
+    for (var col = 0; col < 2; col++) { // 2 columns
 
       var td = document.createElement("td");
+
       td.setAttribute("id", row + "," + col);  // set name
       td.setAttribute("align", "center");
-      td.style.width = "50%";
-      td.style.height = "33%";
 
-      var innertbl = document.createElement("table");  // declare table
-      innertbl.setAttribute("border", "0");
-      innertbl.style.width = "25%";
-      innertbl.style.height = "25%";
+      if(col == 0){
 
-      var innertbdy = document.createElement("tbody");  // declare body
-      var innertr = document.createElement("tr");  // declare row
-      var innertd = document.createElement("td");
-      innertr.appendChild(innertd);
-      innertbdy.appendChild(innertr);
-      innertbl.appendChild(innertbdy)
+        var innertbl = document.createElement("table");  // declare table
+        td.style.width = "30%";
 
-      td.appendChild(innertbl)  // add empty text
+        innertbl.setAttribute("border", "0");
+        innertbl.style.width = "25%";
+        innertbl.style.height = "90%";
+
+        var innertbdy = document.createElement("tbody");  // declare body
+        var innertr = document.createElement("tr");  // declare row
+        var innertd = document.createElement("td");
+
+        innertd.style.backgroundColor = snakeColours[row];  // set colour swatch
+
+        innertr.appendChild(innertd);
+        innertbdy.appendChild(innertr);
+        innertbl.appendChild(innertbdy)
+
+        td.appendChild(innertbl)  // add empty text
+
+      }else{
+
+        td.style.width = "70%";
+
+        var p;
+        if(row == 0){
+          p = document.createTextNode("Wall");
+        }else if(row == 1){
+          p = document.createTextNode("Food");
+        }else if(row == 2){
+          p = document.createTextNode("You");
+        }else{
+          p = document.createTextNode("Snake " + (row - 2));
+        }
+
+        td.style.textAlign = "left";
+        td.appendChild(p);  // add label
+
+      }
+
+      td.style.height = ((windowSize - 100) / snakeColours.length) + "px";
 
       tr.appendChild(td)  // append cell to row
 
@@ -133,8 +158,5 @@ function fillSelector(){
 
   tbl.appendChild(tbdy);  // add table to HTML
   selector.appendChild(tbl);
-
-  // p.innerHTML = "temp test";
-  // selector.appendChild(p);
 
 }
