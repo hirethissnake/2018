@@ -36,10 +36,10 @@ function cellClicked(elem){
   var cell = document.getElementById(elem.id);
   if(cell.class != currentSelected && cell.innerHTML == "h"){
     cell.innerHTML = "";
-    snakes[cell.class] = true;
+    snakes[cell.className] = true;
   }
   cell.style.backgroundColor = snakeColours[currentSelected];
-  cell.class = currentSelected;
+  cell.className = currentSelected;
   if(snakes[currentSelected]){
     cell.innerHTML = "h";
     snakes[currentSelected] = false;
@@ -256,27 +256,41 @@ function fillTools(){
 
   var numTools = 10;
 
-  //for (var row = 0; row < numTools; row++) {  // for each colour
+  var tr = document.createElement("tr");  // declare row
+  tr.setAttribute("id", "tools" + 0);  // make referenceable
 
-    var tr = document.createElement("tr");  // declare row
-    tr.setAttribute("id", "tools" + 0);  // make referenceable
+  var button = document.createElement("button");
+  button.innerHTML = "Clear Table";
+  button.style.height = (tableHeight / numTools)  - 10 + "px";
+  button.style.width = (tableWidth / 8) + "px";
 
-    var button = document.createElement("button");
-    button.innerHTML = "Clear Table";
-    button.style.height = (tableHeight / numTools)  - 10 + "px";
-    button.style.width = (tableWidth / 8) + "px";
+  var body = document.getElementsByTagName("body")[0];
+  tr.appendChild(button);
+  button.parentElement.setAttribute("align", "center");
 
-    var body = document.getElementsByTagName("body")[0];
-    tr.appendChild(button);
-    button.parentElement.setAttribute("align", "center");
+  button.addEventListener ("click", function() {
+    clearTable();
+  });
 
-    button.addEventListener ("click", function() {
-      clearTable();
-    });
+  tbdy.appendChild(tr);  // append row to table
 
-    tbdy.appendChild(tr);  // append row to table
+  tr = document.createElement("tr");  // declare row
+  tr.setAttribute("id", "tools" + 0);  // make referenceable
 
-  //}
+  var button = document.createElement("button");
+  button.innerHTML = "Move Head";
+  button.style.height = (tableHeight / numTools)  - 10 + "px";
+  button.style.width = (tableWidth / 8) + "px";
+
+  var body = document.getElementsByTagName("body")[0];
+  tr.appendChild(button);
+  button.parentElement.setAttribute("align", "center");
+
+  button.addEventListener ("click", function() {
+    moveHead();
+  });
+
+  tbdy.appendChild(tr);  // append row to table
 
   tbl.appendChild(tbdy);  // add table to HTML
   selector.appendChild(tbl);
@@ -301,5 +315,15 @@ function clearTable(){
     }
 
   }
+
+}
+
+function moveHead(){
+
+  var cells = document.getElementsByClassName(currentSelected);
+  for(var cell of cells){
+    cell.innerHTML = "";
+  }
+  snakes[currentSelected] = true;
 
 }
