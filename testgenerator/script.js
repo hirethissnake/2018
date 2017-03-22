@@ -294,6 +294,9 @@ function clearTable(){
 
       var td = document.getElementById(row + "," + col);  // get by name
       td.style.backgroundColor = "#FFFFFF";
+      td.class = "";
+      td.innerHTML = "";
+      snakes = [false, false, true, true, true, true, true, true, true, true, true, true, true];
 
     }
 
