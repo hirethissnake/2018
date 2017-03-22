@@ -1,29 +1,58 @@
 var snakeColours = ["#F44336","#4CAF50","#E91E63","#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548", "#607D8B"];
+var snakes = [false, false, true, true, true, true, true, true, true, true, true, true, true];
 
-var windowSize = 0;
 var currentSelected = 0;
 var tableSize = 20;
+var mouseDown = 0;  // store mouse status
+var width = 0;
+var height = 0;
+var tableWidth = 0;
+var tableHeight = 0;
 
 function main(){
 
-  var width = window.innerWidth;
-  var height = window.innerHeight;
-  if(width < height){
-    windowSize = width - 100;
-  }else{
-    windowSize = height - 100;
-  }
+  width = window.innerWidth - 50;
+  height = window.innerHeight - 50;
 
+  mouseClick();
   tableCreate();
-  addSelector();
+  addColumns();
   fillSelector();
+  fillTools();
+
+}
+
+
+function mouseClick(){
+
+  document.body.setAttribute("onmousedown", "mouseDown = 1");
+  document.body.setAttribute("onmouseup", "mouseDown = 0");
 
 }
 
 
 function cellClicked(elem){
 
-  document.getElementById(elem.id).style.backgroundColor = snakeColours[currentSelected];
+  var cell = document.getElementById(elem.id);
+  if(cell.class != currentSelected && cell.innerHTML == "h"){
+    cell.innerHTML = "";
+    snakes[cell.class] = true;
+  }
+  cell.style.backgroundColor = snakeColours[currentSelected];
+  cell.class = currentSelected;
+  if(snakes[currentSelected]){
+    cell.innerHTML = "h";
+    snakes[currentSelected] = false;
+  }
+
+}
+
+
+function cellHover(elem){
+
+  if(mouseDown == 1){
+    cellClicked(elem);
+  }
 
 }
 
@@ -40,6 +69,20 @@ function selected(elem){
 }
 
 
+function hover(elem){
+
+  elem.setAttribute("border", "3");
+
+}
+
+
+function dehover(elem){
+
+  elem.setAttribute("border", "0");
+
+}
+
+
 function tableCreate() {
 
   var body = document.getElementsByTagName("body")[0];  // get body
@@ -47,8 +90,17 @@ function tableCreate() {
   var tbl = document.createElement("table");  // declare table
   tbl.setAttribute("border", "1");
   tbl.setAttribute("id", "table");
-  tbl.style.width = (2 * (windowSize - 50)) + "px";
-  tbl.style.height = (windowSize - 50) + "px";
+
+  if(width > height){
+    var desiredWidth = width;
+    if(height < width / 2){
+      tableWidth = tbl.style.width = (height * 2);
+      tableHeight = tbl.style.height = height;
+    }else{
+      tableWidth = tbl.style.width = width;
+      tableHeight = tbl.style.height = (width / 2);
+    }
+  }
 
   var tbdy = document.createElement("tbody");  // declare body
 
@@ -62,6 +114,7 @@ function tableCreate() {
       td.setAttribute("id", row + "," + col);  // set name
 
       td.setAttribute("onclick", "cellClicked(this)");  // make clickable
+      td.setAttribute("onmouseover", "cellHover(this)");  // enable drag select
       td.style.width = ((100 / tableSize) / 2) + "%";
       td.style.height = (100 / tableSize) + "%";
 
@@ -81,14 +134,22 @@ function tableCreate() {
 }
 
 
-function addSelector() {
+function addColumns() {
 
   var tbl = document.getElementById("table");
   var cell = tbl.rows[0].insertCell(tbl.rows[0].cells.length);  // create cell
 
   cell.setAttribute("id", "selector");
   cell.setAttribute("rowspan", tableSize);  // spans entire height
-  cell.style.width = (windowSize / 2) + "px";  // half table width
+  cell.setAttribute("width", (tableWidth / 4) + "px");  // half table width
+
+  cell.appendChild(document.createTextNode("\u0020"));  // add to table
+
+  var cell = tbl.rows[0].insertCell(tbl.rows[0].cells.length);  // create cell
+
+  cell.setAttribute("id", "tools");
+  cell.setAttribute("rowspan", tableSize);  // spans entire height
+  cell.setAttribute("width", (tableWidth / 4) + "px")  // half table width
 
   cell.appendChild(document.createTextNode("\u0020"));  // add to table
 
@@ -120,16 +181,17 @@ function fillSelector(){
 
       var td = document.createElement("td");
 
-      td.setAttribute("id", row + "," + col);  // set name
       td.setAttribute("align", "center");
 
       if(col == 0){
 
         var innertbl = document.createElement("table");  // declare table
+        innertbl.setAttribute("onmouseover", "hover(this)");  // bold on hover
+        innertbl.setAttribute("onmouseout", "dehover(this)");
         td.style.width = "30%";
 
         innertbl.setAttribute("border", "0");
-        innertbl.style.width = "25%";
+        innertbl.style.width = "70%";
         innertbl.style.height = "90%";
 
         var innertbdy = document.createElement("tbody");  // declare body
@@ -164,7 +226,7 @@ function fillSelector(){
 
       }
 
-      td.style.height = ((windowSize - 100) / snakeColours.length) + "px";
+      td.style.height = (tableHeight / snakeColours.length) + "px";
 
       tr.appendChild(td)  // append cell to row
 
@@ -176,5 +238,65 @@ function fillSelector(){
 
   tbl.appendChild(tbdy);  // add table to HTML
   selector.appendChild(tbl);
+
+}
+
+
+function fillTools(){
+
+  var selector = document.getElementById("tools");
+
+  var tbl = document.createElement("table");  // declare table
+  tbl.setAttribute("border", "0");
+  tbl.setAttribute("id", "selectorTable");
+  tbl.style.width = "100%";
+  tbl.style.height = "100%";
+
+  var tbdy = document.createElement("tbody");  // declare body
+
+  var numTools = 10;
+
+  //for (var row = 0; row < numTools; row++) {  // for each colour
+
+    var tr = document.createElement("tr");  // declare row
+    tr.setAttribute("id", "tools" + 0);  // make referenceable
+
+    var button = document.createElement("button");
+    button.innerHTML = "Clear Table";
+    button.style.height = (tableHeight / numTools)  - 10 + "px";
+    button.style.width = (tableWidth / 8) + "px";
+
+    var body = document.getElementsByTagName("body")[0];
+    tr.appendChild(button);
+    button.parentElement.setAttribute("align", "center");
+
+    button.addEventListener ("click", function() {
+      clearTable();
+    });
+
+    tbdy.appendChild(tr);  // append row to table
+
+  //}
+
+  tbl.appendChild(tbdy);  // add table to HTML
+  selector.appendChild(tbl);
+
+}
+
+
+function clearTable(){
+
+  for (var row = 0; row < tableSize; row++) {  // for table size
+
+    var tr = document.createElement("tr");  // declare row
+
+    for (var col = 0; col < tableSize; col++) {
+
+      var td = document.getElementById(row + "," + col);  // get by name
+      td.style.backgroundColor = "#FFFFFF";
+
+    }
+
+  }
 
 }

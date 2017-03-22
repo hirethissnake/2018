@@ -1,7 +1,8 @@
-table{
+table {
   border-collapse: collapse;
+  text-align: center;
 }
-/**{
+/* *{
   background-color: rgba(0,0,0,0.1);
 }*/
 ul {
@@ -12,4 +13,28 @@ ul {
 
 body {
   font-family: arial;
+}
+
+button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 5px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    background-color: #008CBA;
+    color: white;
+    border-radius: 3px;
+    border: 2px solid #008CBA;
+}
+
+button:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid #008CBA;
 }
