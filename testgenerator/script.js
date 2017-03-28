@@ -1,5 +1,6 @@
 var snakeColours = ["#F44336","#4CAF50","#E91E63","#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548", "#607D8B"];
-var snakes = [false, false, true, true, true, true, true, true, true, true, true, true, true];
+var snakesHead = [false, false, true, true, true, true, true, true, true, true, true, true, true];
+var snakesTail = [false, false, true, true, true, true, true, true, true, true, true, true, true];
 
 var currentSelected = 0;
 var tableSize = 20;
@@ -36,13 +37,13 @@ function cellClicked(elem){
   var cell = document.getElementById(elem.id);
   if(cell.class != currentSelected && cell.innerHTML == "h"){
     cell.innerHTML = "";
-    snakes[cell.className] = true;
+    snakesHead[cell.className] = true;
   }
   cell.style.backgroundColor = snakeColours[currentSelected];
   cell.className = currentSelected;
-  if(snakes[currentSelected]){
+  if(snakesHead[currentSelected]){
     cell.innerHTML = "h";
-    snakes[currentSelected] = false;
+    snakesHead[currentSelected] = false;
   }
 
 }
@@ -254,15 +255,16 @@ function fillTools(){
 
   var tbdy = document.createElement("tbody");  // declare body
 
-  var numTools = 10;
+  var numTools = 2;
 
   var tr = document.createElement("tr");  // declare row
-  tr.setAttribute("id", "tools" + 0);  // make referenceable
 
   var button = document.createElement("button");
   button.innerHTML = "Clear Table";
   button.style.height = (tableHeight / numTools)  - 10 + "px";
   button.style.width = (tableWidth / 8) + "px";
+  button.style.marginTop = "10px";
+  //fix centering
 
   var body = document.getElementsByTagName("body")[0];
   tr.appendChild(button);
@@ -275,12 +277,12 @@ function fillTools(){
   tbdy.appendChild(tr);  // append row to table
 
   tr = document.createElement("tr");  // declare row
-  tr.setAttribute("id", "tools" + 0);  // make referenceable
 
   var button = document.createElement("button");
   button.innerHTML = "Move Head";
   button.style.height = (tableHeight / numTools)  - 10 + "px";
   button.style.width = (tableWidth / 8) + "px";
+  button.className = "tools";  // make referenceable
 
   var body = document.getElementsByTagName("body")[0];
   tr.appendChild(button);
@@ -310,7 +312,7 @@ function clearTable(){
       td.style.backgroundColor = "#FFFFFF";
       td.class = "";
       td.innerHTML = "";
-      snakes = [false, false, true, true, true, true, true, true, true, true, true, true, true];
+      snakesHead = [false, false, true, true, true, true, true, true, true, true, true, true, true];
 
     }
 
@@ -324,6 +326,6 @@ function moveHead(){
   for(var cell of cells){
     cell.innerHTML = "";
   }
-  snakes[currentSelected] = true;
+  snakesHead[currentSelected] = true;
 
 }
