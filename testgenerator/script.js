@@ -1,6 +1,5 @@
 var snakeColours = ["#F44336","#4CAF50","#E91E63","#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548", "#607D8B"];
 var snakesHead = [false, false, true, true, true, true, true, true, true, true, true, true, true];
-var snakesTail = [false, false, true, true, true, true, true, true, true, true, true, true, true];
 
 var currentSelected = 0;
 var tableSize = 20;
@@ -35,15 +34,29 @@ function mouseClick(){
 function cellClicked(elem){
 
   var cell = document.getElementById(elem.id);
-  if(cell.class != currentSelected && cell.innerHTML == "h"){
+  if(cell.class != currentSelected){
     cell.innerHTML = "";
-    snakesHead[cell.className] = true;
+    if(cell.innerHTML == "h"){
+      snakesHead[cell.className] = true;
+    }if(cell.innerHTML == "t"){
+      snakesTail[cell.className] = true;
+    }
   }
   cell.style.backgroundColor = snakeColours[currentSelected];
   cell.className = currentSelected;
-  if(snakesHead[currentSelected]){
-    cell.innerHTML = "h";
-    snakesHead[currentSelected] = false;
+  if(currentSelected != 0 && currentSelected != 1){
+    if(snakesHead[currentSelected]){
+      cell.innerHTML = "h";
+      snakesHead[currentSelected] = false;
+    }else{
+      var cells = document.getElementsByClassName(currentSelected);
+      for(var tempCell of cells){
+        if(tempCell.innerHTML != "h"){
+          tempCell.innerHTML = "";
+        }
+      }
+      cell.innerHTML = "t";
+    }
   }
 
 }
@@ -264,7 +277,6 @@ function fillTools(){
   button.style.height = (tableHeight / numTools)  - 10 + "px";
   button.style.width = (tableWidth / 8) + "px";
   button.style.marginTop = "10px";
-  //fix centering
 
   var body = document.getElementsByTagName("body")[0];
   tr.appendChild(button);
@@ -282,7 +294,7 @@ function fillTools(){
   button.innerHTML = "Move Head";
   button.style.height = (tableHeight / numTools)  - 10 + "px";
   button.style.width = (tableWidth / 8) + "px";
-  button.className = "tools";  // make referenceable
+  button.style.marginTop = "10px";
 
   var body = document.getElementsByTagName("body")[0];
   tr.appendChild(button);
@@ -324,8 +336,12 @@ function moveHead(){
 
   var cells = document.getElementsByClassName(currentSelected);
   for(var cell of cells){
-    cell.innerHTML = "";
+    if(cell.innerHTML == "h"){
+      cell.innerHTML = "";
+    }
   }
-  snakesHead[currentSelected] = true;
+  if(currentSelected != 0 && currentSelected != 1){
+    snakesHead[currentSelected] = true;
+  }
 
 }
