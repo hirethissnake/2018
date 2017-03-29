@@ -351,7 +351,7 @@ function clearTable(){
       td.style.backgroundColor = "#FFFFFF";
       td.class = "";
       td.innerHTML = "";
-      snakesHead = [false, false, true, true, true, true, true, true, true, true, true, true, true];
+      snakesHead = [false, true, true, true, true, true, true, true, true, true, true, true, true];
 
     }
 
