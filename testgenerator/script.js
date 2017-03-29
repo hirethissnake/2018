@@ -74,8 +74,12 @@ function cellHover(elem){
 function selected(elem){
 
   var currentId = elem.id.split("colour")[1];
+  for(var i = 0; i < 13; i++){
+    document.getElementById("colour" + i).childNodes[0].childNodes[0].setAttribute("border", "0");
+  }
   if(currentSelected != currentId){
     elem.style.fontWeight = "bold";
+    elem.childNodes[0].childNodes[0].setAttribute("border", "3");
     var deBold = document.getElementById("colour" + currentSelected).style.fontWeight = "normal";  // get current bold
     currentSelected = currentId;  // store selected
   }
@@ -85,14 +89,18 @@ function selected(elem){
 
 function hover(elem){
 
-  elem.setAttribute("border", "3");
+  var tableSwatch = elem.childNodes[0].childNodes[0];
+  tableSwatch.setAttribute("border", "3");
 
 }
 
 
 function dehover(elem){
 
-  elem.setAttribute("border", "0");
+  if(elem.id.split("colour")[1] != currentSelected){
+    var tableSwatch = elem.childNodes[0].childNodes[0];
+    tableSwatch.setAttribute("border", "0");
+  }
 
 }
 
@@ -126,6 +134,7 @@ function tableCreate() {
 
       var td = document.createElement("td");
       td.setAttribute("id", row + "," + col);  // set name
+      td.setAttribute("class", "selectionSquare");
 
       td.setAttribute("onclick", "cellClicked(this)");  // make clickable
       td.setAttribute("onmouseover", "cellHover(this)");  // enable drag select
@@ -190,6 +199,8 @@ function fillSelector(){
       tr.style.fontWeight = "bold";
     }
     tr.setAttribute("onClick", "selected(this)");  // when clicked
+    tr.setAttribute("onmouseover", "hover(this)");  // bold on hover
+    tr.setAttribute("onmouseout", "dehover(this)");
 
     for (var col = 0; col < 2; col++) { // 2 columns
 
@@ -200,8 +211,6 @@ function fillSelector(){
       if(col == 0){
 
         var innertbl = document.createElement("table");  // declare table
-        innertbl.setAttribute("onmouseover", "hover(this)");  // bold on hover
-        innertbl.setAttribute("onmouseout", "dehover(this)");
         td.style.width = "30%";
 
         innertbl.setAttribute("border", "0");
@@ -262,13 +271,13 @@ function fillTools(){
 
   var tbl = document.createElement("table");  // declare table
   tbl.setAttribute("border", "0");
-  tbl.setAttribute("id", "selectorTable");
+  tbl.setAttribute("id", "toolsTable");
   tbl.style.width = "100%";
   tbl.style.height = "100%";
 
   var tbdy = document.createElement("tbody");  // declare body
 
-  var numTools = 2;
+  var numTools = 3;
 
   var tr = document.createElement("tr");  // declare row
 
@@ -302,6 +311,24 @@ function fillTools(){
 
   button.addEventListener ("click", function() {
     moveHead();
+  });
+
+  tbdy.appendChild(tr);  // append row to table
+
+  tr = document.createElement("tr");  // declare row
+
+  var button = document.createElement("button");
+  button.innerHTML = "Erase";
+  button.style.height = (tableHeight / numTools)  - 10 + "px";
+  button.style.width = (tableWidth / 8) + "px";
+  button.style.marginTop = "10px";
+
+  var body = document.getElementsByTagName("body")[0];
+  tr.appendChild(button);
+  button.parentElement.setAttribute("align", "center");
+
+  button.addEventListener ("click", function() {
+    erase();
   });
 
   tbdy.appendChild(tr);  // append row to table
@@ -343,5 +370,11 @@ function moveHead(){
   if(currentSelected != 0 && currentSelected != 1){
     snakesHead[currentSelected] = true;
   }
+
+}
+
+function erase(){
+
+  currentSelected = -1; // currently breaks functions
 
 }
