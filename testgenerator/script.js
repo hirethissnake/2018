@@ -2,6 +2,7 @@ var snakeColours = ["#4CAF50","#607D8B","#E91E63","#9C27B0", "#3F51B5", "#03A9F4
 var snakesHead = [false, true, true, true, true, true, true, true, true, true, true, true, true];
 
 var currentSelected = 0;
+var tempSelected = 0;
 var tableSize = 20;
 var mouseDown = 0;  // store mouse status
 var width = 0;
@@ -34,28 +35,33 @@ function mouseClick(){
 function cellClicked(elem){
 
   var cell = document.getElementById(elem.id);
-  if(cell.class != currentSelected){
+  if(currentSelected == -1){
     cell.innerHTML = "";
-    if(cell.innerHTML == "h"){
-      snakesHead[cell.className] = true;
-    }if(cell.innerHTML == "t"){
-      snakesTail[cell.className] = true;
-    }
-  }
-  cell.style.backgroundColor = snakeColours[currentSelected];
-  cell.className = currentSelected;
-  if(currentSelected != 0){
-    if(snakesHead[currentSelected]){
-      cell.innerHTML = "h";
-      snakesHead[currentSelected] = false;
-    }else{
-      var cells = document.getElementsByClassName(currentSelected);
-      for(var tempCell of cells){
-        if(tempCell.innerHTML != "h"){
-          tempCell.innerHTML = "";
-        }
+    cell.style.backgroundColor = "";
+  }else{
+    if(cell.class != currentSelected){
+      cell.innerHTML = "";
+      if(cell.innerHTML == "h"){
+        snakesHead[cell.className] = true;
+      }if(cell.innerHTML == "t"){
+        snakesTail[cell.className] = true;
       }
-      cell.innerHTML = "t";
+    }
+    cell.style.backgroundColor = snakeColours[currentSelected];
+    cell.className = currentSelected;
+    if(currentSelected != 0){
+      if(snakesHead[currentSelected]){
+        cell.innerHTML = "h";
+        snakesHead[currentSelected] = false;
+      }else{
+        var cells = document.getElementsByClassName(currentSelected);
+        for(var tempCell of cells){
+          if(tempCell.innerHTML != "h"){
+            tempCell.innerHTML = "";
+          }
+        }
+        cell.innerHTML = "t";
+      }
     }
   }
 
@@ -375,6 +381,7 @@ function moveHead(){
 
 function erase(){
 
-  currentSelected = -1; // currently breaks functions
+  tempSelected = currentSelected;
+  currentSelected = -1;
 
 }
