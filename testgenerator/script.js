@@ -1,5 +1,5 @@
-var snakeColours = ["#F44336","#4CAF50","#E91E63","#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548", "#607D8B"];
-var snakesHead = [false, false, true, true, true, true, true, true, true, true, true, true, true];
+var snakeColours = ["#4CAF50","#607D8B","#E91E63","#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548"];
+var snakesHead = [false, true, true, true, true, true, true, true, true, true, true, true, true];
 
 var currentSelected = 0;
 var tableSize = 20;
@@ -44,7 +44,7 @@ function cellClicked(elem){
   }
   cell.style.backgroundColor = snakeColours[currentSelected];
   cell.className = currentSelected;
-  if(currentSelected != 0 && currentSelected != 1){
+  if(currentSelected != 0){
     if(snakesHead[currentSelected]){
       cell.innerHTML = "h";
       snakesHead[currentSelected] = false;
@@ -74,7 +74,7 @@ function cellHover(elem){
 function selected(elem){
 
   var currentId = elem.id.split("colour")[1];
-  for(var i = 0; i < 13; i++){
+  for(var i = 0; i < 12; i++){
     document.getElementById("colour" + i).childNodes[0].childNodes[0].setAttribute("border", "0");
   }
   if(currentSelected != currentId){
@@ -235,10 +235,8 @@ function fillSelector(){
 
         var p;
         if(row == 0){
-          p = document.createTextNode("Wall");
-        }else if(row == 1){
           p = document.createTextNode("Food");
-        }else if(row == 2){
+        }else if(row == 1){
           p = document.createTextNode("You");
         }else{
           p = document.createTextNode("Snake " + (row - 2));
@@ -261,6 +259,8 @@ function fillSelector(){
 
   tbl.appendChild(tbdy);  // add table to HTML
   selector.appendChild(tbl);
+
+  document.getElementById("colour0").childNodes[0].childNodes[0].setAttribute("border", "3");
 
 }
 
@@ -367,7 +367,7 @@ function moveHead(){
       cell.innerHTML = "";
     }
   }
-  if(currentSelected != 0 && currentSelected != 1){
+  if(currentSelected != 0){
     snakesHead[currentSelected] = true;
   }
 
