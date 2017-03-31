@@ -2,7 +2,6 @@ var snakeColours = ["#4CAF50","#607D8B","#E91E63","#9C27B0", "#3F51B5", "#03A9F4
 var snakesHead = [false, true, true, true, true, true, true, true, true, true, true, true, true];
 
 var currentSelected = -1;
-var tempSelected = 0;
 var tableSize = 20;
 var mouseDown = 0;  // store mouse status
 var width = 0;
@@ -34,11 +33,14 @@ function mouseClick(){
 
 function cellClicked(elem){
 
-  var cell = document.getElementById(elem.id);
   if(currentSelected == -1){
-    cell.innerHTML = "";
-    cell.style.backgroundColor = "";
-    cell.className = "selectionSquare";
+    if(elem.innerHTML == "h"){
+      snakesHead[elem.className.split(" ")[1]] = true;
+      console.log(elem.className);
+    }
+    elem.innerHTML = "";
+    elem.style.backgroundColor = "";
+    elem.className = "selectionSquare";
     var cells = document.getElementsByClassName(currentSelected);
     for(var tempCell of cells){
       if(tempCell.innerHTML != "h"){
@@ -46,19 +48,17 @@ function cellClicked(elem){
       }
     }
   }else{
-    if(cell.class != currentSelected){
-      cell.innerHTML = "";
-      if(cell.innerHTML == "h"){
-        snakesHead[cell.className] = true;
-      }if(cell.innerHTML == "t"){
-        snakesTail[cell.className] = true;
+    if(elem.className != currentSelected){
+      if(elem.innerHTML == "h"){
+        snakesHead[elem.className.split(" ")[1]] = true;
       }
+      elem.innerHTML = "";
     }
-    cell.style.backgroundColor = snakeColours[currentSelected];
-    cell.className = "selectionSquare " + currentSelected;
+    elem.style.backgroundColor = snakeColours[currentSelected];
+    elem.className = "selectionSquare " + currentSelected;
     if(currentSelected != 0){
       if(snakesHead[currentSelected]){
-        cell.innerHTML = "h";
+        elem.innerHTML = "h";
         snakesHead[currentSelected] = false;
       }else{
         var cells = document.getElementsByClassName(currentSelected);
@@ -67,7 +67,7 @@ function cellClicked(elem){
             tempCell.innerHTML = "";
           }
         }
-        cell.innerHTML = "t";
+        elem.innerHTML = "t";
       }
     }
   }
@@ -366,7 +366,7 @@ function clearTable(){
 
       var td = document.getElementById(row + "," + col);  // get by name
       td.style.backgroundColor = "#FFFFFF";
-      td.class = "";
+      td.className = "selectionSquare";
       td.innerHTML = "";
       snakesHead = [false, true, true, true, true, true, true, true, true, true, true, true, true];
 
@@ -392,11 +392,10 @@ function moveHead(){
 
 function erase(){
 
-  tempSelected = currentSelected;
-  currentSelected = -1;
-  for(var i = 0; i < 12; i++){
+  currentSelected = -1;  // set selector to erase mode
+  for(var i = 0; i < 12; i++){  // reset all selector visuals
     var row = document.getElementById("colour" + i);
-    row.childNodes[0].childNodes[0].setAttribute("border", "0");
+    row.childNodes[0].childNodes[0].setAttribute("border", "0");  //
     row.style.fontWeight = "normal"
   }
 
