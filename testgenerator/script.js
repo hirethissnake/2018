@@ -1,7 +1,7 @@
 var snakeColours = ["#4CAF50","#607D8B","#E91E63","#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548"];
 var snakesHead = [false, true, true, true, true, true, true, true, true, true, true, true, true];
 
-var currentSelected = 0;
+var currentSelected = -1;
 var tempSelected = 0;
 var tableSize = 20;
 var mouseDown = 0;  // store mouse status
@@ -38,6 +38,12 @@ function cellClicked(elem){
   if(currentSelected == -1){
     cell.innerHTML = "";
     cell.style.backgroundColor = "";
+    var cells = document.getElementsByClassName(currentSelected);
+    for(var tempCell of cells){
+      if(tempCell.innerHTML != "h"){
+        tempCell.innerHTML = "";
+      }
+    }
   }else{
     if(cell.class != currentSelected){
       cell.innerHTML = "";
@@ -81,12 +87,16 @@ function selected(elem){
 
   var currentId = elem.id.split("colour")[1];
   for(var i = 0; i < 12; i++){
-    document.getElementById("colour" + i).childNodes[0].childNodes[0].setAttribute("border", "0");
+    var row = document.getElementById("colour" + i);
+    row.childNodes[0].childNodes[0].setAttribute("border", "0");
+    row.style.fontWeight = "normal";
   }
   if(currentSelected != currentId){
     elem.style.fontWeight = "bold";
     elem.childNodes[0].childNodes[0].setAttribute("border", "3");
-    var deBold = document.getElementById("colour" + currentSelected).style.fontWeight = "normal";  // get current bold
+    if(currentSelected != -1){
+      var deBold = document.getElementById("colour" + currentSelected).style.fontWeight = "normal";  // get current bold
+    }
     currentSelected = currentId;  // store selected
   }
 
@@ -383,5 +393,10 @@ function erase(){
 
   tempSelected = currentSelected;
   currentSelected = -1;
+  for(var i = 0; i < 12; i++){
+    var row = document.getElementById("colour" + i);
+    row.childNodes[0].childNodes[0].setAttribute("border", "0");
+    row.style.fontWeight = "normal"
+  }
 
 }
