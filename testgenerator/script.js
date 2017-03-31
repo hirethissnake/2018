@@ -38,6 +38,7 @@ function cellClicked(elem){
   if(currentSelected == -1){
     cell.innerHTML = "";
     cell.style.backgroundColor = "";
+    cell.className = "selectionSquare";
     var cells = document.getElementsByClassName(currentSelected);
     for(var tempCell of cells){
       if(tempCell.innerHTML != "h"){
@@ -54,7 +55,7 @@ function cellClicked(elem){
       }
     }
     cell.style.backgroundColor = snakeColours[currentSelected];
-    cell.className = currentSelected;
+    cell.className = "selectionSquare " + currentSelected;
     if(currentSelected != 0){
       if(snakesHead[currentSelected]){
         cell.innerHTML = "h";
