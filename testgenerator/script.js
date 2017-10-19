@@ -140,6 +140,9 @@ function tableCreate() {
       tableWidth = tbl.style.width = width;
       tableHeight = tbl.style.height = (width / 2);
     }
+  }else{
+    tableWidth = tbl.style.width = width;
+    tableHeight = tbl.style.height = (width / 2);
   }
 
   var tbdy = document.createElement("tbody");  // declare body
