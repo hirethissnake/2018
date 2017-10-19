@@ -1,13 +1,15 @@
 var snakeColours = ["#4CAF50","#607D8B","#E91E63","#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548"];
 var snakesHead = [false, true, true, true, true, true, true, true, true, true, true, true, true];
 
-var currentSelected = -1;
+var currentSelected = 0;
 var tableSize = 20;
 var mouseDown = 0;  // store mouse status
 var width = 0;
 var height = 0;
 var tableWidth = 0;
 var tableHeight = 0;
+
+var jsonString = {}
 
 function main(){
 
@@ -36,7 +38,6 @@ function cellClicked(elem){
   if(currentSelected == -1){
     if(elem.innerHTML == "h"){
       snakesHead[elem.className.split(" ")[1]] = true;
-      console.log(elem.className);
     }
     elem.innerHTML = "";
     elem.style.backgroundColor = "";
@@ -150,7 +151,7 @@ function tableCreate() {
     for (var col = 0; col < tableSize; col++) {
 
       var td = document.createElement("td");
-      td.setAttribute("id", row + "," + col);  // set name
+      td.setAttribute("id", col + "," + row);  // set name
       td.setAttribute("class", "selectionSquare");
 
       td.setAttribute("onclick", "cellClicked(this)");  // make clickable
@@ -294,7 +295,7 @@ function fillTools(){
 
   var tbdy = document.createElement("tbody");  // declare body
 
-  var numTools = 3;
+  var numTools = 4;
 
   var tr = document.createElement("tr");  // declare row
 
@@ -350,6 +351,30 @@ function fillTools(){
 
   tbdy.appendChild(tr);  // append row to table
 
+  tr = document.createElement("tr");  // declare row
+
+  var button = document.createElement("button");
+  button.innerHTML = "JSON";
+  button.style.height = (tableHeight / numTools)  - 10 + "px";
+  button.style.width = (tableWidth / 8) + "px";
+  button.style.marginTop = "10px";
+  button.style.marginBottom = "10px";
+
+  var body = document.getElementsByTagName("body")[0];
+  tr.appendChild(button);
+  button.parentElement.setAttribute("align", "center");
+
+  button.addEventListener ("click", function() {
+    json();
+    console.log(jsonString);
+    var x = window.open();
+    x.document.open();
+    x.document.write('<html><body><pre>' + JSON.stringify(jsonString) + '</pre></body></html>');
+    x.document.close();
+  });
+
+  tbdy.appendChild(tr);  // append row to table
+
   tbl.appendChild(tbdy);  // add table to HTML
   selector.appendChild(tbl);
 
@@ -399,4 +424,87 @@ function erase(){
     row.style.fontWeight = "normal"
   }
 
+}
+
+function json(){
+  var food = document.getElementsByClassName("selectionSquare 0");
+  var you = document.getElementsByClassName("selectionSquare 1");
+  var opponents = [];
+  for(var i = 2; i <= 11; i++){
+    opponents.push(document.getElementsByClassName("selectionSquare " + i));
+  }
+  jsonString = {
+    "you": "you",
+    "turn": 1,
+    "snakes": (
+      function() {
+
+        var snakes = [];
+        snakes.push({
+          "taunt": "gotta go fast",
+          "name": "sneakysnake",
+          "id": "you",
+          "health_points": 100,
+          "coords": (
+            function() {
+              var ret = [];
+              for(var i = 0; i < you.length; i++){
+                var coords = you[i].id.split(",");
+                var wrapped = [parseInt(coords[0]), parseInt(coords[1])];
+                if(you[i].innerHTML == "h"){
+                  ret.unshift(wrapped);
+                }else{
+                  ret.push(wrapped);
+                }
+              }
+              return ret;
+            }
+          )()
+        });
+
+        for(var i = 0; i < opponents.length; i++){
+          var currentSnake = {
+            "taunt": "gotta go slow",
+            "name": "snake" + (i),
+            "id": (i).toString(),
+            "health_points": 100,
+            "coords": (
+              function() {
+                var ret = [];
+                for(var x = 0; x < opponents[i].length; x++){
+                  var coords = opponents[i][x].id.split(",");
+                  var wrapped = [parseInt(coords[0]), parseInt(coords[1])];
+                  if(opponents[i][x].innerHTML == "h"){
+                    ret.unshift(wrapped);
+                  }else{
+                    ret.push(wrapped);
+                  }
+                }
+                return ret;
+              }
+            )()
+          }
+          if(currentSnake.coords.length != 0){
+            snakes.push(currentSnake);
+          }
+        }
+
+        return snakes;
+      }
+    )(),
+    "height": tableSize,
+    "width": tableSize,
+    "game_id": "gameid",
+    "food":  (
+      function() {
+        var ret = [];
+        for(var i = 0; i < food.length; i++){
+          var coords = food[i].id.split(",");
+          ret.push([parseInt(coords[0]), parseInt(coords[1])]);
+        }
+        return ret;
+      }
+    )(),
+    "dead_snakes": []
+  }
 }
