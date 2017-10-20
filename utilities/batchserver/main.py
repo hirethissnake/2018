@@ -1,13 +1,12 @@
 """Server to rapidly simulate games to determine loss trends"""
 
-from random import randint
 from State import State
 
 
 if __name__ == '__main__':
     print("We're up!")
-    state = State(20, 20, 1)
-    print(state.state)
+    state = State(20, 20, 1, 2)
+    #print(state.getState())
 
 def printGames(games, p, m):
     #given games[], print to file/directory p
