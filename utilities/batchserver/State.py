@@ -51,7 +51,7 @@ class State:
             self.state["snakes"][i]["coords"].append(possibleLoc)
             occupied.append(possibleLoc)
 
-        for i in range(0, numSnakes):
+        for i in range(0, numFood):
             valid = False
             possibleLoc = None
             while not valid:
@@ -60,7 +60,7 @@ class State:
                 for occupiedLoc in occupied:
                     if possibleLoc[0] == occupiedLoc[0] and possibleLoc[1] == occupiedLoc[1]:
                         valid = False
-            self.state["snakes"][i]["coords"].append(possibleLoc)
+            self.state["food"].append(possibleLoc)
             occupied.append(possibleLoc)
 
 
