@@ -1,51 +1,12 @@
 """Server to rapidly simulate games to determine loss trends"""
 
 from random import randint
+from State import State
+
 
 if __name__ == '__main__':
     print("We're up!")
-
-    state = {
-    	"you": "you",
-    	"turn": 1,
-    	"snakes": [
-    		{
-    			"taunt": "gotta go fast",
-    			"name": "sneakysnake",
-    			"id": "you",
-    			"health_points": 100,
-    			"coords": [
-    				[
-    					11,
-    					5
-    				],
-    				[
-    					11,
-    					6
-    				],
-    				[
-    					11,
-    					7
-    				]
-    			]
-    		}
-    	],
-    	"height": 20,
-    	"width": 20,
-    	"game_id": "gameid",
-    	"food": [
-    		[
-    			5,
-                4
-    		]
-    	],
-    	"dead_snakes": []
-    }
-
-def initSnake():
-    valid = false
-    while(not valid):
-        location = (randint(0,19), randint(0,19))
+    state = State(20, 20, 1)
 
 def printGames(games, p, m):
     #given games[], print to file/directory p
