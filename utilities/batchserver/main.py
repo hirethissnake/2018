@@ -1,11 +1,13 @@
 """Server to rapidly simulate games to determine loss trends"""
 
 from State import State
+import sys
 
 
 if __name__ == '__main__':
-    print("We're up!")
-    state = State(20, 20, 2, 398)
+    if len(sys.argv) < 2 or len(sys.argv) > 2 or not sys.argv[1].isdigit():
+        raise ValueError('Invalid arguments')
+    state = State(20, 20, 1, 1)
     print(state.getState())
 
 def printGames(games, p, m):
