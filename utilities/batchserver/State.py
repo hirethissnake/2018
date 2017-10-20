@@ -10,6 +10,8 @@ class State:
         param3: integer - number of snakes to create
         """
 
+        if numSnakes < 1:
+            raise ValueError('Need to init self')
         if(numSnakes + numFood) > (width * height):
             raise ValueError('Not enough space on board')
 

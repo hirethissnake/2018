@@ -5,8 +5,8 @@ from State import State
 
 if __name__ == '__main__':
     print("We're up!")
-    state = State(20, 20, 1, 2)
-    #print(state.getState())
+    state = State(20, 20, 2, 398)
+    print(state.getState())
 
 def printGames(games, p, m):
     #given games[], print to file/directory p
