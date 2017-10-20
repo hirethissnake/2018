@@ -7,6 +7,7 @@ from State import State
 if __name__ == '__main__':
     print("We're up!")
     state = State(20, 20, 1)
+    print(state.state)
 
 def printGames(games, p, m):
     #given games[], print to file/directory p
