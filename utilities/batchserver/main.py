@@ -10,7 +10,11 @@ def runGame():
     allDead = False
     while(not allDead):
         state.incrementState(stepSnakes(state))
+        print(state.getState())
+        state.setPos(0, [(20,19)])
+        print(state.getState())
         state.kill()
+        print(state.getState())
         if state.numAlive() == 0:
             allDead = True
 

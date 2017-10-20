@@ -73,8 +73,11 @@ class State:
     def getState(self):
         return self.state
 
+    def setPos(self, snakeNum, coords):
+        self.state["snakes"][snakeNum]["coords"] = coords
+
     def numAlive(self):
-        return 0 #len(self.state["snakes"])
+        return len(self.state["snakes"])
 
     def kill(self):
         #makes dead snakes dead
@@ -84,8 +87,12 @@ class State:
         snakes = self.state["snakes"]
         for i in range(0, len(snakes)):
             headPos = snakes[i]["coords"][0]
-            if(headPos[0] < 0 or headPos[0] == self.width or headPos[1] < 0 or headPos[1] > self.height):
-                toBeKilled.append(i)
+            if(headPos[0] < 0 or headPos[0] > (self.width - 1) or headPos[1] < 0 or headPos[1] > (self.height - 1)):
+                toBeKilled.append(snakes[i])
+
+        for snake in toBeKilled:
+            self.state["dead_snakes"].append(snake)
+            self.state["snakes"].remove(snake)
 
 
     def incrementState(self, moves):
