@@ -7,4 +7,4 @@ before_script:
 script:
     - coverage run app/Test.py --source app/
 after_success:
-    - coveralls
+    - codecov --token=f1ac9529-ba99-4004-9b1c-98e1e55aea27 
