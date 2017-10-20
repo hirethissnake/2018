@@ -75,3 +75,19 @@ class State:
 
     def numAlive(self):
         return 0 #len(self.state["snakes"])
+
+    def kill(self):
+        #makes dead snakes dead
+        #returns modified gameState
+
+        toBeKilled = []
+        snakes = self.state["snakes"]
+        for i in range(0, len(snakes)):
+            headPos = snakes[i]["coords"][0]
+            if(headPos[0] < 0 or headPos[0] == self.width or headPos[1] < 0 or headPos[1] > self.height):
+                toBeKilled.append(i)
+
+
+    def incrementState(self, moves):
+        #increments snake position in game state using move[]
+        return
