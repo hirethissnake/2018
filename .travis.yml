@@ -1,0 +1,10 @@
+language: python
+python:
+    - '2.7'
+cache: pip
+before_script:
+    - pip install -r requirements.txt
+script:
+    - coverage run app/Test.py --source app/
+after_success:
+    - codecov --token=f1ac9529-ba99-4004-9b1c-98e1e55aea27 
