@@ -72,3 +72,6 @@ class State:
 
     def getState(self):
         return self.state
+
+    def numAlive(self):
+        return 0 #len(self.state["snakes"])

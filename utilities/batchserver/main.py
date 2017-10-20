@@ -6,7 +6,15 @@ import sys
 
 def runGame():
     state = State(20, 20, 1, 1)
-    print(state.getState())
+
+    allDead = False
+    while(not allDead):
+        state = incrementState(state, stepSnakes(state))
+        state = kill(state)
+        if state.numAlive() == 0:
+            allDead = True
+
+    #print(state.getState())
 
 def printGames(games, p, m):
     #given games[], print to file/directory p
@@ -15,15 +23,21 @@ def printGames(games, p, m):
 
 def stepSnakes(gameState):
     #send gameState to each snake and waits for a response
-    return
+    #retruns an array of moves
+    return []
 
-def incrementState(snake, move):
-    #increments snake position in game state using move
-    return
+def incrementState(gameState, moves):
+    #increments snake position in game state using move[]
+    return gameState
 
 def generateFood(numItems):
     #check to see if a random food item is due to be added
     return
+
+def kill(gameState):
+    #makes dead snakes dead
+    #returns modified gameState
+    return gameState
 
 ## Accept command inputs ##
 #-s 'game state to run from'
