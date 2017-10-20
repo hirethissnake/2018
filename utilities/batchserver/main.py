@@ -4,9 +4,7 @@ from State import State
 import sys
 
 
-if __name__ == '__main__':
-    if len(sys.argv) < 2 or len(sys.argv) > 2 or not sys.argv[1].isdigit():
-        raise ValueError('Invalid arguments')
+def runGame():
     state = State(20, 20, 1, 1)
     print(state.getState())
 
@@ -42,3 +40,9 @@ def generateFood(numItems):
 ## Generate game state to send to snakes ##
 ## Given a move, modify the game state to match ##
 ## Build in local snakes and web snakes ##
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2 or len(sys.argv) > 2 or not sys.argv[1].isdigit():
+        raise ValueError('Invalid arguments')
+    for i in range(0, int(sys.argv[1])):
+        runGame()
