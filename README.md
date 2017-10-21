@@ -1,12 +1,32 @@
 ## Sneaky Snake
+[![codecov](https://codecov.io/gh/phildenhoff/hirethissnake/branch/master/graph/badge.svg?token=loYR0W8K2L)](https://codecov.io/gh/phildenhoff/hirethissnake) [![Build
+Status](https://travis-ci.com/phildenhoff/hirethissnake.svg?token=zfsf2J47jwdz7GuKxCSd&branch=master)](https://travis-ci.com/phildenhoff/hirethissnake)
 
-A aggressive / defensive Battlesnake implementation. Written by Phil Denhoff, Daniel Frankcom, Eric Showers, Kyle Thorpe, and Alex Welsh-Piedrahita.
+An Battlesnake AI implementation based heavily on graphing. Written by Phil Denhoff, Daniel Frankcom, Eric Showers, Kyle Thorpe, and Alex Welsh-Piedrahita, on Python 3.5.
 
-Current feature list is in the `.docx` file. 
+Current feature list is in the `features.md` file. 
 
-### Running / Installing
+### Installation
 
-Install the Microsoft Visual C++ compiler for Python 2.7 from [aka.ms/vcpython27](http://aka.ms/vcpython27).
+An installer file is provided to run the download the repo and all neccessary
+packages and programs to run the server. Currently only Linux is supported.
+
+Download the `install.sh` file to your local server, where you'd like to the
+`hirethissnake` folder. Add execution permissions to the script and execute it.
+It will ask for your password to sudo-install some packages, and will request
+your github credentials to access the repo if it's private. Please feel free to
+expect the installer if you aren't comfortable with that, or do those steps
+yourself.
+
+```bash
+chmod +x ./install.sh
+./install.sh
+```
+
+#### Unsupported / Outdated
+
+To run the server on Windows, on Python 2.7, you required the Microsoft Visual
+C++ compiler available here: [aka.ms/vcpython27](http://aka.ms/vcpython27).
 
 The required Python packages are listed in `requirements.txt`. They can be batch installed, as an administrator (use sudo), with
 
@@ -15,78 +35,21 @@ pip install -r requirements.txt
 ```
 
 and python-igraph can be installed by following instructions at
-[python-igraph install](http://igraph.org/python/#pyinstall). For Windows, use Christoph Gohlke's unofficial installers (pick *-cp27), and
+[python-igraph install](http://igraph.org/python/#pyinstall). For Windows, use Christoph Gohlke's unofficial installers (pick \*-cp27), and
 
 ```
 python -m pip install /path/to/igraph.whl
 ```
 
- ---
+### Running
 
-Dependencies should be visually confirmed to be installed with
-```
-pip list
-```
+To run the server, execute
 
-## battlesnake-python
-
-A simple [BattleSnake AI](http://battlesnake.io) written in Python.
-
-Visit [battlesnake.io/readme](http://battlesnake.io/readme) for API documentation and instructions for running your AI.
-
-This AI client uses the [bottle web framework](http://bottlepy.org/docs/dev/index.html) to serve requests and the [gunicorn web server](http://gunicorn.org/) for running bottle on Heroku. Dependencies are listed in [requirements.txt](requirements.txt).
-
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-
-#### You will need...
-
-* a working Python 2.7 development environment ([getting started guide](http://hackercodex.com/guide/python-development-environment-on-mac-osx/))
-* experience [deploying Python apps to Heroku](https://devcenter.heroku.com/articles/getting-started-with-python#introduction)
-* [pip](https://pip.pypa.io/en/latest/installing.html) to install Python dependencies
-
-## Running the Snake Locally
-
-1) [Fork this repo](https://github.com/sendwithus/battlesnake-python/fork).
-
-2) Clone repo to your development environment:
-```
-git clone git@github.com:username/battlesnake-python.git
-```
-
-3) Install dependencies using [pip](https://pip.pypa.io/en/latest/installing.html):
-```
-pip install -r requirements.txt
-```
-
-4) Run local server:
-```
+```python
 python app/main.py
 ```
 
-5) Test client in your browser: [http://localhost:8080](http://localhost:8080).
-
-## Deploying to Heroku
-
-1) Create a new Heroku app:
-```
-heroku create [APP_NAME]
-```
-
-2) Deploy code to Heroku servers:
-```
-git push heroku master
-```
-
-3) Open Heroku app in browser:
-```
-heroku open
-```
-or visit [http://APP_NAME.herokuapp.com](http://APP_NAME.herokuapp.com).
-
-4) View server logs with the `heroku logs` command:
-```
-heroku logs --tail
-```
+and then test the client in your browser: [http://localhost:8080](http://localhost:8080)
 
 ## Questions?
 
