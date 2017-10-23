@@ -114,18 +114,75 @@ function tableCreate() {
 function newTurn() {
     console.log("Woahboi "+turnCounter);
     var thisTurn = twoTurnData[turnCounter];
-    
+
+    //Compare last turn to current turn to remove unused cells
+    if (turnCounter > 0) {
+        var lastTurn = twoTurnData[turnCounter-1];
+
+        // Check if old food still exists
+        for (x in lastTurn.food) {
+            var oldKibbles = lastTurn.food[x];
+            var oldFound = false;
+            
+            for (k in thisTurn.food) {
+                if (oldKibbles == thisTurn.food[k]){oldFound=true; break;}
+            }
+            // if oldKibbles no longer exists, remove its color
+            if (!oldFound) {
+                document.getElementById(oldKibbles[0]+','+oldKibbles[1]).style.backgroundColor = null;
+            }
+        }
+
+        // Check if old Snakes & their coords still exist
+        for (x in lastTurn.snakes) {
+            var oldSnake = lastTurn.snakes[x];
+            var oldSnakeFound = false;
+
+            // Check for this snakes existence
+            for (k in thisTurn.snakes) {
+                if (oldSnake.id == thisTurn.snakes[k].id) {
+                    
+                    // Check if the old coordinates still exist
+                    for (j in oldSnake.coords) {
+                        var oldCoord = oldSnake.coords[j];
+                        var oldCorFound = false;
+
+                        // Check for this coordinate's existence
+                        for (f in thisTurn.snakes[k].coords) {
+                            if (oldCoord == thisTurn.snakes[k].coords[f]){oldCorFound=true; break;}
+                        }
+                        // If coordinate was not found in new coords, remove its color
+                        if (!oldCorFound) {
+                            document.getElementById(oldSnake.coords[j][0]+','+oldSnake.coords[j][1]).style.backgroundColor = null;
+                        }
+                    }
+
+                    oldSnakeFound=true;
+                    break;
+                }
+            }
+            // If snake was not found in new snakes, remove all of its color
+            if (!oldSnakeFound) {
+                for (j in oldSnake.coords) {
+                    document.getElementById(oldSnake.coords[j][0]+','+oldSnake.coords[j][1]).style.backgroundColor = null;
+                }
+            }
+        }
+    }
+
+    //Add data from new turn
     for (x in thisTurn.food){
         var kibbles = thisTurn.food[x];
         document.getElementById(kibbles[0]+','+kibbles[1]).style.backgroundColor = "rgb(76, 175, 80)";
     }
     for (x in thisTurn.snakes){
         var curSnake = thisTurn.snakes[x];
-        for (y in curSnake.coords){
-            var curCoord = curSnake.coords[y];
+        for (k in curSnake.coords){
+            var curCoord = curSnake.coords[k];
             document.getElementById(curCoord[0]+','+curCoord[1]).style.backgroundColor = snakeColours[curSnake.id];
         }
     }
+
     turnCounter++;
     if (turnCounter >= twoTurnData.length) {
         clearInterval(interID);
