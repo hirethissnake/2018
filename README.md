@@ -31,6 +31,45 @@ docker build -t hirethissnake .
 image, -t designates the name of the image, and we use '.' to say 'look for
 a Dockerfile in the current folder'.
 
+
+#### Script - Linux Only
+
+An installer file is provided to run the download the repo and all neccessary
+packages and programs to run the server. Currently only Linux is supported.
+
+Download the `install.sh` file to your local server, where you'd like to the
+`hirethissnake` folder. Add execution permissions to the script and execute it.
+It will ask for your password to sudo-install some packages, and will request
+your github credentials to access the repo if it's private. Please feel free to
+expect the installer if you aren't comfortable with that, or do those steps
+yourself.
+
+```bash
+chmod +x ./install.sh
+./install.sh
+```
+
+#### Unsupported / Outdated
+
+To run the server on Windows, on Python 2.7, you required the Microsoft Visual
+C++ compiler available here: [aka.ms/vcpython27](http://aka.ms/vcpython27).
+
+The required Python packages are listed in `requirements.txt`. They can be batch installed, as an administrator (use sudo), with
+
+```
+pip install -r requirements.txt
+```
+
+and python-igraph can be installed by following instructions at
+[python-igraph install](http://igraph.org/python/#pyinstall). For Windows, use Christoph Gohlke's unofficial installers (pick \*-cp27), and
+
+```
+python -m pip install /path/to/igraph.whl
+```
+
+### Running
+
+#### Docker
 Following the successful completion of `docker build`, we will need to actually
 run the container with our current code. One of the issues is that we want
 a constant base-system (Python with required packages) but constantly changing
@@ -75,44 +114,7 @@ server.
 You can now make any changes you'd like to the local files in ./app and then
 run the `docker run` command above, and see those changes represented.
 
-
-#### Script - Linux Only
-
-An installer file is provided to run the download the repo and all neccessary
-packages and programs to run the server. Currently only Linux is supported.
-
-Download the `install.sh` file to your local server, where you'd like to the
-`hirethissnake` folder. Add execution permissions to the script and execute it.
-It will ask for your password to sudo-install some packages, and will request
-your github credentials to access the repo if it's private. Please feel free to
-expect the installer if you aren't comfortable with that, or do those steps
-yourself.
-
-```bash
-chmod +x ./install.sh
-./install.sh
-```
-
-#### Unsupported / Outdated
-
-To run the server on Windows, on Python 2.7, you required the Microsoft Visual
-C++ compiler available here: [aka.ms/vcpython27](http://aka.ms/vcpython27).
-
-The required Python packages are listed in `requirements.txt`. They can be batch installed, as an administrator (use sudo), with
-
-```
-pip install -r requirements.txt
-```
-
-and python-igraph can be installed by following instructions at
-[python-igraph install](http://igraph.org/python/#pyinstall). For Windows, use Christoph Gohlke's unofficial installers (pick \*-cp27), and
-
-```
-python -m pip install /path/to/igraph.whl
-```
-
-### Running
-
+#### Manually
 To run the server, execute
 
 ```python
