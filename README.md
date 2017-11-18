@@ -78,8 +78,7 @@ command:
 
 **Linux / Mac**
 ```
-docker run -p 8080:8080 -v$(pwd)/app:/data/app hirethissnake python
-/data/app/main.py
+docker run -p 8080:8080 -v$(pwd)/app:/data/app hirethissnake python /data/app/main.py
 ```
 
 **Windows - Command Prompt**
