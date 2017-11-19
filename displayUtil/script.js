@@ -10,6 +10,7 @@ var tableWidth = 0;
 var tableHeight = 0;
 var turnCounter = 0;
 var interID;
+var paused = false;
 
 var oneTurnData = {
     'you':'you',
@@ -50,15 +51,29 @@ var multiTurnData = [
     {"you":"you","turn":1,"snakes":[{"taunt":"gotta go fast","name":"sneakysnake","id":"you","health_points":100,"coords":[]},{"taunt":"gotta go slow","name":"snake0","id":"0","health_points":100,"coords":[[12,1],[13,1],[14,1],[15,1],[15,2],[15,3],[15,4],[15,5],[15,6],[15,7]]},{"taunt":"gotta go slow","name":"snake3","id":"3","health_points":100,"coords":[[6,15],[7,15],[7,16],[7,17],[8,17],[9,17],[10,17],[11,17],[12,17],[13,17]]}],"height":20,"width":20,"game_id":"gameid","food":[[4,2],[10,5],[17,8],[3,13],[16,15]],"dead_snakes":[]}
 ];
 
+var openFile = function(event) {
+    var input = event.target;
+
+    var reader = new FileReader();
+    reader.onload = function(){
+        var text = reader.result;
+        oneTurnData = JSON.parse(text);
+
+    };
+    reader.readAsText(input.files[0]);
+};
+
 function main() {
     
     width = window.innerWidth - 50;
     height = window.innerHeight - 50;
 
     tableCreate();
-    interID = setInterval(newTurn, 1500);
-    console.log(multiTurnData.length);
+}
 
+function start() {
+    interID = setInterval(newTurn, 1500);
+    console.log(oneTurnData.length);
 }
 
 function tableCreate() {
@@ -69,16 +84,16 @@ function tableCreate() {
     tbl.setAttribute("border", "1");
     tbl.setAttribute("id", "table");
 
-    if(width > height){
+    if (width > height){
         var desiredWidth = width;
-        if(height < width / 2){
+        if (height < width / 2){
           tableWidth = tbl.style.width = height;
           tableHeight = tbl.style.height = height;
-        }else{
+        } else {
           tableWidth = tbl.style.width = width / 2;
           tableHeight = tbl.style.height = (width / 2);
         }
-    }else{
+    } else {
         tableWidth = tbl.style.width = width;
         tableHeight = tbl.style.height = (width);
     }
@@ -115,11 +130,12 @@ function tableCreate() {
 
 function newTurn() {
     console.log("Woahboi "+turnCounter);
-    var thisTurn = multiTurnData[turnCounter];
+
+    var thisTurn = oneTurnData[turnCounter];
 
     //Compare last turn to current turn to remove unused cells
     if (turnCounter > 0) {
-        var lastTurn = multiTurnData[turnCounter-1];
+        var lastTurn = oneTurnData[turnCounter-1];
 
         // Check if old food still exists
         for (x in lastTurn.food) {
@@ -181,12 +197,13 @@ function newTurn() {
         var curSnake = thisTurn.snakes[x];
         for (k in curSnake.coords){
             var curCoord = curSnake.coords[k];
+            console.log(curCoord);
             document.getElementById(curCoord[0]+','+curCoord[1]).style.backgroundColor = snakeColours[curSnake.id];
         }
     }
 
     turnCounter++;
-    if (turnCounter >= multiTurnData.length) {
+    if (turnCounter >= oneTurnData.length) {
         clearInterval(interID);
     }
 }
