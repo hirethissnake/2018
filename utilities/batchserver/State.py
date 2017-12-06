@@ -1,3 +1,4 @@
+import json
 from random import randint
 
 class State:
@@ -46,7 +47,7 @@ class State:
             possibleLoc = None
             while not valid:
                 valid = True
-                possibleLoc = (randint(0, width - 1), randint(0, height - 1))
+                possibleLoc = [randint(0, width - 1), randint(0, height - 1)]
                 for occupiedLoc in occupied:
                     if possibleLoc[0] == occupiedLoc[0] and possibleLoc[1] == occupiedLoc[1]:
                         valid = False
@@ -58,7 +59,7 @@ class State:
             possibleLoc = None
             while not valid:
                 valid = True
-                possibleLoc = (randint(0, width - 1), randint(0, height - 1))
+                possibleLoc = [randint(0, width - 1), randint(0, height - 1)]
                 for occupiedLoc in occupied:
                     if possibleLoc[0] == occupiedLoc[0] and possibleLoc[1] == occupiedLoc[1]:
                         valid = False
@@ -71,7 +72,7 @@ class State:
         return True
 
     def getState(self):
-        return self.state
+        return json.dumps(self.state)
 
     def setPos(self, snakeNum, coords):
         self.state["snakes"][snakeNum]["coords"] = coords
@@ -96,5 +97,5 @@ class State:
 
 
     def incrementState(self, moves):
-        #increments snake position in game state using move[]
+        #increments snake position in game state using moves[]
         return

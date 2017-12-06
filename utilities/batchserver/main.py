@@ -1,7 +1,7 @@
 """Server to rapidly simulate games to determine loss trends"""
 
-from State import State
 import sys
+from State import State
 
 
 def runGame():
@@ -11,7 +11,8 @@ def runGame():
     while(not allDead):
         state.incrementState(stepSnakes(state))
         print(state.getState())
-        state.setPos(0, [(20,19)])
+        state.setPos(0, [[20,19]])
+        #contact servers and update state here
         print(state.getState())
         state.kill()
         print(state.getState())
@@ -53,7 +54,7 @@ def generateFood(numItems):
 ## Build in local snakes and web snakes ##
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2 or len(sys.argv) > 2 or not sys.argv[1].isdigit():
+    if len(sys.argv) != 2 or not sys.argv[1].isdigit():
         raise ValueError('Invalid arguments')
     for i in range(0, int(sys.argv[1])):
         runGame()
