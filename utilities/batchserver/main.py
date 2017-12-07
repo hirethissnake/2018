@@ -6,16 +6,27 @@ import requests
 from State import State
 
 
-def runGame():
+def runGame(snakesFile):
+    snakeUrls = []
+    with open(snakesFile) as f:
+        snakeUrls = f.read().split("\n")
+
+    snakes = {}
+    for url in snakeUrls:
+        response = requests.post(url + "/start", data=json.dumps({"width": 20, "height": 20, "game_id": "gameid"}), headers={'content-type': 'application/json'})
+        snakes[eval(response.text)["name"]] = url + "/move"
+    print(snakes)
+    return
     numSnakes = 1
     state = State(20, 20, numSnakes, 1)
 
-    for i in range(0, numSnakes):
-        response = requests.post("http://localhost:8080/start", data=json.dumps({"width": 20, "height": 20, "game_id": "gameid"}), headers={'content-type': 'application/json'})
+        
 
     allDead = False
     while(not allDead):
 
+        for i in range(0, numSnakes):
+            return
         response = requests.post("http://localhost:8080/move", data=state.getState(), headers={'content-type': 'application/json'})
         move = eval(response.text)["move"]
         print(move)
@@ -65,7 +76,7 @@ def generateFood(numItems):
 ## Build in local snakes and web snakes ##
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2 or not sys.argv[1].isdigit():
+    if len(sys.argv) != 3 or not sys.argv[1].isdigit():
         raise ValueError('Invalid arguments')
     for i in range(0, int(sys.argv[1])):
-        runGame()
+        runGame(sys.argv[2])
