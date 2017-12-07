@@ -1,14 +1,24 @@
 """Server to rapidly simulate games to determine loss trends"""
 
 import sys
+import json
+import requests
 from State import State
 
 
 def runGame():
-    state = State(20, 20, 1, 1)
+    numSnakes = 1
+    state = State(20, 20, numSnakes, 1)
+
+    for i in range(0, numSnakes):
+        response = requests.post("http://localhost:8080/start", data=json.dumps({"width": 20, "height": 20, "game_id": "gameid"}), headers={'content-type': 'application/json'})
 
     allDead = False
     while(not allDead):
+
+        response = requests.post("http://localhost:8080/move", data=state.getState(), headers={'content-type': 'application/json'})
+        move = eval(response.text)["move"]
+        print(move)
         state.incrementState(stepSnakes(state))
         print(state.getState())
         state.setPos(0, [[20,19]])
@@ -18,6 +28,7 @@ def runGame():
         print(state.getState())
         if state.numAlive() == 0:
             allDead = True
+        print(state.getState())
 
     #print(state.getState())
 
