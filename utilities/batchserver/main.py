@@ -26,14 +26,14 @@ def runGame(snakesFile):
             print(state.state)
             response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'})
             move = eval(response.text)["move"]
+            print(move)
             state.move(name, move)
+            print(state.state)
         return
         
-        print(state.state)
-        state.setPos(0, [[20,19]])
-        #contact servers and update state here
-        print(state.state)
         state.kill()
+
+        #TODO: update snakes dictionary to remove dead snakes
         print(state.state)
 
 

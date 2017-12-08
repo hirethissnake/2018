@@ -60,19 +60,25 @@ class State:
 
 
     def move(self, snakeName, move):
-        #TODO: check for food infront, extend tail, create new head, potentially remove old tail
-        print(snakeName)
-        print(move)
-        if move == 'up':
-            self.state["snakes"]
-        elif move == 'right':
+        #TODO: check for food infront, extend tail, potentially remove old tail
 
-        elif move == 'down':
+        for snake in self.state["snakes"]:
+            if snake["name"] != snakeName: continue
 
-        elif move == 'left':
+            currentHead = snake["coords"][0]
+            if move == 'up':
+                snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [0,1])])
+            elif move == 'right':
+                snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [1,0])])
+            elif move == 'down':
+                snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [0,-1])])
+            elif move == 'left':
+                snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [-1,0])])
+                
+            #check food here before deleting tail
 
 
-    def setPos(self, snakeNum, coords):
+    def setPos(self, snakeNum, coords): #just used for testing/debugging
         self.state["snakes"][snakeNum]["coords"] = coords
 
 
