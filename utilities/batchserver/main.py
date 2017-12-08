@@ -2,6 +2,7 @@
 
 import sys
 import json
+import time
 import requests
 from State import State
 
@@ -23,18 +24,18 @@ def runGame(snakesFile):
     while(len(snakes) != 0):
 
         for name in snakes:
-            print(state.state)
             response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'})
             move = eval(response.text)["move"]
             print(move)
             state.move(name, move)
-            print(state.state)
-        return
         
         state.kill()
 
         #TODO: update snakes dictionary to remove dead snakes
         print(state.state)
+        print()
+
+        time.sleep(4)
 
 
 def printGames(games, p, m):

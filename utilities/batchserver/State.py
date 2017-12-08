@@ -60,16 +60,18 @@ class State:
 
 
     def move(self, snakeName, move):
+        #TODO: placeholder for tail, extend on next move
+        
         for snake in self.state["snakes"]:
             if snake["name"] != snakeName: continue
 
             currentHead = snake["coords"][0]
             if move == 'up':
-                snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [0,1])])
+                snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [0,-1])])
             elif move == 'right':
                 snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [1,0])])
             elif move == 'down':
-                snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [0,-1])])
+                snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [0,1])])
             elif move == 'left':
                 snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [-1,0])])
 
