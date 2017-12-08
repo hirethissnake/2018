@@ -8,14 +8,27 @@ from State import State
 
 
 def runGame(snakesFile):
+    #TODO: add health system
+    # add snake collisions
+    # print games to a file when done
+    # make sure game actually stops
+    # add robusteness and proper command system
+    # randomly spawn food
+    # update taunts
+
     snakeUrls = []
     with open(snakesFile) as f:
         snakeUrls = f.read().split("\n")
 
     snakes = {}
+    differentiationCounter = 0
     for url in snakeUrls:
         response = requests.post(url + "/start", data=json.dumps({"width": 20, "height": 20, "game_id": "gameid"}), headers={'content-type': 'application/json'})
-        snakes[eval(response.text)["name"]] = url + "/move"    
+        name = eval(response.text)["name"]
+        while name in snakes:
+            name = eval(response.text)["name"] + str(differentiationCounter)
+            differentiationCounter += 1
+        snakes[name] = url + "/move"    
 
     state = State(20, 20, list(snakes.keys()), 4)
     
