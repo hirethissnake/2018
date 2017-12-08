@@ -60,8 +60,6 @@ class State:
 
 
     def move(self, snakeName, move):
-        #TODO: check for food infront, extend tail, potentially remove old tail
-
         for snake in self.state["snakes"]:
             if snake["name"] != snakeName: continue
 
@@ -74,8 +72,10 @@ class State:
                 snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [0,-1])])
             elif move == 'left':
                 snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [-1,0])])
-                
-            #check food here before deleting tail
+
+            if snake["coords"][0] not in self.state["food"]: #note: food removed in kill() function
+                snake["coords"] = snake["coords"][:-1]
+            
 
 
     def setPos(self, snakeNum, coords): #just used for testing/debugging
@@ -89,6 +89,7 @@ class State:
 
     def kill(self):
         #TODO: check for other snake collisions
+        #Food is removed here to prevent race condition with 2 snakes headbutting over food
 
         toBeKilled = []
         for snake in self.state["snakes"]:
