@@ -15,43 +15,33 @@ def runGame(snakesFile):
     for url in snakeUrls:
         response = requests.post(url + "/start", data=json.dumps({"width": 20, "height": 20, "game_id": "gameid"}), headers={'content-type': 'application/json'})
         snakes[eval(response.text)["name"]] = url + "/move"
-    print(snakes)
-    return
-    numSnakes = 1
-    state = State(20, 20, numSnakes, 1)
+    print(len(snakes))
+    
 
+    state = State(20, 20, list(snakes.keys()), 1)
+    
+    while(len(snakes) != 0):
+
+        for name in snakes:
+            print(state.state)
+            response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'})
+            move = eval(response.text)["move"]
+            state.move(name, move)
+        return
         
-
-    allDead = False
-    while(not allDead):
-
-        for i in range(0, numSnakes):
-            return
-        response = requests.post("http://localhost:8080/move", data=state.getState(), headers={'content-type': 'application/json'})
-        move = eval(response.text)["move"]
-        print(move)
-        state.incrementState(stepSnakes(state))
-        print(state.getState())
+        print(state.state)
         state.setPos(0, [[20,19]])
         #contact servers and update state here
-        print(state.getState())
+        print(state.state)
         state.kill()
-        print(state.getState())
-        if state.numAlive() == 0:
-            allDead = True
-        print(state.getState())
+        print(state.state)
 
-    #print(state.getState())
 
 def printGames(games, p, m):
     #given games[], print to file/directory p
     #if m(bool), print each game to a different file
     return
 
-def stepSnakes(gameState):
-    #send gameState to each snake and waits for a response
-    #retruns an array of moves
-    return []
 
 def generateFood(numItems):
     #check to see if a random food item is due to be added
