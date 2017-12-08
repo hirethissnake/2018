@@ -30,8 +30,11 @@ class State:
         	"dead_snakes": []
         }
 
+        self.extend = {} #stores snakes that have just eaten food
+
         for name in snakes:
             self.state["snakes"].append({ "taunt": "gotta go!", "name": name, "id": name, "health_points": 100, "coords": [] })
+            self.extend[name] = 0
 
         occupied = []
         for i in range(0, numSnakes): #place randomly on board
@@ -60,8 +63,6 @@ class State:
 
 
     def move(self, snakeName, move):
-        #TODO: placeholder for tail, extend on next move
-        
         for snake in self.state["snakes"]:
             if snake["name"] != snakeName: continue
 
@@ -75,8 +76,13 @@ class State:
             elif move == 'left':
                 snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [-1,0])])
 
-            if snake["coords"][0] not in self.state["food"]: #note: food removed in kill() function
+            if self.extend[snakeName] == 0:
                 snake["coords"] = snake["coords"][:-1]
+            else:
+                self.extend[snakeName] -= 1
+
+            if snake["coords"][0] in self.state["food"]: #note: food removed in kill() function
+                self.extend[snakeName] += 1
             
 
 
@@ -90,12 +96,14 @@ class State:
 
 
     def kill(self):
-        #TODO: check for other snake collisions
+        #TODO: check for other snake collisions - check extend{} length in addition to regular length
         #Food is removed here to prevent race condition with 2 snakes headbutting over food
 
         toBeKilled = []
         for snake in self.state["snakes"]:
             headPos = snake["coords"][0]
+            if headPos in self.state["food"]:
+                self.state["food"].remove(headPos)
             if(headPos[0] < 0 or headPos[0] > (self.width - 1) or headPos[1] < 0 or headPos[1] > (self.height - 1)):
                 toBeKilled.append(snake)
 

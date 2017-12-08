@@ -15,15 +15,14 @@ def runGame(snakesFile):
     snakes = {}
     for url in snakeUrls:
         response = requests.post(url + "/start", data=json.dumps({"width": 20, "height": 20, "game_id": "gameid"}), headers={'content-type': 'application/json'})
-        snakes[eval(response.text)["name"]] = url + "/move"
-    print(len(snakes))
-    
+        snakes[eval(response.text)["name"]] = url + "/move"    
 
-    state = State(20, 20, list(snakes.keys()), 1)
+    state = State(20, 20, list(snakes.keys()), 4)
     
     while(len(snakes) != 0):
 
         for name in snakes:
+            print(state.state)
             response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'})
             move = eval(response.text)["move"]
             print(move)
@@ -35,7 +34,7 @@ def runGame(snakesFile):
         print(state.state)
         print()
 
-        time.sleep(4)
+        time.sleep(2)
 
 
 def printGames(games, p, m):
