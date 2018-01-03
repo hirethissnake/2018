@@ -38,7 +38,7 @@ def runGame(snakesFile):
             print(state.state)
             response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'})
             move = eval(response.text)["move"]
-            print(move)
+            print(response)
             state.move(name, move)
         
         state.kill()
