@@ -2,4 +2,4 @@
 *.pyc
 battlesnake
 .idea
-.vscode
+.vscode/
