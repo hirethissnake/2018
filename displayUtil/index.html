@@ -5,7 +5,13 @@
       <link href="style.css" rel="stylesheet" type="text/css"></style>
     </head>
     <input type='file' accept='.json*' onchange='openFile(event)'><br>
-    <button onclick="start()">Start</button>
+    
+    <button onclick="start()">Play</button>
+    <button onclick="pause()">Pause</button>
+    
+    Jump to a turn: <input type='text' id='thisTurn'>
+    <input type="button" onclick="jumpTo()" value="Submit">
+
     <body onload="main()">
     </body>
   </html>

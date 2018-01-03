@@ -12,38 +12,6 @@ var turnCounter = 0;
 var interID;
 var paused = false;
 
-var oneTurnData = {
-    'you':'you',
-    'turn':1,
-    'snakes':[
-        {'taunt':'gotta go slow',
-        'name':'snake1',
-        'id':'1',
-        'health_points':100,
-        'coords':[[7,2],[7,3],[7,4],[7,5],[7,6],[8,6]]},
-        {'taunt':'gotta go slow',
-        'name':'snake4',
-        'id':'4',
-        'health_points':100,
-        'coords':[[4,11],[5,11],[6,11],[7,11],[7,12],[7,13],[8,13],[8,14],[8,15],[9,15]]},
-        {'taunt':'gotta go slow',
-        'name':'snake5',
-        'id':'5',
-        'health_points':100,
-        'coords':[[16,13],[12,9],[13,9],[14,9],[15,9],[16,9],[12,10],[16,10],[12,11],[13,11],[13,12],[14,12],[15,13]]}
-    ],
-    'height':20,
-    'width':20,
-    'game_id':'gameid',
-    'food':[
-        [14,2],
-        [3,6],
-        [18,11],
-        [12,13],
-        [3,16]
-    ],
-    'dead_snakes':[]
-};
 var multiTurnData = [
     {"you":"you","turn":1,"snakes":[{"taunt":"gotta go fast","name":"sneakysnake","id":"you","health_points":100,"coords":[]},{"taunt":"gotta go slow","name":"snake0","id":"0","health_points":100,"coords":[[15,1],[15,2],[15,3],[15,4],[15,5],[15,6],[13,7],[14,7],[15,7],[13,8]]},{"taunt":"gotta go slow","name":"snake3","id":"3","health_points":100,"coords":[[7,17],[8,17],[9,17],[10,17],[11,17],[12,17],[13,17],[14,17],[14,18],[15,18]]}],"height":20,"width":20,"game_id":"gameid","food":[[4,2],[10,5],[17,8],[3,13],[16,15]],"dead_snakes":[]},
     {"you":"you","turn":1,"snakes":[{"taunt":"gotta go fast","name":"sneakysnake","id":"you","health_points":100,"coords":[]},{"taunt":"gotta go slow","name":"snake0","id":"0","health_points":100,"coords":[[14,1],[15,1],[15,2],[15,3],[15,4],[15,5],[15,6],[13,7],[14,7],[15,7]]},{"taunt":"gotta go slow","name":"snake3","id":"3","health_points":100,"coords":[[7,16],[7,17],[8,17],[9,17],[10,17],[11,17],[12,17],[13,17],[14,17],[14,18]]}],"height":20,"width":20,"game_id":"gameid","food":[[4,2],[10,5],[17,8],[3,13],[16,15]],"dead_snakes":[]},
@@ -75,6 +43,14 @@ function start() {
     interID = setInterval(newTurn, 1500);
     console.log(oneTurnData.length);
 }
+function pause() {
+    clearInterval(interID);
+}
+function jumpTo() {
+    thisTurn = document.getElementById('thisTurn');
+    turnCounter = thisTurn;
+    console.log(turnCounter);
+}
 
 function tableCreate() {
     
@@ -102,24 +78,24 @@ function tableCreate() {
 
     for (var row = 0; row < tableSize; row++) {  // for table size
 
-    var tr = document.createElement("tr");  // declare row
+        var tr = document.createElement("tr");  // declare row
 
-    for (var col = 0; col < tableSize; col++) {
+        for (var col = 0; col < tableSize; col++) {
 
-        var td = document.createElement("td");
-        td.setAttribute("id", col + "," + row);  // set name
-        td.setAttribute("class", "selectionSquare");
+            var td = document.createElement("td");
+            td.setAttribute("id", col + "," + row);  // set name
+            td.setAttribute("class", "selectionSquare");
 
-        td.style.width = ((100 / tableSize) / 2) + "%";
-        td.style.height = (100 / tableSize) + "%";
+            td.style.width = ((100 / tableSize) / 2) + "%";
+            td.style.height = (100 / tableSize) + "%";
 
-        td.appendChild(document.createTextNode("\u0020"))  // add empty text
+            td.appendChild(document.createTextNode("\u0020"))  // add empty text
 
-        tr.appendChild(td)  // append cell to row
+            tr.appendChild(td)  // append cell to row
 
-    }
+        }
 
-    tbdy.appendChild(tr);  // append row to table
+        tbdy.appendChild(tr);  // append row to table
 
     }
 
