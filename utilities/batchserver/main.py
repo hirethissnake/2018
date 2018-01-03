@@ -37,7 +37,7 @@ def runGame(snakesFile):
         toUpdate = []
         for name in snakes:
             response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'})
-            print(response)
+            print(response.text)
             toUpdate.append([name, eval(response.text)["move"]])
         for info in toUpdate:
             state.move(info[0], info[1])
