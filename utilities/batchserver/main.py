@@ -31,23 +31,23 @@ def runGame(snakesFile):
         snakes[name] = url + "/move"    
 
     state = State(20, 20, list(snakes.keys()), 4)
-    
-    while(len(snakes) != 0):
 
+    while(len(snakes) != 0):
+        print(state.state)
+        toUpdate = []
         for name in snakes:
-            print(state.state)
             response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'})
-            move = eval(response.text)["move"]
-            print(move)
-            state.move(name, move)
+            print(response)
+            toUpdate.append([name, eval(response.text)["move"]])
+        for info in toUpdate:
+            state.move(info[0], info[1])
         
         state.kill()
-
+        state.checkFood()
+        #sys.exit(0)
         #TODO: update snakes dictionary to remove dead snakes
         print(state.state)
         print()
-
-        time.sleep(2)
 
 
 def printGames(games, p, m):

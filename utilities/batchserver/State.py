@@ -49,17 +49,8 @@ class State:
             self.state["snakes"][i]["coords"].append(possibleLoc)
             occupied.append(possibleLoc)
 
-        for i in range(0, numFood):
-            valid = False
-            possibleLoc = None
-            while not valid:
-                valid = True
-                possibleLoc = [randint(0, width - 1), randint(0, height - 1)]
-                for occupiedLoc in occupied:
-                    if possibleLoc[0] == occupiedLoc[0] and possibleLoc[1] == occupiedLoc[1]:
-                        valid = False
-            self.state["food"].append(possibleLoc)
-            occupied.append(possibleLoc)
+        self.state["food"] = [] #declar here so that below function call works
+        self.placeFood(numFood)
 
 
     def move(self, snakeName, move):
@@ -108,3 +99,28 @@ class State:
         for snake in toBeKilled:
             self.state["dead_snakes"].append(snake)
             self.state["snakes"].remove(snake)
+
+    def checkFood(self):
+        if len(self.state["food"]) == 0:
+            self.placeFood(1)
+
+    def placeFood(self, numFood):
+        occupied = self.getOccupied()
+        for i in range(0, numFood):
+            valid = False
+            possibleLoc = None
+            while not valid:
+                valid = True
+                possibleLoc = [randint(0, self.width - 1), randint(0, self.height - 1)]
+                for occupiedLoc in occupied:
+                    if possibleLoc[0] == occupiedLoc[0] and possibleLoc[1] == occupiedLoc[1]:
+                        valid = False
+            self.state["food"].append(possibleLoc)
+            occupied.append(possibleLoc)
+
+    def getOccupied(self):
+        occupied = []
+        for snake in self.state["snakes"]:
+            occupied += snake["coords"]
+        occupied += self.state["food"]
+        return occupied
