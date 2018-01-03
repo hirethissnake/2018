@@ -42,7 +42,7 @@ def runGame(snakesFile):
             try:
                 toUpdate.append([name, eval(response.text)["move"]])
             except:
-                with open('out.txt', 'w') as out:
+                with open('out.json', 'w') as out:
                     out.write(str(data))
                 sys.exit(0)
 

@@ -3,4 +3,4 @@
 battlesnake
 .idea
 .vscode/
-utilities/batchserver/out.txt
+utilities/batchserver/out.json
