@@ -83,7 +83,6 @@ class State:
 
             if snake["coords"][0] in self.state["food"]: #note: food removed in kill() function
                 self.extend[snakeName] += 1
-            
 
 
     def setPos(self, snakeNum, coords): #just used for testing/debugging
@@ -97,7 +96,6 @@ class State:
 
     def kill(self):
         #TODO: check for other snake collisions - check extend{} length in addition to regular length
-        #Food is removed here to prevent race condition with 2 snakes headbutting over food
 
         toBeKilled = []
         for snake in self.state["snakes"]:
