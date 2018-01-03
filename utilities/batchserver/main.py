@@ -34,7 +34,7 @@ def runGame(snakesFile):
 
     data = []
     while(len(snakes) != 0):
-        data.append(state.state)
+        data.append(json.dumps(state.state))
         toUpdate = []
         for name in snakes:
             response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'})
