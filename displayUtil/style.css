@@ -18,6 +18,7 @@ table {
   
   .selectionSquare {
     cursor:pointer;
+    font-size: 12px;
   }
   
   #selectorTable {

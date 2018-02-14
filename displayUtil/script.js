@@ -1,4 +1,5 @@
-var snakeColours = ["#4CAF50","#607D8B","#E91E63","#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548"];
+const snakeColours = ["#607D8B","#E91E63","#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548"];
+const snakeFaces = [":)", ":O", "xD", ":P", ">:(", "8)", ":C", ":3", ":E"]
 var snakesHead = [false, true, true, true, true, true, true, true, true, true, true, true, true];
 
 var currentSelected = 0;
@@ -9,15 +10,9 @@ var height = 0;
 var tableWidth = 0;
 var tableHeight = 0;
 var turnCounter = 0;
+let interLength = 200;
 var interID;
-var paused = false;
-
-var multiTurnData = [
-    {"you":"you","turn":1,"snakes":[{"taunt":"gotta go fast","name":"sneakysnake","id":"you","health_points":100,"coords":[]},{"taunt":"gotta go slow","name":"snake0","id":"0","health_points":100,"coords":[[15,1],[15,2],[15,3],[15,4],[15,5],[15,6],[13,7],[14,7],[15,7],[13,8]]},{"taunt":"gotta go slow","name":"snake3","id":"3","health_points":100,"coords":[[7,17],[8,17],[9,17],[10,17],[11,17],[12,17],[13,17],[14,17],[14,18],[15,18]]}],"height":20,"width":20,"game_id":"gameid","food":[[4,2],[10,5],[17,8],[3,13],[16,15]],"dead_snakes":[]},
-    {"you":"you","turn":1,"snakes":[{"taunt":"gotta go fast","name":"sneakysnake","id":"you","health_points":100,"coords":[]},{"taunt":"gotta go slow","name":"snake0","id":"0","health_points":100,"coords":[[14,1],[15,1],[15,2],[15,3],[15,4],[15,5],[15,6],[13,7],[14,7],[15,7]]},{"taunt":"gotta go slow","name":"snake3","id":"3","health_points":100,"coords":[[7,16],[7,17],[8,17],[9,17],[10,17],[11,17],[12,17],[13,17],[14,17],[14,18]]}],"height":20,"width":20,"game_id":"gameid","food":[[4,2],[10,5],[17,8],[3,13],[16,15]],"dead_snakes":[]},
-    {"you":"you","turn":1,"snakes":[{"taunt":"gotta go fast","name":"sneakysnake","id":"you","health_points":100,"coords":[]},{"taunt":"gotta go slow","name":"snake0","id":"0","health_points":100,"coords":[[13,1],[14,1],[15,1],[15,2],[15,3],[15,4],[15,5],[15,6],[14,7],[15,7]]},{"taunt":"gotta go slow","name":"snake3","id":"3","health_points":100,"coords":[[7,15],[7,16],[7,17],[8,17],[9,17],[10,17],[11,17],[12,17],[13,17],[14,17]]}],"height":20,"width":20,"game_id":"gameid","food":[[4,2],[10,5],[17,8],[3,13],[16,15]],"dead_snakes":[]},
-    {"you":"you","turn":1,"snakes":[{"taunt":"gotta go fast","name":"sneakysnake","id":"you","health_points":100,"coords":[]},{"taunt":"gotta go slow","name":"snake0","id":"0","health_points":100,"coords":[[12,1],[13,1],[14,1],[15,1],[15,2],[15,3],[15,4],[15,5],[15,6],[15,7]]},{"taunt":"gotta go slow","name":"snake3","id":"3","health_points":100,"coords":[[6,15],[7,15],[7,16],[7,17],[8,17],[9,17],[10,17],[11,17],[12,17],[13,17]]}],"height":20,"width":20,"game_id":"gameid","food":[[4,2],[10,5],[17,8],[3,13],[16,15]],"dead_snakes":[]}
-];
+var paused = true;
 
 var openFile = function(event) {
     var input = event.target;
@@ -25,33 +20,95 @@ var openFile = function(event) {
     var reader = new FileReader();
     reader.onload = function(){
         var text = reader.result;
-        oneTurnData = JSON.parse(text);
-
+        turnData = JSON.parse(text);
+        renderTurn(0)
     };
     reader.readAsText(input.files[0]);
 };
 
-function main() {
-    
+function main() {  
     width = window.innerWidth - 50;
     height = window.innerHeight - 50;
+
+    snakeColours.sort(function() { return 0.5 - Math.random() });
+    snakeFaces.sort(function() { return 0.5 - Math.random() });
 
     tableCreate();
 }
 
 function start() {
-    interID = setInterval(newTurn, 1500);
-    console.log(oneTurnData.length);
+    if (paused) {
+        interID = setInterval(playTurn, interLength)
+        paused = false
+    } else {
+        console.log("Already playing!")
+    }
+}
+function playTurn() {
+    clearCells()
+    renderTurn(turnCounter)
+    turnDisplay(turnCounter)
+    turnCounter++
+    if (turnCounter >= turnData.length) {
+        clearInterval(interID);
+    }
+}
+function turnDisplay(curTurn) {
+    document.getElementById('turnDisplay').innerText = curTurn
 }
 function pause() {
-    clearInterval(interID);
+    clearInterval(interID)
+    paused = true
 }
 function jumpTo() {
-    thisTurn = document.getElementById('thisTurn');
-    turnCounter = thisTurn;
-    console.log(turnCounter);
+    jumpToTurn = document.getElementById('thisTurn').value;
+    console.log("Jumping to "+jumpToTurn)
+    turnCounter = jumpToTurn;
+    clearCells()
+    renderTurn(turnCounter)
+    turnDisplay(turnCounter)
 }
+//Update delay between turn rendering. If currently playing, call setInterval
+function playbackSpeed() {
+    clearInterval(interID)
+    interLength = document.getElementById('playbackSpeed').value
+    console.log("new delay: "+interLength)
+    if (!paused) {
+        interID = setInterval(playTurn, interLength)
+    }
+}
+//Remove all colors from board
+function clearCells() {
 
+    for (let x=0; x < tableSize; x++ ) {
+        for (let y=0; y < tableSize; y++) {
+            let curCell = x+','+y
+            document.getElementById(curCell).style.backgroundColor = "rgb(255,255,255)";
+            document.getElementById(curCell).innerText = "";
+        }
+    }
+}
+//Render the colors for a specific turn
+function renderTurn(turnToRender) {
+    const curTurn = turnData[turnToRender]
+
+    //Add food for new turn
+    for (x in curTurn.food){
+        var kibbles = curTurn.food[x];
+        document.getElementById(kibbles[0]+','+kibbles[1]).style.backgroundColor = "rgb(76, 175, 80)";
+    }
+    //Add snakes for new turn
+    for (x in curTurn.snakes){
+        var curSnake = curTurn.snakes[x];
+        for (k in curSnake.coords){
+            var curCoord = curSnake.coords[k];
+            document.getElementById(curCoord[0]+','+curCoord[1]).style.backgroundColor = snakeColours[x];
+            if (k == 0) {
+                document.getElementById(curCoord[0]+','+curCoord[1]).innerText = snakeFaces[x];
+            }
+        }
+    }
+}
 function tableCreate() {
     
     var body = document.getElementsByTagName("body")[0];  // get body
@@ -102,84 +159,4 @@ function tableCreate() {
     tbl.appendChild(tbdy);  // add table to HTML
     body.appendChild(tbl);
 
-}
-
-function newTurn() {
-    console.log("Woahboi "+turnCounter);
-
-    var thisTurn = oneTurnData[turnCounter];
-
-    //Compare last turn to current turn to remove unused cells
-    if (turnCounter > 0) {
-        var lastTurn = oneTurnData[turnCounter-1];
-
-        // Check if old food still exists
-        for (x in lastTurn.food) {
-            var oldKibbles = lastTurn.food[x];
-            var oldFound = false;
-            
-            for (k in thisTurn.food) {
-                if (oldKibbles == thisTurn.food[k]){oldFound=true; break;}
-            }
-            // if oldKibbles no longer exists, remove its color
-            if (!oldFound) {
-                document.getElementById(oldKibbles[0]+','+oldKibbles[1]).style.backgroundColor = null;
-            }
-        }
-
-        // Check if old Snakes & their coords still exist
-        for (x in lastTurn.snakes) {
-            var oldSnake = lastTurn.snakes[x];
-            var oldSnakeFound = false;
-
-            // Check for this snakes existence
-            for (k in thisTurn.snakes) {
-                if (oldSnake.id == thisTurn.snakes[k].id) {
-                    
-                    // Check if the old coordinates still exist
-                    for (j in oldSnake.coords) {
-                        var oldCoord = oldSnake.coords[j];
-                        var oldCorFound = false;
-
-                        // Check for this coordinate's existence
-                        for (f in thisTurn.snakes[k].coords) {
-                            if (oldCoord == thisTurn.snakes[k].coords[f]){oldCorFound=true; break;}
-                        }
-                        // If coordinate was not found in new coords, remove its color
-                        if (!oldCorFound) {
-                            document.getElementById(oldSnake.coords[j][0]+','+oldSnake.coords[j][1]).style.backgroundColor = null;
-                        }
-                    }
-
-                    oldSnakeFound=true;
-                    break;
-                }
-            }
-            // If snake was not found in new snakes, remove all of its color
-            if (!oldSnakeFound) {
-                for (j in oldSnake.coords) {
-                    document.getElementById(oldSnake.coords[j][0]+','+oldSnake.coords[j][1]).style.backgroundColor = null;
-                }
-            }
-        }
-    }
-
-    //Add data from new turn
-    for (x in thisTurn.food){
-        var kibbles = thisTurn.food[x];
-        document.getElementById(kibbles[0]+','+kibbles[1]).style.backgroundColor = "rgb(76, 175, 80)";
-    }
-    for (x in thisTurn.snakes){
-        var curSnake = thisTurn.snakes[x];
-        for (k in curSnake.coords){
-            var curCoord = curSnake.coords[k];
-            console.log(curCoord);
-            document.getElementById(curCoord[0]+','+curCoord[1]).style.backgroundColor = snakeColours[curSnake.id];
-        }
-    }
-
-    turnCounter++;
-    if (turnCounter >= oneTurnData.length) {
-        clearInterval(interID);
-    }
 }
