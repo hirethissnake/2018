@@ -79,25 +79,62 @@ class State:
         self.state["you"] = name
         return json.dumps(self.state)
 
+    
+    def getNumAlive(self):
+        return len(self.state["snakes"])
+
+
+    def getDead(self):
+        return self.state["dead_snakes"]
+
 
     def kill(self):
-        #TODO: check for other snake collisions - check extend{} length in addition to regular length
-
-        toBeKilled = []
+        toBeKilled = set()
         for snake in self.state["snakes"]:
+
             headPos = snake["coords"][0]
             if headPos in self.state["food"]:
                 self.state["food"].remove(headPos)
+
             if(headPos[0] < 0 or headPos[0] > (self.width - 1) or headPos[1] < 0 or headPos[1] > (self.height - 1)):
-                toBeKilled.append(snake)
+                print("wall hit")
+                toBeKilled.add(snake["name"])
+                continue
 
+            for collider in self.state["snakes"]:
+
+                colliderCoords = collider["coords"]
+
+                if headPos in colliderCoords[1:]:
+                    print("collider coords")
+                    print(collider["coords"])
+                    print(collider["coords"][1:])
+                    toBeKilled.add(snake["name"])
+                    continue
+                    
+                colliderHead = colliderCoords[0]
+                if snake != collider and headPos[0] == colliderHead[0] and headPos[1] == colliderHead[1]:
+                    if len(snake["coords"]) + self.extend[snake["name"]] < len(collider["coords"]) + self.extend[collider["name"]]:
+                        print("collider extend:")
+                        print(len(snake["coords"]) + self.extend[snake["name"]])
+                        print(len(collider["coords"]) + self.extend[collider["name"]])
+                        print(collider["coords"][0])
+                        print(headPos)
+                        toBeKilled.add(snake["name"])
+
+        print(list(toBeKilled))
         for snake in toBeKilled:
-            self.state["dead_snakes"].append(snake)
-            self.state["snakes"].remove(snake)
+            current = [x for x in self.state["snakes"] if x["name"] == snake][0]
+            self.state["dead_snakes"].append(current)
+            self.state["snakes"].remove(current)
 
-    def checkFood(self):
+        return list(toBeKilled)
+
+
+    def checkFood(self): # fix to match numFood from init
         if len(self.state["food"]) == 0:
             self.placeFood(1)
+
 
     def placeFood(self, numFood):
         occupied = self.getOccupied()
@@ -112,6 +149,7 @@ class State:
                         valid = False
             self.state["food"].append(possibleLoc)
             occupied.append(possibleLoc)
+
 
     def getOccupied(self):
         occupied = []

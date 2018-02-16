@@ -10,11 +10,8 @@ from State import State
 
 def runGame(snakesFile):
     #TODO: add health system
-    # add snake collisions
-    # print games to a file when done
-    # make sure game actually stops
     # add robusteness and proper command system
-    # randomly spawn food
+    # randomly spawn right amount of food
     # update taunts
 
     snakeUrls = []
@@ -35,40 +32,38 @@ def runGame(snakesFile):
 
     data = []
     counter = 0
-    while(len(snakes) != 0):
+    while(len(snakes) > 1):
+        
         data.append(json.dumps(state.state))
-        #print(data[0])
+        
         toUpdate = []
+        toRemove = []
         for name in snakes:
-            response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'})
-            if(counter % 10 == 0):
+            response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'}).text            
+            if("DOCTYPE HTML" not in response):
+                toUpdate.append([name, eval(response)["move"]])        
+
+        if(counter % 10 == 0):
                 print("turn: " + str(counter))
             counter += 1
-            try:
-                toUpdate.append([name, eval(response.text)["move"]])
-            except:
-                with open('out.json', 'w') as out:
-                    out.write("[")
-                    out.write(",\n".join(data))
-                    out.write("]")
-                sys.exit(0)
 
         for info in toUpdate:
             state.move(info[0], info[1])
         
-        state.kill()
+        for name in state.kill():
+            snakes.pop(name)
+            
         state.checkFood()
         state.state["turn"] += 1
-        #sys.exit(0)
-        #TODO: update snakes dictionary to remove dead snakes
-        #print(state.state)
-        #print()
+
+    printGame("out.json", data)
 
 
-def printGames(games, p, m):
-    #given games[], print to file/directory p
-    #if m(bool), print each game to a different file
-    return
+def printGame(filename, data):
+    with open(filename, "w") as out:
+        out.write("[")
+        out.write(",\n".join(data))
+        out.write("]")
 
 
 def generateFood(numItems):
