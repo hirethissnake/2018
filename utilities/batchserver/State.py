@@ -122,7 +122,6 @@ class State:
                         print(headPos)
                         toBeKilled.add(snake["name"])
 
-        print(list(toBeKilled))
         for snake in toBeKilled:
             current = [x for x in self.state["snakes"] if x["name"] == snake][0]
             self.state["dead_snakes"].append(current)
@@ -138,7 +137,7 @@ class State:
 
     def placeFood(self, numFood):
         occupied = self.getOccupied()
-        for i in range(0, numFood):
+        for _ in range(0, numFood):
             valid = False
             possibleLoc = None
             while not valid:

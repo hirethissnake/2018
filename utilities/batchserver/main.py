@@ -37,14 +37,13 @@ def runGame(snakesFile):
         data.append(json.dumps(state.state))
         
         toUpdate = []
-        toRemove = []
         for name in snakes:
             response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'}).text            
             if("DOCTYPE HTML" not in response):
                 toUpdate.append([name, eval(response)["move"]])        
 
         if(counter % 10 == 0):
-                print("turn: " + str(counter))
+            print("turn: " + str(counter))
             counter += 1
 
         for info in toUpdate:
