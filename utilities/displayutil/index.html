@@ -1,0 +1,30 @@
+<html>
+    <head>
+      <title>BattleSnake Replay</title>
+      <script src="script.js"></script>
+      <link href="style.css" rel="stylesheet" type="text/css"></style>
+    </head>
+
+    <body onload="main()" style="margin: 20px">
+
+        <div>
+            <input type='file' accept='.json*' onchange='openFile(event)'><br>
+        
+            <button onclick="start()">Play</button>
+            <button onclick="pause()">Pause</button>
+        </div>
+        <div>
+          Jump to a turn: <input type='text' id='thisTurn'>
+          <input type="button" onclick="jumpTo()" value="JUMP">
+        </div>
+        <div>
+          Set playback speed in ms (default 200): <input type='text' id='playbackSpeed'>
+          <input type="button" onclick="playbackSpeed()" value="SET">
+        </div>
+        <div>
+          Current Turn: <div id="turnDisplay">0</div>
+        </div>
+
+    </body>
+  </html>
+  
