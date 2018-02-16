@@ -2,14 +2,8 @@ import json
 from random import randint
 
 class State:
-    def __init__(self, width, height, snakes, numFood):
-        """
-        Initialize the State class.
 
-        param1: integer - width of board
-        param2: integer - height of board
-        param3: integer - number of snakes to create
-        """
+    def __init__(self, width, height, snakes, numFood):
         numSnakes = len(snakes)
         if numSnakes < 1:
             raise ValueError('Need have at least one snake')
@@ -49,7 +43,7 @@ class State:
             self.state["snakes"][i]["coords"].append(possibleLoc)
             occupied.append(possibleLoc)
 
-        self.state["food"] = [] #declar here so that below function call works
+        self.state["food"] = [] #declare here so that below function call works
         self.placeFood(numFood)
 
 
@@ -57,6 +51,7 @@ class State:
         for snake in self.state["snakes"]:
             if snake["name"] != snakeName: continue
 
+            # add new coord to front of list
             currentHead = snake["coords"][0]
             if move == 'up':
                 snake["coords"].insert(0, [sum(x) for x in zip(currentHead, [0,-1])])

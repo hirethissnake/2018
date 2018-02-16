@@ -4,3 +4,4 @@ battlesnake
 .idea
 .vscode/
 utilities/batchserver/out.json
+run.bat

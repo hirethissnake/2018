@@ -1,6 +1,7 @@
 """Server to rapidly simulate games to determine loss trends"""
 
 import sys
+import pickle
 import json
 import time
 import requests
@@ -33,17 +34,23 @@ def runGame(snakesFile):
     state = State(20, 20, list(snakes.keys()), 4)
 
     data = []
+    counter = 0
     while(len(snakes) != 0):
         data.append(json.dumps(state.state))
+        #print(data[0])
         toUpdate = []
         for name in snakes:
             response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'})
-            print(response.text)
+            if(counter % 10 == 0):
+                print("turn: " + str(counter))
+            counter += 1
             try:
                 toUpdate.append([name, eval(response.text)["move"]])
             except:
                 with open('out.json', 'w') as out:
-                    out.write(str(data))
+                    out.write("[")
+                    out.write(",\n".join(data))
+                    out.write("]")
                 sys.exit(0)
 
         for info in toUpdate:
@@ -54,8 +61,8 @@ def runGame(snakesFile):
         state.state["turn"] += 1
         #sys.exit(0)
         #TODO: update snakes dictionary to remove dead snakes
-        print(state.state)
-        print()
+        #print(state.state)
+        #print()
 
 
 def printGames(games, p, m):
