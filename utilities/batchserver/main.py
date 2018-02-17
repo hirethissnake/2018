@@ -8,11 +8,10 @@ import requests
 from State import State
 
 
-def runGame(snakesFile):
+def runGame(snakesFile, gameCounter):
     #TODO:
     # add robusteness and proper command system
     # randomly spawn right amount of food
-    # update taunts
 
     snakeUrls = []
     with open(snakesFile) as f:
@@ -54,7 +53,8 @@ def runGame(snakesFile):
             
         data.append(json.dumps(state.state))
 
-    printGame("out.json", data)
+    printGame("game" + str(gameCounter).zfill(3) + ".json", data)
+    return gameCounter + 1
 
 
 def printGame(filename, data):
@@ -83,5 +83,7 @@ def printGame(filename, data):
 if __name__ == '__main__':
     if len(sys.argv) != 3 or not sys.argv[1].isdigit():
         raise ValueError('Invalid arguments')
+
+    gameCounter = 1
     for i in range(0, int(sys.argv[1])):
-        runGame(sys.argv[2])
+        gameCounter = runGame(sys.argv[2], gameCounter)
