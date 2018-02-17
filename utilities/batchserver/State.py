@@ -79,40 +79,39 @@ class State:
         self.state["you"] = name
         return json.dumps(self.state)
 
-    
-    def getNumAlive(self):
-        return len(self.state["snakes"])
 
-
-    def getDead(self):
-        return self.state["dead_snakes"]
-
-
-    def kill(self):
+    def updateState(self):
         toBeKilled = set()
         for snake in self.state["snakes"]:
 
             headPos = snake["coords"][0]
-            if headPos in self.state["food"]:
+            if headPos in self.state["food"]: # snake eats food
                 self.state["food"].remove(headPos)
+                snake["health_points"] = 100
+
+            snake["health_points"] -= 1 # decrement health and check if dead
+            if(snake["health_points"] == 0):
+                print("ran out of food")
+                toBeKilled.add(snake["name"])
+                continue
 
             if(headPos[0] < 0 or headPos[0] > (self.width - 1) or headPos[1] < 0 or headPos[1] > (self.height - 1)):
                 print("wall hit")
                 toBeKilled.add(snake["name"])
                 continue
 
-            for collider in self.state["snakes"]:
+            for collider in self.state["snakes"]: # check our snake position against others
 
                 colliderCoords = collider["coords"]
 
-                if headPos in colliderCoords[1:]:
+                if headPos in colliderCoords[1:]: # hit body
                     print("collider coords")
                     print(collider["coords"])
                     print(collider["coords"][1:])
                     toBeKilled.add(snake["name"])
                     continue
                     
-                colliderHead = colliderCoords[0]
+                colliderHead = colliderCoords[0] # hit head and this snake is smaller
                 if snake != collider and headPos[0] == colliderHead[0] and headPos[1] == colliderHead[1]:
                     if len(snake["coords"]) + self.extend[snake["name"]] < len(collider["coords"]) + self.extend[collider["name"]]:
                         print("collider extend:")
@@ -122,10 +121,13 @@ class State:
                         print(headPos)
                         toBeKilled.add(snake["name"])
 
-        for snake in toBeKilled:
+        for snake in toBeKilled: # kill snakes here as looping through dict above
             current = [x for x in self.state["snakes"] if x["name"] == snake][0]
             self.state["dead_snakes"].append(current)
             self.state["snakes"].remove(current)
+
+        self.checkFood()
+        self.state["turn"] += 1
 
         return list(toBeKilled)
 

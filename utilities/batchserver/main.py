@@ -9,7 +9,7 @@ from State import State
 
 
 def runGame(snakesFile):
-    #TODO: add health system
+    #TODO:
     # add robusteness and proper command system
     # randomly spawn right amount of food
     # update taunts
@@ -31,10 +31,10 @@ def runGame(snakesFile):
     state = State(20, 20, list(snakes.keys()), 4)
 
     data = []
+    data.append(json.dumps(state.state))
+
     counter = 0
-    while(len(snakes) > 1):
-        
-        data.append(json.dumps(state.state))
+    while(len(snakes) > 1):        
         
         toUpdate = []
         for name in snakes:
@@ -44,16 +44,15 @@ def runGame(snakesFile):
 
         if(counter % 10 == 0):
             print("turn: " + str(counter))
-            counter += 1
+        counter += 1
 
         for info in toUpdate:
             state.move(info[0], info[1])
         
-        for name in state.kill():
+        for name in state.updateState():
             snakes.pop(name)
             
-        state.checkFood()
-        state.state["turn"] += 1
+        data.append(json.dumps(state.state))
 
     printGame("out.json", data)
 
@@ -63,12 +62,6 @@ def printGame(filename, data):
         out.write("[")
         out.write(",\n".join(data))
         out.write("]")
-
-
-def generateFood(numItems):
-    #check to see if a random food item is due to be added
-    return
-
 
 
 ## Accept command inputs ##
