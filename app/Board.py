@@ -149,7 +149,8 @@ showPath                void        Display graphic of best path between nodes
 
         param1: [int, int] - node in the form [x, y]
         """
-
+        if type(u) != 'list':
+            raise ValueError('node should be an array')
         if len(u) != 2:
             raise ValueError('nodes should be in the form [x, y]')
         if u[0] >= self.height or u[0] < 0 or u[1] >= self.width or u[1] < 0:
