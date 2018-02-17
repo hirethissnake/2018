@@ -7,9 +7,6 @@ before_script:
     - pip install pytest
 script:
     - coverage run --source app/ -m tests.test_suite -v
-    - set -e
-    - coverage report --fail-under=75
-    - python -m pytest tests/
-    - set +e
+    - python -m unittest discover
 after_success:
     - codecov --token=f1ac9529-ba99-4004-9b1c-98e1e55aea27 
