@@ -3,3 +3,5 @@
 battlesnake
 .idea
 .vscode/
+.coverage
+htmlcov/
