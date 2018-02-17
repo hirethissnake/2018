@@ -9,10 +9,7 @@ import bottle
 import time
 from Game import Game
 
-gameDic = dict()
-
-print "main.py is now running"
-
+gameDic = {}
 
 @bottle.route('/static/<path:path>')
 def static(path):
@@ -55,7 +52,6 @@ def start():
     }
 
     # log and return
-    print sendingData
     return sendingData
 
 @bottle.post('/move')
@@ -88,20 +84,16 @@ def move():
         print '  To avoid collateral damage to other games, responding with \
         default move'
         nextMove = 'up'
-        #nextTaunt = 'yeaboi'
 
     sendingData = {
         'move': nextMove,
         'taunt': 'please no'
-    }#nextTaunt
+    }
 
-    # log and return
-    print sendingData
     return sendingData
 
 
 # Expose WSGI app (so gunicorn can find it)
 APPLICATION = bottle.default_app()
 if __name__ == '__main__':
-
     bottle.run(APPLICATION, host=os.getenv('IP', '0.0.0.0'), port=os.getenv('PORT', '8080'))
