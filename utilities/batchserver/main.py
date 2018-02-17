@@ -1,14 +1,15 @@
 """Server to rapidly simulate games to determine loss trends"""
 
 import sys
-import pickle
+import os
 import json
-import time
 import requests
+from optparse import OptionParser
+
 from State import State
 
 
-def runGame(snakesFile, gameCounter):
+def runGame(snakesFile, gameCounter, outputDirectory):
     #TODO:
     # add robusteness and proper command system
     # randomly spawn right amount of food
@@ -41,7 +42,8 @@ def runGame(snakesFile, gameCounter):
             if("DOCTYPE HTML" not in response):
                 toUpdate.append([name, eval(response)["move"]])  
             else:
-                toUpdate.append([name, "up"])      
+                toUpdate.append([name, "up"])     
+                print(name + " DID NOT RESPOND - MOVING UP") 
 
         if(counter % 10 == 0):
             print("turn: " + str(counter))
@@ -55,12 +57,15 @@ def runGame(snakesFile, gameCounter):
             
         data.append(json.dumps(state.state))
 
-    printGame("game" + str(gameCounter).zfill(3) + ".json", data)
+    printGame(outputDirectory, "game" + str(gameCounter).zfill(3) + ".json", data)
     return gameCounter + 1
 
 
-def printGame(filename, data):
-    with open(filename, "w") as out:
+def printGame(dir, filename, data):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+
+    with open(dir + "/" + filename, "w") as out:
         out.write("[")
         out.write(",\n".join(data))
         out.write("]")
@@ -83,9 +88,13 @@ def printGame(filename, data):
 ## Build in local snakes and web snakes ##
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3 or not sys.argv[1].isdigit():
-        raise ValueError('Invalid arguments')
+    #if len(sys.argv) != 3 or not sys.argv[1].isdigit():
+    #    raise ValueError('Invalid arguments')
+
+    parser = OptionParser()
+    parser.add_option("-d", "--directory", dest="outputDirectory", help="Output directory for saved game.json files")
+    options, args = parser.parse_args()
 
     gameCounter = 1
     for i in range(0, int(sys.argv[1])):
-        gameCounter = runGame(sys.argv[2], gameCounter)
+        gameCounter = runGame(sys.argv[2], gameCounter, options.outputDirectory)
