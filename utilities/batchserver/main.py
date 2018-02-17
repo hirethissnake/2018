@@ -39,7 +39,9 @@ def runGame(snakesFile, gameCounter):
         for name in snakes:
             response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'}).text            
             if("DOCTYPE HTML" not in response):
-                toUpdate.append([name, eval(response)["move"]])        
+                toUpdate.append([name, eval(response)["move"]])  
+            else:
+                toUpdate.append([name, "up"])      
 
         if(counter % 10 == 0):
             print("turn: " + str(counter))
