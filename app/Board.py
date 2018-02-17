@@ -9,7 +9,6 @@ try:
     from appJar import gui
 except ImportError:
     print 'Failed to import appJar'
-from sortedcollections import ValueSortedDict
 
 
 class Board:
@@ -86,12 +85,12 @@ showPath                void        Display graphic of best path between nodes
                     self.graph.add_edge(str(row) + ',' + str(col), str(row - 1) +
                                         ',' + str(col), weight=50.0)
 
-        self.dictionary = ValueSortedDict()
+        self.dictionary = {}
         for row in range(height):  # populate dictionary
             for col in range(width):
                 self.dictionary[str(row) + ',' + str(col)] = 50.0
 
-        self.edges = dict()
+        self.edges = {}
         for row in range(height):  # save edges incident to each vertex
             for col in range(width):
                 vertexId = self.graph.vs.find(str(row) + ',' + str(col))
@@ -148,7 +147,7 @@ showPath                void        Display graphic of best path between nodes
 
         param1: [int, int] - node in the form [x, y]
         """
-        if type(u) != 'list':
+        if not isinstance(u, (list,)):
             raise ValueError('node should be an array')
         if len(u) != 2:
             raise ValueError('nodes should be in the form [x, y]')
@@ -432,7 +431,7 @@ showPath                void        Display graphic of best path between nodes
 
         self.checkInt(index)  # comment this out for speed
 
-        nodeString = self.dictionary.iloc[index]
+        nodeString = sorted(self.dictionary, key=self.dictionary.get)[index]
         return [int(x) for x in nodeString.split(',')]
 
 
@@ -447,7 +446,7 @@ showPath                void        Display graphic of best path between nodes
 
         self.getNodesWithPriorityErrorCheck(start, end)  # comment for speed
 
-        nodesString = self.dictionary.iloc[start : end + 1]
+        nodesString = sorted(self.dictionary, key=self.dictionary.get)[start : end + 1]
         nodesArray = [self.stringAsNode(x) for x in nodesString]
 
         return nodesArray
