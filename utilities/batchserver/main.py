@@ -1,11 +1,7 @@
 """Server to rapidly simulate games to determine loss trends"""
 
-import os
-import json
-import requests
-import shutil
+import os, glob, json, requests, shutil
 from optparse import OptionParser 
-
 from State import State
 
 
@@ -99,9 +95,12 @@ def main():
     elif not options.numGames:
         printError("Number of games", parser)
 
-    if os.path.exists(options.outputDirectory): # confirm exists and clear
-        shutil.rmtree(options.outputDirectory)
-    os.makedirs(options.outputDirectory)
+    dirName = options.outputDirectory
+    if os.path.exists(dirName):
+        for file in glob.glob(dirName + "/game*.json"):
+            os.remove(file)
+    else:
+        os.makedirs(options.outputDirectory)
 
     for gameNum in range(1, int(options.numGames) + 1):
         runGame(gameNum, options.outputDirectory, int(options.numFood), options.snakeFile)
