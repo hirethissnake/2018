@@ -9,7 +9,7 @@ from optparse import OptionParser
 from State import State
 
 
-def runGame(snakesFile, gameCounter, outputDirectory):
+def runGame(snakesFile, gameCounter, outputDirectory, numFood):
     #TODO:
     # add robusteness and proper command system
     # randomly spawn right amount of food
@@ -28,7 +28,7 @@ def runGame(snakesFile, gameCounter, outputDirectory):
             differentiationCounter += 1
         snakes[name] = url + "/move"    
 
-    state = State(20, 20, list(snakes.keys()), 4)
+    state = State(20, 20, list(snakes.keys()), numFood)
 
     data = []
     data.append(json.dumps(state.state))
@@ -72,20 +72,14 @@ def printGame(dir, filename, data):
 
 
 ## Accept command inputs ##
-#-s 'game state to run from'
-#   if not present, use default
-#-n 'number of games to run'
-#   will have hard upper limit
-#-p 'path for game outcomes'
-#   if not present, use default
-#-m 'print separate files for each game'
-#   if not present, all games in one file
+#-d 'directory for game outcomes'
 #-f 'number of food items at any one time'
-#   if not present, use default
+#-n 'number of games to run'
+#-s 'file containing urls to snakes'
 
-## Generate game state to send to snakes ##
-## Given a move, modify the game state to match ##
-## Build in local snakes and web snakes ##
+def printError(option):
+    print("Type 'python main.py -h' to get help")
+    parser.error(option + " not given")
 
 if __name__ == '__main__':
     #if len(sys.argv) != 3 or not sys.argv[1].isdigit():
@@ -93,8 +87,14 @@ if __name__ == '__main__':
 
     parser = OptionParser()
     parser.add_option("-d", "--directory", dest="outputDirectory", help="Output directory for saved game.json files")
+    parser.add_option("-f", "--food", dest="numFood", help="Amount of food on board at any given time")
     options, args = parser.parse_args()
+
+    if not options.outputDirectory:
+        printError("Output directory")
+    elif not options.numFood:
+        printError("Amount of food")
 
     gameCounter = 1
     for i in range(0, int(sys.argv[1])):
-        gameCounter = runGame(sys.argv[2], gameCounter, options.outputDirectory)
+        gameCounter = runGame(sys.argv[2], gameCounter, options.outputDirectory, int(options.numFood))

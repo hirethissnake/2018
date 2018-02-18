@@ -12,6 +12,7 @@ class State:
 
         self.width = width  # declare size of board
         self.height = height
+        self.numFood = numFood
 
         self.state = {
         	"you": "",
@@ -133,8 +134,11 @@ class State:
 
 
     def checkFood(self): # fix to match numFood from init
-        if len(self.state["food"]) == 0:
-            self.placeFood(1)
+        current = len(self.state["food"])
+        desired = self.numFood
+
+        if current < desired:
+            self.placeFood(desired - current)
 
 
     def placeFood(self, numFood):
