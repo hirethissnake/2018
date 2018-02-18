@@ -48,7 +48,7 @@ class TestMain(unittest.TestCase):
         self.assertIn('name', responseData)
         self.assertIn('taunt', responseData)
 
-    def test_optional_start_reponses(self):
+    def test_optional_start_responses(self):
         """
         Test optional responses to '/start' POST
         """
