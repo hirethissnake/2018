@@ -437,7 +437,7 @@ showPath                void        Display graphic of best path between nodes
 
     def getNodesWithPriority(self, start, end):
         """
-        Return vertex name with priority index.
+        Return vertexes in order of highest (start) to lowest (end) priority.
 
         param1: int - start index to return priority
         param2: int - end index to return priority
@@ -449,7 +449,7 @@ showPath                void        Display graphic of best path between nodes
         nodesString = sorted(self.dictionary, key=self.dictionary.get)[start : end + 1]
         nodesArray = [self.stringAsNode(x) for x in nodesString]
 
-        return nodesArray
+        return nodesArray[::-1]
 
 
     def getNodesWithPriorityErrorCheck(self, start, end):
@@ -479,7 +479,7 @@ showPath                void        Display graphic of best path between nodes
 
     def countNodeWeightCopies(self, u):
         """
-        Return False if weight appears more than once in the graph.
+        Returns the number of nodes with the same weight as the given node (minimum 1).
 
         param1: [int, int] - node in the form [x, y]
         return: int - Returns number of other nodes with same weight
