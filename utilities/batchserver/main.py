@@ -74,7 +74,7 @@ def printGame(dir, filename, data):
 ## Accept command inputs ##
 #-d 'directory for game outcomes'
 #-f 'number of food items at any one time'
-#-n 'number of games to run'
+#-g 'number of games to run'
 #-s 'file containing urls to snakes'
 
 def printError(option):
@@ -82,19 +82,19 @@ def printError(option):
     parser.error(option + " not given")
 
 if __name__ == '__main__':
-    #if len(sys.argv) != 3 or not sys.argv[1].isdigit():
-    #    raise ValueError('Invalid arguments')
-
     parser = OptionParser()
     parser.add_option("-d", "--directory", dest="outputDirectory", help="Output directory for saved game.json files")
     parser.add_option("-f", "--food", dest="numFood", help="Amount of food on board at any given time")
+    parser.add_option("-g", "--games", dest="numGames", help="Number of games to simulate")
     options, args = parser.parse_args()
 
     if not options.outputDirectory:
         printError("Output directory")
     elif not options.numFood:
         printError("Amount of food")
+    elif not options.numGames:
+        printError("Number of games")
 
     gameCounter = 1
-    for i in range(0, int(sys.argv[1])):
-        gameCounter = runGame(sys.argv[2], gameCounter, options.outputDirectory, int(options.numFood))
+    for i in range(0, int(options.numGames)):
+        gameCounter = runGame(sys.argv[1], gameCounter, options.outputDirectory, int(options.numFood))
