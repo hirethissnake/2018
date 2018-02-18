@@ -185,23 +185,11 @@ class TestBoard(unittest.TestCase):
         for coord in coords:
             self.assertEquals(bd.getWeight(coord), 50.0 * fraction)
 
-    def test_divide_weight_even_digit(self):
+    def test_divide_weight(self):
         """
         Tests dividing node weight using an even divisor.
         """
         divisor = 4
-        bd = Board(30, 30)
-        coords = [[29, 3], [16, 22], [6, 2]]
-        for coord in coords:
-            bd.divideWeight(coord, divisor)
-        for coord in coords:
-            self.assertAlmostEquals(bd.getWeight(coord), 50.0 / divisor, places=4)
-
-    def test_divide_weight_odd_digit(self):
-        """
-        Tests dividing node weight using an odd divisor.
-        """
-        divisor = 3
         bd = Board(30, 30)
         coords = [[29, 3], [16, 22], [6, 2]]
         for coord in coords:
@@ -244,22 +232,23 @@ class TestBoard(unittest.TestCase):
         for coord in coords:
             self.assertEquals(bd.getWeight(coord), 50.0 * fraction)
 
-    def test_divide_many_nodes_even_digit(self):
+    def test_divide_many_weights(self):
         """
-        Tests dividing many nodes weights using an even divisor.
+        Tests dividing many nodes weights using an odd divisor.
         """
-        divisor = 4
+        divisor = 3
         bd = Board(30, 30)
         coords = [[29, 3], [16, 22], [6, 2]]
         bd.modifyWeights('/', coords, divisor)
         for coord in coords:
             self.assertAlmostEquals(bd.getWeight(coord), 50.0 / divisor, places=4)
 
-    def test_divide_many_nodes_odd_digit(self):
+    def test_divide_many_weights_cleanly(self):
         """
-        Tests dividing many nodes weights using an odd divisor.
+        Tests dividing many nodes weights using a divisor that cleanly divides the weight.
+        i.e. weight % divisor = 0
         """
-        divisor = 3
+        divisor = 5
         bd = Board(30, 30)
         coords = [[29, 3], [16, 22], [6, 2]]
         bd.modifyWeights('/', coords, divisor)
