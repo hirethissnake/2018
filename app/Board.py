@@ -7,10 +7,8 @@ import colorsys
 import igraph
 try:
     from appJar import gui
-    print 'Importing appJar'
 except ImportError:
-    print 'Did not import appJar'
-from sortedcollections import ValueSortedDict
+    print 'Failed to import appJar'
 
 
 class Board:
@@ -87,12 +85,12 @@ showPath                void        Display graphic of best path between nodes
                     self.graph.add_edge(str(row) + ',' + str(col), str(row - 1) +
                                         ',' + str(col), weight=50.0)
 
-        self.dictionary = ValueSortedDict()
+        self.dictionary = {}
         for row in range(height):  # populate dictionary
             for col in range(width):
                 self.dictionary[str(row) + ',' + str(col)] = 50.0
 
-        self.edges = dict()
+        self.edges = {}
         for row in range(height):  # save edges incident to each vertex
             for col in range(width):
                 vertexId = self.graph.vs.find(str(row) + ',' + str(col))
@@ -149,7 +147,8 @@ showPath                void        Display graphic of best path between nodes
 
         param1: [int, int] - node in the form [x, y]
         """
-
+        if not isinstance(u, (list,)):
+            raise ValueError('node should be an array')
         if len(u) != 2:
             raise ValueError('nodes should be in the form [x, y]')
         if u[0] >= self.height or u[0] < 0 or u[1] >= self.width or u[1] < 0:
@@ -432,13 +431,13 @@ showPath                void        Display graphic of best path between nodes
 
         self.checkInt(index)  # comment this out for speed
 
-        nodeString = self.dictionary.iloc[index]
+        nodeString = sorted(self.dictionary, key=self.dictionary.get)[index]
         return [int(x) for x in nodeString.split(',')]
 
 
     def getNodesWithPriority(self, start, end):
         """
-        Return vertex name with priority index.
+        Return vertexes in order of highest (start) to lowest (end) priority.
 
         param1: int - start index to return priority
         param2: int - end index to return priority
@@ -447,10 +446,10 @@ showPath                void        Display graphic of best path between nodes
 
         self.getNodesWithPriorityErrorCheck(start, end)  # comment for speed
 
-        nodesString = self.dictionary.iloc[start : end + 1]
+        nodesString = sorted(self.dictionary, key=self.dictionary.get)[start : end + 1]
         nodesArray = [self.stringAsNode(x) for x in nodesString]
 
-        return nodesArray
+        return nodesArray[::-1]
 
 
     def getNodesWithPriorityErrorCheck(self, start, end):
@@ -480,7 +479,7 @@ showPath                void        Display graphic of best path between nodes
 
     def countNodeWeightCopies(self, u):
         """
-        Return False if weight appears more than once in the graph.
+        Returns the number of nodes with the same weight as the given node (minimum 1).
 
         param1: [int, int] - node in the form [x, y]
         return: int - Returns number of other nodes with same weight
@@ -621,48 +620,3 @@ showPath                void        Display graphic of best path between nodes
                     app.setLabelBg(nodeName, hexCode)
 
         app.go() # show window
-
-
-    def printDict(self):
-        """
-        Print dictionary.
-        """
-
-        print self.dictionary
-
-
-
-if __name__ == '__main__':
-    g = Board(20, 20)
-    g.setWeights([[0, 0], [0, 1], [0, 2], [1, 2], [2, 2], [2, 1], [2, 0], [1, 0]], 0)
-    g.setEdges()
-    print g.optimumPath([3, 3], [1, 1])
-    print g.optimumPathLength([3, 3], [1, 1]) == float("inf")
-    g.showWeights(True, True)
-    """g.setWeight([0, 5], 0)
-    g.setWeight([1, 5], 0)
-    g.setWeight([2, 5], 0)
-    g.setWeight([3, 5], 0)
-    g.setWeight([1, 3], 99.9)
-    g.setWeight([4, 5], 100)
-    g.setWeights([[1, 1], [2, 1]], [0.2, 0.2])
-    print g.optimumPath([0, 0], [6, 4])
-    #print g.getNodesWithPriority(0, 1)
-    #print g.isNodeWeightUnique([0, 2])
-    #print g.countNodeWeightCopies([2, 2])
-    #g.showWeights(True, False)
-    #print g.getWeight([0, 1])
-    #g.multiplyWeight([2, 0], 1)
-    #print g.getWeight([2, 0])
-    #g.sortNames()
-    #print g.dictionary
-    #g.show(True, True)
-    print g.getWeight([3, 5])
-    print g.getNodeWithPriority(0)
-    print g.getNodesWithPriority(0, 1)
-    #g.showWeights(True, True)
-    g.averageWeights(20)
-    g.showPath([0, 0], [0, 10])
-    #g.showWeights(True, True)"""
-    #print g.optimumPath([11, 7], [0, 0])
-    #print g.graph

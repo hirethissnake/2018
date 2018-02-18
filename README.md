@@ -2,9 +2,7 @@
 [![codecov](https://codecov.io/gh/phildenhoff/hirethissnake/branch/master/graph/badge.svg?token=loYR0W8K2L)](https://codecov.io/gh/phildenhoff/hirethissnake) [![Build
 Status](https://travis-ci.com/phildenhoff/hirethissnake.svg?token=zfsf2J47jwdz7GuKxCSd&branch=master)](https://travis-ci.com/phildenhoff/hirethissnake)
 
-An Battlesnake AI implementation based heavily on graphing. Written by Phil Denhoff, Daniel Frankcom, Eric Showers, Kyle Thorpe, and Alex Welsh-Piedrahita, on Python 3.5.
-
-Current feature list is in the `features.md` file. 
+A Battlesnake AI based heavily on graphing algorithms. Written in Python 3.7 by Daniel Frankcom, Eric Showers, Kyle Thorpe, and Phil Denhoff, with contributions from Alex Welsh-Piedrahita.
 
 ### Installation
 
@@ -12,16 +10,16 @@ Current feature list is in the `features.md` file.
 
 You'll have to install [Docker](https://www.docker.com/) yourself, however once
 that is done installation and execution is relatively simple. The basic concept
-is that you install a Docker container which has all the required files
-built into it, so you don't have to worry about having the right version of
-Python on this project, and another project, all at once.
+is that you install a Docker container which has all the required environment to
+run this project without installing a different version of Python, plus all the
+required packages.
 
-For now, you'll have to *build* the docker image on your local machine - soon
-you'll (hopefully) be able to build to container pre-built for you.
+For now, you'll have to build the docker image on your local machine - soon
+you'll (hopefully) be able to download a pre-built image.
 
 First, git clone this repository to your local machine (using command line or
 a GUI). In command line, traverse to the the directory. Then build the docker
-image.
+image using this command
 
 ```
 docker build -t hirethissnake .
@@ -31,6 +29,7 @@ docker build -t hirethissnake .
 image, -t designates the name of the image, and we use '.' to say 'look for
 a Dockerfile in the current folder'.
 
+Go to [Running](#Running) to see how to use the program.
 
 #### Script - Linux Only
 
@@ -49,42 +48,22 @@ chmod +x ./install.sh
 ./install.sh
 ```
 
-#### Unsupported / Outdated
-
-To run the server on Windows, on Python 2.7, you required the Microsoft Visual
-C++ compiler available here: [aka.ms/vcpython27](http://aka.ms/vcpython27).
-
-The required Python packages are listed in `requirements.txt`. They can be batch installed, as an administrator (use sudo), with
-
-```
-pip install -r requirements.txt
-```
-
-and python-igraph can be installed by following instructions at
-[python-igraph install](http://igraph.org/python/#pyinstall). For Windows, use Christoph Gohlke's unofficial installers (pick \*-cp27), and
-
-```
-python -m pip install /path/to/igraph.whl
-```
-
 ### Running
 
 #### Docker
 Following the successful completion of `docker build`, we will need to actually
 run the container with our current code. One of the issues is that we want
-a constant base-system (Python with required packages) but constantly changing
-files. We manage this by mounting a *volume* a volume in docker. Issue this
-command:
+a constant environment (Python with required packages) but constantly changing
+source code. We manage this by mounting a volume in docker. Run this command:
 
 **Linux / Mac**
 ```
-docker run -p 8080:8080 -v$(pwd)/app:/data/app hirethissnake python
-/data/app/main.py
+docker run -p 8080:8080 -v $(pwd)/app:/data/app hirethissnake python /data/app/main.py
 ```
 
 **Windows - Command Prompt**
 ```
-docker run -p 8080:8080 -v%cd%/app:/data/app hirethissnake python /data/app/main.py
+docker run -p 8080:8080 -v %cd%/app:/data/app hirethissnake python /data/app/main.py
 ```
 
 **Windows - Power Shell**
@@ -103,7 +82,7 @@ In a list:
  - -p 4000:8080 : Pass all data from port 4000 on the host computer into the
    docker image on port 8080, and vice-versa. 4000 can be changed on the CLI,
 but 8080 is the port that main.py executes on.
- - -v$(pwd)/app:/data/app : (**Linux**) The command is roughly the same on
+ - -v $(pwd)/app:/data/app : (**Linux**) The command is roughly the same on
    Windows. $(pwd) == %cd%, and returns the current location of the terminal.
 -v tells Docker to mount the folder before the colon (":") from the host
 computer to the folder after the colon on the Docker image. In this way, files
@@ -112,8 +91,7 @@ run the command, instead of having to re-build the image.
  - hirethissnake : the name of the image. This can be changed, and if you have
    many images, should be changed.
  - python /data/app/main.py : This command is passed along to the Docker image,
-   and is executed inside its environment. It runs the
-server.
+   and is executed inside its environment. It runs the server.
 
 You can now make any changes you'd like to the local files in ./app and then
 run the `docker run` command above, and see those changes represented.
@@ -129,4 +107,4 @@ and then test the client in your browser: [http://localhost:8080](http://localho
 
 ## Questions?
 
-Email [phildenhoff@gmail.com](mailto:phildenhoff@gmail.com).
+Please email any questions you have to [phildenhoff@gmail.com](mailto:phildenhoff@gmail.com) and he'll make sure they get to the right person.
