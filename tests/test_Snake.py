@@ -87,12 +87,16 @@ class TestSnake(unittest.TestCase):
         s1.update(updateParams)
 
         headPosition_expected = updateParams['coords'][0]
+        tailPosition_expected = updateParams['coords'][-1]
+        positions_expected = updateParams['coords']
         health_expected = updateParams['health_points']
         length_expected = len(updateParams['coords'])
 
         self.assertEqual(s1.getHeadPosition(), headPosition_expected)
         self.assertEqual(s1.getHealth(), health_expected)
         self.assertEqual(s1.getSize(), length_expected)
+        self.assertEqual(s1.getTailPosition(), tailPosition_expected)
+        self.assertEqual(s1.getAllPositions(), positions_expected)
 
         updateParams = {
             'coords': [
