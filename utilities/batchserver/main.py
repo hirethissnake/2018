@@ -9,10 +9,7 @@ from optparse import OptionParser
 from State import State
 
 
-def runGame(snakesFile, gameCounter, outputDirectory, numFood):
-    #TODO:
-    # add robusteness and proper command system
-    # randomly spawn right amount of food
+def runGame(gameCounter, outputDirectory, numFood, snakesFile):
 
     snakeUrls = []
     with open(snakesFile) as f:
@@ -58,7 +55,6 @@ def runGame(snakesFile, gameCounter, outputDirectory, numFood):
         data.append(json.dumps(state.state))
 
     printGame(outputDirectory, "game" + str(gameCounter).zfill(3) + ".json", data)
-    return gameCounter + 1
 
 
 def printGame(dir, filename, data):
@@ -85,6 +81,7 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option("-d", "--directory", dest="outputDirectory", help="Output directory for saved game.json files")
     parser.add_option("-f", "--food", dest="numFood", help="Amount of food on board at any given time")
+    parser.add_option("-s", "--snakes", dest="snakeFile", help="File containing snake URLs")
     parser.add_option("-g", "--games", dest="numGames", help="Number of games to simulate")
     options, args = parser.parse_args()
 
@@ -92,9 +89,10 @@ if __name__ == '__main__':
         printError("Output directory")
     elif not options.numFood:
         printError("Amount of food")
+    elif not options.snakeFile:
+        printError("Snake file")
     elif not options.numGames:
         printError("Number of games")
 
-    gameCounter = 1
-    for i in range(0, int(options.numGames)):
-        gameCounter = runGame(sys.argv[1], gameCounter, options.outputDirectory, int(options.numFood))
+    for gameNum in range(1, int(options.numGames) + 1):
+        runGame(gameNum, options.outputDirectory, int(options.numFood), options.snakeFile)
