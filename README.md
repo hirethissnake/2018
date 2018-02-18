@@ -99,11 +99,26 @@ run the `docker run` command above, and see those changes represented.
 #### Manually
 To run the server, execute
 
-```python
+```
 python app/main.py
 ```
 
 and then test the client in your browser: [http://localhost:8080](http://localhost:8080)
+
+#### Docker Compose
+For advanced users, we have included a `docker-compose.yml` file which is currently set up to pit 3 of our snakes against each other.
+
+The primary usecase for this is currently using the included batch game server found at `utilities/batchserver/`. The `docker-compose.yml` file can easily be modified to run 1 snake, or for that matter any number of snakes providing the user has a basic understanding of the Docker Compose syntax. Additionally, it is not directly tied to the batch server in any way, and simply makes the various snake URLs available for access however you see fit. 
+
+In order to run the snake in this manner, [Docker Compose](https://docs.docker.com/compose/) must be installed.
+
+First, build the snake image as instructed in the [Installation](#installation) section.
+
+Then run the following command to start the snakes
+
+```
+docker-compose up
+```
 
 ## Questions?
 
