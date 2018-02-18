@@ -364,7 +364,7 @@ class TestBoard(unittest.TestCase):
         Path is expected to be `coords`.
         """
         bd = Board(5, 5)
-        coords = [[0, 0], [0, 1], [1, 0], [2, 0], [3, 0]]
+        coords = [[0, 1], [0, 0], [1, 0], [2, 0], [3, 0]]
         start = [0, 2]
         end = [4, 0]
         ideal_path = [start] + coords + [end]
