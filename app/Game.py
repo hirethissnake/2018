@@ -65,7 +65,6 @@ class Game:
 
     def showBoard(self):
         """Use to show board with weight and colours """
-        print "Running showBoard"
         self.weightGrid.showWeights(True, True)
 
 
@@ -74,14 +73,14 @@ class Game:
 
         self.weightGrid.resetWeights()
 
-        # RUN WEIGHTING ALGORITHMS HERE
+        # RUN WEIGHTING ALGORITHMS HERE vvv
 
         self.weightNotHitSnakes()
         self.weightFood()
         self.weightSmallSnakes()
         self.weightLargeSnakes()
 
-        # RUN WEIGHTING ALGORITHMS HERE
+        # RUN WEIGHTING ALGORITHMS HERE ^^^
 
         self.weightGrid.setEdges()
         # self.weightGrid.averageWeights(5)
@@ -127,8 +126,6 @@ class Game:
 
 
         nextMove = self.weightEnclosedSpaces(target)
-        print "Following path: " + str(self.weightGrid.optimumPath(usSnake.getHeadPosition(),\
-        nextMove))
         return self.convertNodeToDirection(nextMove, self.you)
 
     def getTaunt(self):
@@ -140,7 +137,7 @@ class Game:
 
         nextTaunt = random.choice(taunts)
 
-        #If a snake died last turn, taunt them and clear the newDead variable
+        # If a snake died last turn, taunt them and clear the newDead variable
         if self.newDead != False:
             deadSnake = self.deadSnakes[self.newDead]
             nextTaunt = 'RIP ' + deadSnake['name'] + ', turn 0 -> turn ' + str(self.turn - 1)
@@ -154,7 +151,6 @@ class Game:
         # pylint: disable=E1121
 
         for s in self.snakes:
-            print s
             positions = self.snakes[s].getAllPositions()
             head = positions[0]
             tail = positions[-1]
@@ -185,20 +181,16 @@ class Game:
         shortestPath = sys.maxint
         oursnake = self.snakes[self.you]
         head = oursnake.getHeadPosition()
-        health = oursnake.getHealth()
+        # health = oursnake.getHealth()
         for foodCoords in self.food:
             pathLength = len(self.weightGrid.optimumPath(head, foodCoords))
             if pathLength < shortestPath:
                 shortestPath = pathLength
                 #closestFoodCoord = foodCoords
 
-
             #foodCoord += 1
-            foodWeight = 100# - health - pathLength # this will change based on
-
-                                                   # health decrementation
+            foodWeight = 100# - health - pathLength # this will change based on health decrementation
             self.weightGrid.setWeight(foodCoords, foodWeight)
-
 
 
     def weightSmallSnakes(self):
@@ -263,8 +255,6 @@ class Game:
         return newCoordinates
 
 
-
-
     def weightLargeSnakes(self):
         """Negativly weight squares where larger snake heads could move to next round"""
 
@@ -299,6 +289,7 @@ class Game:
                     else:
                         self.weightGrid.setWeights([[x, y+1]], 0)
 
+
     def weightSafeTails(self):
         #TODO
         #For all snakes whose head is not adjacent to a food:
@@ -317,13 +308,13 @@ class Game:
 
                 #Save posible moves that are within the board (including body)
                 if (headX - 1) >= 0:
-                    n.append([headX-1, headY])
+                    moveOptions.append([headX - 1, headY])
                 if (headX + 1) < self.width:
-                    n.append([headX+1, headY])
+                    moveOptions.append([headX + 1, headY])
                 if (headY + 1) < self.height:
-                    n.append([headX, headY+1])
+                    moveOptions.append([headX, headY + 1])
                 if (headY - 1) >= 0:
-                    n.append([headX, headY-1])
+                    moveOptions.append([headX, headY - 1])
 
                 #If any possible move is to food, tail is not safe
                 for coords in moveOptions:
@@ -348,7 +339,6 @@ class Game:
         self.weightGrid.setWeight(tailPos, 1)
         self.weightGrid.setEdges()
         if self.weightGrid.optimumPathLength(u, tailPos) != float('inf'):
-            print "Did not run weightEnclosedSpaces"
             return path[1]
         us_id = self.you
         for snk in self.snakes: #Set weight of all possible next moves of other snakes to 0.
@@ -395,7 +385,6 @@ class Game:
                 dont = True
         self.weightGrid.setWeights(n, 1)
         if dont:
-            print "Switched directions from weightEnclosedSpaces"
             return otherOptions[0]
         return path[1]
         #set other snak eotpions to 1
@@ -448,10 +437,3 @@ class Game:
             return 'up'
         else:
             raise ValueError('node must be adjacent')
-
-# Example code testing
-if __name__ == '__main__':
-    INITDATA = {"width": 20, "height": 20, "game_id": "b1dadee8-a112-4e0e-afa2-2845cd1f21aa"}
-    b = Game(INITDATA)
-    b.weightGrid.showWeights(True, True)
-    print b.getNextMove()
