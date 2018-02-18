@@ -3,7 +3,6 @@ Test the Board class.
 """
 #!/usr/bin/python
 import unittest
-import random
 from app.Board import Board
 
 class TestBoard(unittest.TestCase):
@@ -43,8 +42,8 @@ class TestBoard(unittest.TestCase):
         """
         Tests the Board init function initial weighting.
         """
-        width = random.randint(5, 50)
-        height = random.randint(5, 50)
+        width = 40
+        height = 40
         bd = Board(width, height)
         for y in range(height):
             for x in range(width):
@@ -96,11 +95,12 @@ class TestBoard(unittest.TestCase):
         height = 30
         width = 30
         bd = Board(width, height)
-        for _ in range(random.randint(0, height * width)):
-            try:
-                bd.checkNode([random.randint(0, width - 1), random.randint(0, height - 1)])
-            except ValueError:
-                self.fail(msg="Valid node raised ValueError")
+        for x in range(width):
+            for y in range(height):
+                try:
+                    bd.checkNode([x, y])
+                except ValueError:
+                    self.fail(msg="Valid node raised ValueError")
 
     def test_check_node_invalid_bound(self):
         """
@@ -114,6 +114,7 @@ class TestBoard(unittest.TestCase):
         self.assertRaises(ValueError, bd.checkNode, [height + 1, width / 2])    # directly above
         self.assertRaises(ValueError, bd.checkNode, [height / 2, width + 1])    # right of
         self.assertRaises(ValueError, bd.checkNode, [height + 1, width + 1])    # below
+        self.assertRaises(ValueError, bd.checkNode, [height / 2, -1])
 
     def test_check_node_invalid_format(self):
         """
@@ -129,11 +130,11 @@ class TestBoard(unittest.TestCase):
         Tests setting and getting node weight.
         """
         bd = Board(30, 30)
-        for _ in range(random.randint(0, 30 * 30)):
-            weight = random.randint(0, 100 - 1)
-            coords = [random.randint(0, 30 - 1), random.randint(0, 30 - 1)]
-            bd.setWeight(coords, weight)
-            self.assertEquals(bd.getWeight(coords), weight)
+        coords = [[12, 4], [0, 27], [8, 12], [4, 16], [1, 0], [8, 26], [3, 10], [22, 5], [24, 14], [4, 17], [1, 7], [27, 2], [21, 25], [10, 22], [25, 12]]
+        weights = [54, 82, 42, 12, 32, 95, 87, 0, 53, 89, 10, 34, 15, 46, 72]
+        for coord, weight in zip(coords, weights):
+            bd.setWeight(coord, weight)
+            self.assertEquals(bd.getWeight(coord), weight)
 
     def test_set_weight_too_large(self):
         """
@@ -143,6 +144,15 @@ class TestBoard(unittest.TestCase):
         coord = [0, 5]
         bd.setWeight(coord, 105)
         self.assertEquals(bd.getWeight(coord), 100)
+
+    def test_set_weight_too_small(self):
+        """
+        Tests setting a node's weight to a value under the minimum (0).
+        """
+        bd = Board(30, 30)
+        coord = [0, 5]
+        bd.setWeight(coord, -55)
+        self.assertEquals(bd.getWeight(coord), 0)
 
     def test_set_many_weights(self):
         """
@@ -162,16 +172,14 @@ class TestBoard(unittest.TestCase):
         Tests resetting node weights to default value (50.0).
         """
         bd = Board(30, 30)
-        # Make a set of weights (up to 75) with random weightings at random locations
-        size = random.randint(10, 75)
-        weights = [random.randint(0, 100 - 1) for i in range(size)]
-        coords = [[random.randint(0, 30 - 1), random.randint(0, 30 - 1)] for i in range(size)]
-        for i in range(size):
-            bd.setWeight(coords[i], weights[i])
+        weights = [60, 39, 67, 46, 61, 77, 61, 47, 13, 79, 66, 4, 58, 86, 49]
+        coords = [[11, 21], [10, 22], [20, 26], [17, 3], [12, 13], [16, 13], [16, 3], [19, 29], [27, 21], [13, 11], [18, 14], [2, 6], [26, 27], [12, 23], [28, 29]]
+        for coord, weight in zip(coords, weights):
+            bd.setWeight(coord, weight)
         bd.resetWeights()
-        for i in range(size):
-            failMsg = "%2.1F != %2.1f at %s" % (bd.getWeight(coords[i]), 50.0, coords[i])
-            self.assertEquals(bd.getWeight(coords[i]), 50.0, msg=failMsg)
+        for coord in coords:
+            failMsg = "%2.1F != %2.1f at %s" % (bd.getWeight(coord), 50.0, coord)
+            self.assertEquals(bd.getWeight(coord), 50.0, msg=failMsg)
 
     def test_multiply_weight(self):
         """
@@ -291,7 +299,7 @@ class TestBoard(unittest.TestCase):
         """
         bd = Board(30, 30)
         coords = [[5, 5], [17, 7], [19, 9], [29, 16], [5, 14]]
-        weights = [random.randint(51, 100 - 1) for _ in range(len(coords))]
+        weights = [96, 43, 31, 75, 4]
         for coord, weight in zip(coords, weights):
             bd.setWeight(coord, weight)
         priority = coords[weights.index(max(weights))]
@@ -359,15 +367,15 @@ class TestBoard(unittest.TestCase):
         coords = [[0, 0], [0, 1], [1, 0], [2, 0], [3, 0]]
         start = [0, 2]
         end = [4, 0]
+        ideal_path = [start] + coords + [end]
         weight = 60
         for coord in coords:
             bd.setWeight(coord, weight)
         bd.setEdges()
         path = bd.optimumPath(start, end)
-        for coord in path:
-            if coord not in coords and coord != start and coord != end:
-                self.fail(msg="Returned coordinates not in optimal path for given weights:\
- [%i, %i] in " % (coord[0], coord[1]))
+
+        # Confirm returned path is same as ideal path from start to end (inclusive)
+        self.assertItemsEqual(ideal_path, path)
 
     def test_optimum_path_long(self):
         """
@@ -378,16 +386,15 @@ class TestBoard(unittest.TestCase):
         coords = [[1, 2], [1, 3], [2, 3], [3, 3], [3, 2]]
         start = [0, 2]
         end = [4, 2]
-        ideal_path = [start, end, [1, 2], [2, 2], [3, 2]]
+        ideal_path = [start, [1, 2], [2, 2], [3, 2], end]
         weight = 60
         for coord in coords:
             bd.setWeight(coord, weight)
         bd.setEdges()
         path = bd.optimumPath(start, end)
-        for coord in path:
-            if coord not in ideal_path:
-                self.fail(msg="Returned coordinates not in optimal path for given weights:\
- [%i, %i] in " % (coord[0], coord[1]))
+
+        # Confirm returned path is same as ideal path from start to end (inclusive)
+        self.assertItemsEqual(ideal_path, path)
 
     def test_optimum_path_very_long(self):
         """
@@ -398,16 +405,15 @@ class TestBoard(unittest.TestCase):
         coords = [[0, 1], [0, 2], [0, 3], [0, 4], [1, 4], [2, 4], [2, 3], [2, 2], [2, 1]]
         start = [0, 0]
         end = [2, 0]
-        ideal_path = [start, end, [1, 0]]
+        ideal_path = [start, [1, 0], end]
         weight = 60
         for coord in coords:
             bd.setWeight(coord, weight)
         bd.setEdges()
         path = bd.optimumPath(start, end)
-        for coord in path:
-            if coord not in ideal_path:
-                self.fail(msg="Returned coordinates not in optimal path for given weights:\
- [%i, %i] in " % (coord[0], coord[1]))
+
+        # Confirm returned path is same as ideal path from start to end (inclusive)
+        self.assertItemsEqual(ideal_path, path)
 
     def test_optimum_path_length(self):
         """
@@ -425,7 +431,7 @@ class TestBoard(unittest.TestCase):
         bd.setEdges()
         path_length = bd.optimumPathLength(start, end)
         # Include only interior points along path - not start or end.
-        self.assertEquals(path_length, len(ideal_path) * weight - 2 * weight)
+        self.assertEquals(path_length, (len(ideal_path) - 2) * weight)
 
 if __name__ == "__main__":
     unittest.main()
