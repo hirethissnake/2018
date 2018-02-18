@@ -78,26 +78,26 @@ def printGame(dir, filename, data):
 # -g 'number of games to run'
 # -s 'file containing urls to snakes'
 
-def printError(option):
+def printError(option, parser):
     print("Type 'python main.py -h' to get help")
     parser.error(option + " not given")
 
-if __name__ == '__main__':
+def main():
     parser = OptionParser()
     parser.add_option("-d", "--directory", dest="outputDirectory", help="Output directory for saved game.json files")
     parser.add_option("-f", "--food", dest="numFood", help="Amount of food on board at any given time")
     parser.add_option("-s", "--snakes", dest="snakeFile", help="File containing snake URLs")
     parser.add_option("-g", "--games", dest="numGames", help="Number of games to simulate")
-    options, args = parser.parse_args()
+    options, _ = parser.parse_args()
 
     if not options.outputDirectory:
-        printError("Output directory")
+        printError("Output directory", parser)
     elif not options.numFood:
-        printError("Amount of food")
+        printError("Amount of food", parser)
     elif not options.snakeFile:
-        printError("Snake file")
+        printError("Snake file", parser)
     elif not options.numGames:
-        printError("Number of games")
+        printError("Number of games", parser)
 
     if os.path.exists(options.outputDirectory): # confirm exists and clear
         shutil.rmtree(options.outputDirectory)
@@ -105,3 +105,6 @@ if __name__ == '__main__':
 
     for gameNum in range(1, int(options.numGames) + 1):
         runGame(gameNum, options.outputDirectory, int(options.numFood), options.snakeFile)
+
+if __name__ == '__main__':
+    main()
