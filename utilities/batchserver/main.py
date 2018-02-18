@@ -41,7 +41,7 @@ def runGame(gameCounter, outputDirectory, numFood, snakesFile):
         for name in snakes:
             response = requests.post(snakes[name], data=state.getPersonalizedState(name), headers={'content-type': 'application/json'})            
             if response.headers.get('content-type') == 'application/json':
-                toUpdate.append([name, eval(response.text)["move"]])  
+                toUpdate.append([name, response.json()["move"]])  
             else:
                 # this is not as good as moving same direction but adding
                 # that functionality would need a bunch of other machinery
