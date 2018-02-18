@@ -13,43 +13,50 @@ def runGame(gameCounter, outputDirectory, numFood, snakesFile):
 
     snakeUrls = []
     with open(snakesFile) as f:
-        snakeUrls = f.read().split("\n")
+        snakeUrls = list(filter(None, f.read().split("\n"))) # strip out blank lines
 
     snakes = {}
     differentiationCounter = 0
     for url in snakeUrls:
         response = requests.post(url + "/start", data=json.dumps({"width": 20, "height": 20, "game_id": "gameid"}), headers={'content-type': 'application/json'})
         name = eval(response.text)["name"]
-        while name in snakes:
+        while name in snakes: # add arbitrary number if names are same
             name = eval(response.text)["name"] + str(differentiationCounter)
             differentiationCounter += 1
-        snakes[name] = url + "/move"    
+        snakes[name] = url + "/move" # assumption is URLs are not /move specific
 
     state = State(20, 20, list(snakes.keys()), numFood)
 
     data = []
-    data.append(json.dumps(state.state))
+    data.append(json.dumps(state.state)) # puts state dict in json format
+
+    end = 1
+    if len(snakeUrls) == 1: # if solo game
+        end = 0
 
     counter = 0
-    while(len(snakes) > 1):        
+    while(len(snakes) > end):
         
         toUpdate = []
         for name in snakes:
-            response = requests.post(snakes[name], data=state.getState(name), headers={'content-type': 'application/json'}).text            
-            if("DOCTYPE HTML" not in response):
+            response = requests.post(snakes[name], data=state.getPersonalizedState(name), headers={'content-type': 'application/json'}).text            
+            if("DOCTYPE HTML" not in response): # error response from our snake
                 toUpdate.append([name, eval(response)["move"]])  
             else:
-                toUpdate.append([name, "up"])     
+                # this is not as good as moving same direction but adding
+                # that functionality would need a bunch of other machinery
+                # and ideally we shouldn't be getting errors at all
+                toUpdate.append([name, "up"])
                 print(name + " DID NOT RESPOND - MOVING UP") 
 
-        if(counter % 10 == 0):
+        if(counter % 10 == 0): # arbitrary counter to display game progress
             print("turn: " + str(counter))
         counter += 1
 
-        for info in toUpdate:
+        for info in toUpdate: # update them here to prevent changing state while processing
             state.move(info[0], info[1])
         
-        for name in state.updateState():
+        for name in state.updateState(): # remove dead snakes
             snakes.pop(name)
             
         data.append(json.dumps(state.state))
@@ -62,16 +69,17 @@ def printGame(dir, filename, data):
         os.makedirs(dir)
 
     with open(dir + "/" + filename, "w") as out:
+        # here we create a json array with our separate json dicts
         out.write("[")
         out.write(",\n".join(data))
         out.write("]")
 
 
 ## Accept command inputs ##
-#-d 'directory for game outcomes'
-#-f 'number of food items at any one time'
-#-g 'number of games to run'
-#-s 'file containing urls to snakes'
+# -d 'directory for game outcomes'
+# -f 'number of food items at any one time'
+# -g 'number of games to run'
+# -s 'file containing urls to snakes'
 
 def printError(option):
     print("Type 'python main.py -h' to get help")
