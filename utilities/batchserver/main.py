@@ -39,15 +39,15 @@ def runGame(gameCounter, outputDirectory, numFood, snakesFile):
         
         toUpdate = []
         for name in snakes:
-            response = requests.post(snakes[name], data=state.getPersonalizedState(name), headers={'content-type': 'application/json'}).text            
-            if("DOCTYPE HTML" not in response): # error response from our snake
-                toUpdate.append([name, eval(response)["move"]])  
+            response = requests.post(snakes[name], data=state.getPersonalizedState(name), headers={'content-type': 'application/json'})            
+            if response.headers.get('content-type') == 'application/json':
+                toUpdate.append([name, eval(response.text)["move"]])  
             else:
                 # this is not as good as moving same direction but adding
                 # that functionality would need a bunch of other machinery
                 # and ideally we shouldn't be getting errors at all
                 toUpdate.append([name, "up"])
-                print(name + " DID NOT RESPOND - MOVING UP") 
+                print(name + " DID NOT RESPOND - MOVING UP")
 
         if(counter % 10 == 0): # arbitrary counter to display game progress
             print("turn: " + str(counter))
