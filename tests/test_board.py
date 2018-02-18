@@ -195,7 +195,7 @@ class TestBoard(unittest.TestCase):
         for coord in coords:
             bd.divideWeight(coord, divisor)
         for coord in coords:
-            self.assertEquals(bd.getWeight(coord), 50.0 / divisor)
+            self.assertAlmostEquals(bd.getWeight(coord), 50.0 / divisor, places=4)
 
     def test_divide_weight_odd_digit(self):
         """
@@ -207,7 +207,7 @@ class TestBoard(unittest.TestCase):
         for coord in coords:
             bd.divideWeight(coord, divisor)
         for coord in coords:
-            self.assertEquals(bd.getWeight(coord), 50.0 / divisor)
+            self.assertAlmostEquals(bd.getWeight(coord), 50.0 / divisor, places=4)
 
     def test_add_weight(self):
         """
@@ -253,7 +253,7 @@ class TestBoard(unittest.TestCase):
         coords = [[29, 3], [16, 22], [6, 2]]
         bd.modifyWeights('/', coords, divisor)
         for coord in coords:
-            self.assertEquals(bd.getWeight(coord), 50.0 / divisor)
+            self.assertAlmostEquals(bd.getWeight(coord), 50.0 / divisor, places=4)
 
     def test_divide_many_nodes_odd_digit(self):
         """
@@ -264,7 +264,7 @@ class TestBoard(unittest.TestCase):
         coords = [[29, 3], [16, 22], [6, 2]]
         bd.modifyWeights('/', coords, divisor)
         for coord in coords:
-            self.assertEquals(bd.getWeight(coord), 50.0 / divisor)
+            self.assertAlmostEquals(bd.getWeight(coord), 50.0 / divisor, places=4)
 
     def test_add_many_nodes(self):
         """
