@@ -3,4 +3,6 @@
 battlesnake
 .idea
 .vscode/
+.coverage
+htmlcov/
 *.json

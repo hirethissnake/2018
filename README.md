@@ -29,7 +29,7 @@ docker build -t hirethissnake .
 image, -t designates the name of the image, and we use '.' to say 'look for
 a Dockerfile in the current folder'.
 
-Go to [Running](#Running) to see how to use the program.
+Go to [Running](#running) to see how to use the program.
 
 #### Script - Linux Only
 
