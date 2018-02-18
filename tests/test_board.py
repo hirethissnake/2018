@@ -315,7 +315,7 @@ class TestBoard(unittest.TestCase):
         for coord, weight in zip(coords, weights):
             bd.setWeight(coord, weight)
         # Returns lowest priority first
-        self.assertEquals(bd.getNodesWithPriority(0, 4), coords[::-1])
+        self.assertEquals(bd.getNodesWithPriority(0, 4), coords)
 
     def test_unique_weights_negative(self):
         """
