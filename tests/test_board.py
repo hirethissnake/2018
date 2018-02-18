@@ -375,7 +375,7 @@ class TestBoard(unittest.TestCase):
         path = bd.optimumPath(start, end)
 
         # Confirm returned path is same as ideal path from start to end (inclusive)
-        self.assertItemsEqual(ideal_path, path)
+        self.assertEquals(ideal_path, path)
 
     def test_optimum_path_long(self):
         """
@@ -394,7 +394,7 @@ class TestBoard(unittest.TestCase):
         path = bd.optimumPath(start, end)
 
         # Confirm returned path is same as ideal path from start to end (inclusive)
-        self.assertItemsEqual(ideal_path, path)
+        self.assertEquals(ideal_path, path)
 
     def test_optimum_path_very_long(self):
         """
@@ -413,7 +413,7 @@ class TestBoard(unittest.TestCase):
         path = bd.optimumPath(start, end)
 
         # Confirm returned path is same as ideal path from start to end (inclusive)
-        self.assertItemsEqual(ideal_path, path)
+        self.assertEquals(ideal_path, path)
 
     def test_optimum_path_length(self):
         """
