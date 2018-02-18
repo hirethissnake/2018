@@ -1,10 +1,10 @@
 """Server to rapidly simulate games to determine loss trends"""
 
-import sys
 import os
 import json
 import requests
-from optparse import OptionParser
+import shutil
+from optparse import OptionParser 
 
 from State import State
 
@@ -65,9 +65,6 @@ def runGame(gameCounter, outputDirectory, numFood, snakesFile):
 
 
 def printGame(dir, filename, data):
-    if not os.path.exists(dir):
-        os.makedirs(dir)
-
     with open(dir + "/" + filename, "w") as out:
         # here we create a json array with our separate json dicts
         out.write("[")
@@ -101,6 +98,10 @@ if __name__ == '__main__':
         printError("Snake file")
     elif not options.numGames:
         printError("Number of games")
+
+    if os.path.exists(options.outputDirectory): # confirm exists and clear
+        shutil.rmtree(options.outputDirectory)
+    os.makedirs(options.outputDirectory)
 
     for gameNum in range(1, int(options.numGames) + 1):
         runGame(gameNum, options.outputDirectory, int(options.numFood), options.snakeFile)
