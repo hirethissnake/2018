@@ -5,7 +5,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ../../app:/data/app
+      - ./app:/data/app
     command:
       bash -c "python /data/app/main.py"
   snake2:
@@ -13,7 +13,7 @@ services:
     ports:
       - "8081:8080"
     volumes:
-      - ../../app:/data/app
+      - ./app:/data/app
     command:
       bash -c "python /data/app/main.py"
   snake3:
@@ -21,6 +21,6 @@ services:
     ports:
       - "8082:8080"
     volumes:
-      - ../../app:/data/app
+      - ./app:/data/app
     command:
       bash -c "python /data/app/main.py"
