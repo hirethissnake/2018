@@ -98,7 +98,7 @@ class TestBoard(unittest.TestCase):
         for x in range(width):
             for y in range(height):
                 try:
-                    bd.checkNode([x, y])
+                    bd.checkNode(x, y)
                 except ValueError:
                     self.fail(msg="Valid node raised ValueError")
 
@@ -109,21 +109,21 @@ class TestBoard(unittest.TestCase):
         height = 30
         width = 30
         bd = Board(width, height)
-        self.assertRaises(ValueError, bd.checkNode, [-1, -1])                   # above, left corner
-        self.assertRaises(ValueError, bd.checkNode, [-1, width / 2])            # left of
-        self.assertRaises(ValueError, bd.checkNode, [height + 1, width / 2])    # directly above
-        self.assertRaises(ValueError, bd.checkNode, [height / 2, width + 1])    # right of
-        self.assertRaises(ValueError, bd.checkNode, [height + 1, width + 1])    # below
-        self.assertRaises(ValueError, bd.checkNode, [height / 2, -1])
+        self.assertRaises(ValueError, bd.checkNode, -1, -1)                   # above, left corner
+        self.assertRaises(ValueError, bd.checkNode, -1, width / 2)            # left of
+        self.assertRaises(ValueError, bd.checkNode, height + 1, width / 2)    # directly above
+        self.assertRaises(ValueError, bd.checkNode, height / 2, width + 1)    # right of
+        self.assertRaises(ValueError, bd.checkNode, height + 1, width + 1)    # below
+        self.assertRaises(ValueError, bd.checkNode, height / 2, -1)
 
     def test_check_node_invalid_format(self):
         """
         Tests checkNode for invalid formats.
         """
         bd = Board(30, 30)
-        self.assertRaises(ValueError, bd.checkNode, [1])
-        self.assertRaises(ValueError, bd.checkNode, {0:1, 1:2})
-        self.assertRaises(ValueError, bd.checkNode, (5, 15))
+        self.assertRaises(ValueError, bd.checkNode, 'test', 'test')
+        self.assertRaises(ValueError, bd.checkNode, [1], [2])
+        self.assertRaises(ValueError, bd.checkNode, {1}, {2})
 
     def test_set_and_get_node_weight(self):
         """
@@ -133,8 +133,8 @@ class TestBoard(unittest.TestCase):
         coords = [[12, 4], [0, 27], [8, 12], [4, 16], [1, 0], [8, 26], [3, 10], [22, 5], [24, 14], [4, 17], [1, 7], [27, 2], [21, 25], [10, 22], [25, 12]]
         weights = [54, 82, 42, 12, 32, 95, 87, 0, 53, 89, 10, 34, 15, 46, 72]
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord, weight)
-            self.assertEquals(bd.getWeight(coord), weight)
+            bd.setWeight(coord[0], coord[1], weight)
+            self.assertEquals(bd.getWeight(coord[0], coord[1]), weight)
 
     def test_set_weight_too_large(self):
         """
@@ -142,8 +142,8 @@ class TestBoard(unittest.TestCase):
         """
         bd = Board(30, 30)
         coord = [0, 5]
-        bd.setWeight(coord, 105)
-        self.assertEquals(bd.getWeight(coord), 100)
+        bd.setWeight(coord[0], coord[1], 105)
+        self.assertEquals(bd.getWeight(coord[0], coord[1]), 100)
 
     def test_set_weight_too_small(self):
         """
@@ -151,8 +151,8 @@ class TestBoard(unittest.TestCase):
         """
         bd = Board(30, 30)
         coord = [0, 5]
-        bd.setWeight(coord, -55)
-        self.assertEquals(bd.getWeight(coord), 0)
+        bd.setWeight(coord[0], coord[1], -105)
+        self.assertEquals(bd.getWeight(coord[0], coord[1]), -100)
 
     def test_set_many_weights(self):
         """

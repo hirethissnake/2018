@@ -66,8 +66,7 @@ showPath                void        Display graphic of best path between nodes
         self.width = width  # declare size of board
         self.height = height
 
-        self.board = np.zeros((width, height))
-        print(self.board)
+        self.board = np.zeros((width, height), dtype='f')
 
 
     def initErrorCheck(self, width, height):
@@ -112,18 +111,16 @@ showPath                void        Display graphic of best path between nodes
         return [int(coords[0]), int(coords[1])]
 
 
-    def checkNode(self, u):
+    def checkNode(self, x, y):
         """
         Check if u is a valid node.
 
         param1: [int, int] - node in the form [x, y]
         """
         
-        if not isinstance(u, list):
-            raise ValueError('node should be an array')
-        if len(u) != 2:
-            raise ValueError('nodes should be in the form [x, y]')
-        if u[0] >= self.height or u[0] < 0 or u[1] >= self.width or u[1] < 0:
+        if not isinstance(x, int) or not isinstance(y, int):
+            raise ValueError('indices should be integers')
+        if x >= self.height or x < 0 or y >= self.width or y < 0:
             raise ValueError('node is out of bounds')
 
 
@@ -161,24 +158,22 @@ showPath                void        Display graphic of best path between nodes
         return list(self.board.shape)
 
 
-    def setWeight(self, u, weight):
+    def setWeight(self, x, y, weight):
         """
         Set incoming edges of vertex u to weight.
 
         param1: [int, int] - node in the form [x, y]
         param2: integer/float - weight to set
         """
-        return
-        self.modifyWeightErrorCheck(u, weight)  # comment this out for speed
+        
+        self.modifyWeightErrorCheck(x, y, weight)  # comment this out for speed
 
-        if weight <= 0:  # ensure weight is in bounds
-            weight = float('-inf')  # do not visit under any circumstances
+        if weight < -100:  # ensure weight is in bounds
+            weight = -100  # do not visit under any circumstances
         elif weight > 100:
-            weight = float(100)
-
-        nodeName = self.nodeAsString(u)
-
-        self.dictionary[nodeName] = 100 - float(weight)  # ensure front is highest
+            weight = 100
+        
+        self.board[x, y] = weight
 
 
     def resetWeights(self):
@@ -309,7 +304,7 @@ showPath                void        Display graphic of best path between nodes
         self.setWeight(u, currentWeight - subtrahend)
 
 
-    def modifyWeightErrorCheck(self, u, num):
+    def modifyWeightErrorCheck(self, x, y, num):
         """
         Check weight modification method for errors.
 
@@ -317,7 +312,7 @@ showPath                void        Display graphic of best path between nodes
         param2: unknown - item to confirm if integer/float
         """
         return
-        self.checkNode(u)
+        self.checkNode(x, y)
         self.checkNumber(num)
 
 
@@ -329,7 +324,7 @@ showPath                void        Display graphic of best path between nodes
         return: integer/float - weight of node u
         """
         
-        self.checkNode([x, y])  # comment this out for speed
+        self.checkNode(x, y)  # comment this out for speed
 
         return self.board[x, y]
 
