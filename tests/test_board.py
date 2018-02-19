@@ -45,9 +45,9 @@ class TestBoard(unittest.TestCase):
         width = 40
         height = 40
         bd = Board(width, height)
-        for y in range(height):
-            for x in range(width):
-                self.assertEquals(50.0, bd.dictionary[str(y) + ',' + str(x)])
+        for x in range(width):
+            for y in range(height):
+                self.assertEquals(0, bd.getWeight(x, y))
 
     def test_check_number_int(self):
         """

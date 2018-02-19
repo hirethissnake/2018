@@ -77,7 +77,7 @@ showPath                void        Display graphic of best path between nodes
         param1: integer - width to check
         param2: integer - height to check
         """
-        return
+        
         self.checkInt(width)
         self.checkInt(height)
 
@@ -118,8 +118,8 @@ showPath                void        Display graphic of best path between nodes
 
         param1: [int, int] - node in the form [x, y]
         """
-        return
-        if not isinstance(u, (list,)):
+        
+        if not isinstance(u, list):
             raise ValueError('node should be an array')
         if len(u) != 2:
             raise ValueError('nodes should be in the form [x, y]')
@@ -321,21 +321,17 @@ showPath                void        Display graphic of best path between nodes
         self.checkNumber(num)
 
 
-    def getWeight(self, u):
+    def getWeight(self, x, y):
         """
         Return the weight of the node u from the dictionary.
 
         param1: [int, int] - node in the form [x, y]
         return: integer/float - weight of node u
         """
-        return
-        self.checkNode(u)  # comment this out for speed
+        
+        self.checkNode([x, y])  # comment this out for speed
 
-        weight = 100 - self.dictionary[self.nodeAsString(u)]
-        if weight == -float('inf'):
-            weight = 0
-
-        return weight  # allow human-readable
+        return self.board[x, y]
 
 
     def averageWeights(self, iterations):
