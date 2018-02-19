@@ -4,10 +4,12 @@ Includes vertices and edges.
 """
 
 import colorsys
-"""try:
+import numpy as np
+#import igraph
+try:
     from appJar import gui
 except ImportError:
-    print 'Failed to import appJar'"""
+    print('Failed to import appJar')
 
 
 class Board:
@@ -58,44 +60,14 @@ showPath                void        Display graphic of best path between nodes
         param1: integer - width of board
         param2: integer - height of board
         """
-        return
+        
         self.initErrorCheck(width, height)  # comment this out for speed
 
         self.width = width  # declare size of board
         self.height = height
 
-        self.graph = igraph.Graph(directed=True)  # declare graph
-        for row in range(height):  # create vertices
-            for col in range(width):
-                self.graph.add_vertex(name=str(row) + ',' + str(col))
-
-        for row in range(height):  # create 1/2 edges
-            for col in range(width):
-                if col < self.width - 1:
-                    self.graph.add_edge(str(row) + ',' + str(col),
-                                        str(row) + ',' + str(col + 1), weight=50.0)
-                if col > 0:
-                    self.graph.add_edge(str(row) + ',' + str(col), str(row) + ',' +
-                                        str(col - 1), weight=50.0)
-                if row < self.height - 1:
-                    self.graph.add_edge(str(row) + ',' + str(col), str(row + 1) +
-                                        ',' + str(col), weight=50.0)
-                if row > 0:
-                    self.graph.add_edge(str(row) + ',' + str(col), str(row - 1) +
-                                        ',' + str(col), weight=50.0)
-
-        self.dictionary = {}
-        for row in range(height):  # populate dictionary
-            for col in range(width):
-                self.dictionary[str(row) + ',' + str(col)] = 50.0
-
-        self.edges = {}
-        for row in range(height):  # save edges incident to each vertex
-            for col in range(width):
-                vertexId = self.graph.vs.find(str(row) + ',' + str(col))
-                edges = self.graph.incident(vertexId) # list of edges
-                edges = [self.graph.es.find(edge) for edge in edges]
-                self.edges[str(row) + ',' + str(col)] = edges
+        self.board = np.zeros((width, height))
+        print(self.board)
 
 
     def initErrorCheck(self, width, height):
@@ -185,8 +157,8 @@ showPath                void        Display graphic of best path between nodes
 
         return: [integer] - array with [width, height]
         """
-        return
-        return [self.width, self.height]
+    
+        return list(self.board.shape)
 
 
     def setWeight(self, u, weight):
