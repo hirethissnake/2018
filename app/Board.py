@@ -120,7 +120,7 @@ showPath                void        Display graphic of best path between nodes
         
         if not isinstance(x, int) or not isinstance(y, int):
             raise ValueError('indices should be integers')
-        if x >= self.height or x < 0 or y >= self.width or y < 0:
+        if x >= self.width or x < 0 or y >= self.height or y < 0:
             raise ValueError('node is out of bounds')
 
 
@@ -158,6 +158,15 @@ showPath                void        Display graphic of best path between nodes
         return list(self.board.shape)
 
 
+    def normalizeWeight(self, weight):
+        if weight < -100:  # ensure weight is in bounds
+            weight = -100
+        elif weight > 100:
+            weight = 100
+            
+        return weight
+
+
     def setWeight(self, x, y, weight):
         """
         Set incoming edges of vertex u to weight.
@@ -167,22 +176,18 @@ showPath                void        Display graphic of best path between nodes
         """
         
         self.modifyWeightErrorCheck(x, y, weight)  # comment this out for speed
-
-        if weight < -100:  # ensure weight is in bounds
-            weight = -100  # do not visit under any circumstances
-        elif weight > 100:
-            weight = 100
+        x = self.normalizeWeight(x)
+        y = self.normalizeWeight(y)
         
         self.board[x, y] = weight
 
 
     def resetWeights(self):
         """
-        Reset all weights to 50.
+        Reset all weights to 0.
         """
-        return
-        for key in self.dictionary:
-            self.dictionary[key] = 50.0
+        
+        self.board = np.zeros((self.width, self.height), dtype='f')
 
 
     def setEdges(self):
@@ -197,18 +202,22 @@ showPath                void        Display graphic of best path between nodes
                 edge['weight'] = float(weight)
 
 
-    def setWeights(self, nodes, value):
+    def setWeights(self, nodes, weight):
         """
         Modify a list of node weights.
 
         param1: [[int, int]] - array of nodes in the form [<integer>,<integer>]
         param2: float/int - weight to set
         """
-        return
-        tempLen = len(nodes)
+        
+        # we create a lists of columns and rows to be modified
+        cols = [self.normalizeWeight(x) for [x, y] in nodes]
+        rows = [self.normalizeWeight(y) for [x, y] in nodes]
 
-        for nodeIndex in range(tempLen):
-            self.setWeight(nodes[nodeIndex], value)
+        for i in range(len(nodes)):
+            self.modifyWeightErrorCheck(cols[i], rows[i], weight)  # comment this out for speed
+
+        self.board[cols, rows] = weight
 
 
     def modifyWeights(self, operator, nodes, value):

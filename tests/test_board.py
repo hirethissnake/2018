@@ -158,14 +158,14 @@ class TestBoard(unittest.TestCase):
         """
         Tests setting many nodes' weight all at once.
         """
-        bd = Board(30, 30)
-        coords = [[26, 24], [5, 1], [19, 13]]
+        bd = Board(30, 31)
+        coords = [[26, 24], [29, 30], [19, 13], [0, 0]]
         weight = 75
         bd.setWeights(coords, weight)
         for coord in coords:
-            if bd.getWeight(coord) != weight:
+            if bd.getWeight(coord[0], coord[1]) != weight:
                 self.fail(msg="Weight %2.1f != %2.1f for node [%i, %i]" % \
-                (bd.getWeight(coord), weight, coord[0], coord[1]))
+                (bd.getWeight(coord[0], coord[1]), weight, coord[0], coord[1]))
 
     def test_reset_node_weights(self):
         """
@@ -175,11 +175,11 @@ class TestBoard(unittest.TestCase):
         weights = [60, 39, 67, 46, 61, 77, 61, 47, 13, 79, 66, 4, 58, 86, 49]
         coords = [[11, 21], [10, 22], [20, 26], [17, 3], [12, 13], [16, 13], [16, 3], [19, 29], [27, 21], [13, 11], [18, 14], [2, 6], [26, 27], [12, 23], [28, 29]]
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord, weight)
+            bd.setWeight(coord[0], coord[1], weight)
         bd.resetWeights()
         for coord in coords:
-            failMsg = "%2.1F != %2.1f at %s" % (bd.getWeight(coord), 50.0, coord)
-            self.assertEquals(bd.getWeight(coord), 50.0, msg=failMsg)
+            failMsg = "%2.1F != %2.1f at %s" % (bd.getWeight(coord[0], coord[1]), 0, coord)
+            self.assertEquals(bd.getWeight(coord[0], coord[1]), 0, msg=failMsg)
 
     def test_multiply_weight(self):
         """
