@@ -5,8 +5,8 @@
 """
 
 import os
-import bottle
 import time
+import bottle
 from Game import Game
 
 gameDic = {}
@@ -27,8 +27,8 @@ def start():
 
     data = bottle.request.json
 
-    print 'We have begun a new game!'
-    print data
+    print('We have begun a new game!')
+    print(data)
 
     #Create a game object with the data given
     game_id = data['game_id']
@@ -61,14 +61,15 @@ def move():
     # E1136 Value 'data' is insubscriptable
     # pylint: disable=E1135, E1136
     data = bottle.request.json
-    print data
+    print(data)
+
     #Store the id of this game and then access the matching object in GameDict
 
     # get game_id
     if 'game_id' in data:
         curGame = data['game_id']
     else:
-        print 'Data missing game_id'
+        print('Data missing game_id')
     # get curGame from gameDic
     if curGame in gameDic:
         battle = gameDic[curGame]
@@ -80,11 +81,11 @@ def move():
         #nextTaunt = battle.getTaunt()
         print("--- %s seconds ---" % (time.time() - start))
     else:
-        print 'ERROR: Received request for game that does not exist'
-        print '  To avoid collateral damage to other games, responding with \
-        default move'
+        print('ERROR: Received request for game that does not exist')
+        print('  To avoid collateral damage to other games, responding with default move')
         nextMove = 'up'
 
+    nextMove = 'up' #TODO: remove
     sendingData = {
         'move': nextMove,
         'taunt': 'please no'

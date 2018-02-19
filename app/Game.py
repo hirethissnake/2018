@@ -98,9 +98,10 @@ class Game:
                 priorityTarget += 1
             else:
                 numDuplicates = self.weightGrid.countNodeWeightCopies(topPriorityNode)
+                return # TODO: remove this
                 duplicateNodes = self.weightGrid.getNodesWithPriority(priorityTarget, \
                 priorityTarget + numDuplicates - 1)
-                closestLen = sys.maxint
+                closestLen = sys.maxsize
                 closestPos = []
 
                 for node in duplicateNodes:
@@ -178,11 +179,12 @@ class Game:
             #How desperately do we need food
             #Goes through all food and returns the closest according to optimumPath
         pathLength = 500
-        shortestPath = sys.maxint
+        shortestPath = sys.maxsize
         oursnake = self.snakes[self.you]
         head = oursnake.getHeadPosition()
         # health = oursnake.getHealth()
         for foodCoords in self.food:
+            return # TODO: remove this
             pathLength = len(self.weightGrid.optimumPath(head, foodCoords))
             if pathLength < shortestPath:
                 shortestPath = pathLength

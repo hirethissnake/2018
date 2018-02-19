@@ -4,11 +4,11 @@ Includes vertices and edges.
 """
 
 import colorsys
-import igraph
+#import igraph
 try:
     from appJar import gui
 except ImportError:
-    print 'Failed to import appJar'
+    print('Failed to import appJar')
 
 
 class Board:
@@ -59,7 +59,7 @@ showPath                void        Display graphic of best path between nodes
         param1: integer - width of board
         param2: integer - height of board
         """
-
+        return
         self.initErrorCheck(width, height)  # comment this out for speed
 
         self.width = width  # declare size of board
@@ -106,7 +106,7 @@ showPath                void        Display graphic of best path between nodes
         param1: integer - width to check
         param2: integer - height to check
         """
-
+        return
         self.checkInt(width)
         self.checkInt(height)
 
@@ -147,6 +147,7 @@ showPath                void        Display graphic of best path between nodes
 
         param1: [int, int] - node in the form [x, y]
         """
+        return
         if not isinstance(u, (list,)):
             raise ValueError('node should be an array')
         if len(u) != 2:
@@ -185,7 +186,7 @@ showPath                void        Display graphic of best path between nodes
 
         return: [integer] - array with [width, height]
         """
-
+        return
         return [self.width, self.height]
 
 
@@ -196,7 +197,7 @@ showPath                void        Display graphic of best path between nodes
         param1: [int, int] - node in the form [x, y]
         param2: integer/float - weight to set
         """
-
+        return
         self.modifyWeightErrorCheck(u, weight)  # comment this out for speed
 
         if weight <= 0:  # ensure weight is in bounds
@@ -213,7 +214,7 @@ showPath                void        Display graphic of best path between nodes
         """
         Reset all weights to 50.
         """
-
+        return
         for key in self.dictionary:
             self.dictionary[key] = 50.0
 
@@ -222,6 +223,7 @@ showPath                void        Display graphic of best path between nodes
         """
         Set edge weights from dictionary.
         """
+        return
         for node in self.dictionary:
             weight = self.dictionary[node]
             for edge in self.edges[node]:  # 100 - weight is to unsure higher weights
@@ -236,7 +238,7 @@ showPath                void        Display graphic of best path between nodes
         param1: [[int, int]] - array of nodes in the form [<integer>,<integer>]
         param2: float/int - weight to set
         """
-
+        return
         tempLen = len(nodes)
 
         for nodeIndex in range(tempLen):
@@ -251,7 +253,7 @@ showPath                void        Display graphic of best path between nodes
         param2: [[int, int]] - array of nodes in the form <integer>,<integer>
         param3: float/int - value to modify by
         """
-
+        return
         self.modifyWeightsErrorCheck(operator)  # comment speed
 
         tempLen = len(nodes)
@@ -287,7 +289,7 @@ showPath                void        Display graphic of best path between nodes
         param1: [int, int] - node in the form [x, y]
         param2: integer/float - number to multiply weight by
         """
-
+        return
         self.modifyWeightErrorCheck(u, multiplier)  # comment this out for speed
 
         currentWeight = self.getWeight(u)
@@ -301,7 +303,7 @@ showPath                void        Display graphic of best path between nodes
         param1: [int, int] - node in the form [x, y]
         param2: integer/float - number to divide weight by
         """
-
+        return
         self.modifyWeightErrorCheck(u, divisor)  # comment this out for speed
 
         currentWeight = self.getWeight(u)
@@ -315,7 +317,7 @@ showPath                void        Display graphic of best path between nodes
         param1: [int, int] - node in the form [x, y]
         param2: integer/float - number to add to weight
         """
-
+        return
         self.modifyWeightErrorCheck(u, addend)  # comment this out for speed
 
         currentWeight = self.getWeight(u)
@@ -329,7 +331,7 @@ showPath                void        Display graphic of best path between nodes
         param1: [int, int] - node in the form [x, y]
         param2: integer/float - number to subtract from weight
         """
-
+        return
         self.modifyWeightErrorCheck(u, subtrahend)  # comment this out for speed
 
         currentWeight = self.getWeight(u)
@@ -343,7 +345,7 @@ showPath                void        Display graphic of best path between nodes
         param1: unknown - item to confirm if node
         param2: unknown - item to confirm if integer/float
         """
-
+        return
         self.checkNode(u)
         self.checkNumber(num)
 
@@ -355,7 +357,7 @@ showPath                void        Display graphic of best path between nodes
         param1: [int, int] - node in the form [x, y]
         return: integer/float - weight of node u
         """
-
+        return
         self.checkNode(u)  # comment this out for speed
 
         weight = 100 - self.dictionary[self.nodeAsString(u)]
@@ -371,7 +373,7 @@ showPath                void        Display graphic of best path between nodes
 
         param1: int - number of iterations to perform
         """
-
+        return
         toReset = []
         gridOld = []
         for row in range(self.height):  # loop through every node
@@ -428,7 +430,7 @@ showPath                void        Display graphic of best path between nodes
         param1: int - index to return priority (can be negative)
         return: [int, int] - node name with priority index
         """
-
+        return
         self.checkInt(index)  # comment this out for speed
 
         nodeString = sorted(self.dictionary, key=self.dictionary.get)[index]
@@ -443,7 +445,7 @@ showPath                void        Display graphic of best path between nodes
         param2: int - end index to return priority
         return: [[int, int]] - node names with priority from start-end
         """
-
+        return
         self.getNodesWithPriorityErrorCheck(start, end)  # comment for speed
 
         nodesString = sorted(self.dictionary, key=self.dictionary.get)[start : end + 1]
@@ -459,7 +461,7 @@ showPath                void        Display graphic of best path between nodes
         param1: int - start index to return priority
         param2: int - end index to return priority
         """
-
+        return
         self.checkInt(start)
         self.checkInt(end)
 
@@ -471,7 +473,7 @@ showPath                void        Display graphic of best path between nodes
         param1: [int, int] - node in the form [x, y]
         return: boolean - True if weight is unique, Fale otherwise
         """
-
+        return
         if self.countNodeWeightCopies(u) > 1:
             return False
         return True
@@ -484,7 +486,7 @@ showPath                void        Display graphic of best path between nodes
         param1: [int, int] - node in the form [x, y]
         return: int - Returns number of other nodes with same weight
         """
-
+        return
         self.checkNode(u)  # comment this out for speed
 
         targetWeight = 100 - self.getWeight(u)
@@ -498,7 +500,7 @@ showPath                void        Display graphic of best path between nodes
         param1,2: [int, int] - node in the form [x, y]
         return: [[int, int]] - node names in the optimum path from u to v
         """
-
+        return
         self.optimumPathErrorCheck(u, v)  # comment this out for speed
 
         ids = self.graph.get_shortest_paths(self.nodeAsString(u),
@@ -515,7 +517,7 @@ showPath                void        Display graphic of best path between nodes
 
         param1,2: unknown - item to confirm if node
         """
-
+        return
         if u == v:
             raise ValueError('u and v cannot be the same node')
 
@@ -530,7 +532,7 @@ showPath                void        Display graphic of best path between nodes
         param1,2: [int, int] - node in the form [x, y]
         return: float - length of path
         """
-
+        return
         return self.graph.shortest_paths(self.nodeAsString(u),
                                          self.nodeAsString(v), \
                                          'weight', 'IN')[0][0]
@@ -543,7 +545,7 @@ showPath                void        Display graphic of best path between nodes
         param1: boolean - show colours on display?
         param2: boolean - show numbers on display?
         """
-
+        return
         self.showWeightsErrorCheck(colours, numbers)  # comment for speed
 
         self.showCombiner([], colours, numbers)
@@ -570,7 +572,7 @@ showPath                void        Display graphic of best path between nodes
 
         param1,2: [int, int] - node in the form [x, y]
         """
-
+        return
         self.optimumPathErrorCheck(u, v)  # comment this out for speed
 
         self.showCombiner(self.optimumPath(u, v), True, True)
@@ -584,7 +586,7 @@ showPath                void        Display graphic of best path between nodes
         param1: boolean - show colours on display?
         param2: boolean - show numbers on display?
         """
-
+        return
         app = gui('Login Window', '950x950')
         app.setBg('white')
         app.setTitle('SneakySnake Visualiser')
