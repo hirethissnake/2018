@@ -398,18 +398,20 @@ showPath                void        Display graphic of best path between nodes
                 self.setWeight([row, col], gridOld[row][col])
 
 
-    def getNodeWithPriority(self, index):
+    def getNodeWithPriority(self, offset):
         """
-        Return vertex name with priority index.
+        Return vertex name with priority offset.
 
         param1: int - index to return priority (can be negative)
-        return: [int, int] - node name with priority index
+        return: [int, int] - node name with priority offset
         """
-        return
-        self.checkInt(index)  # comment this out for speed
 
-        nodeString = sorted(self.dictionary, key=self.dictionary.get)[index]
-        return [int(x) for x in nodeString.split(',')]
+        self.checkInt(offset) # comment this out for speed
+
+        correctedOffset = -offset - 1 # sort backwards and correct for zero
+        flatIndex = np.argpartition(self.board.flatten(), correctedOffset)[correctedOffset] # get index of nth largest value
+        
+        return [flatIndex // self.width, flatIndex % self.width] # '//' operator forces integer division
 
 
     def getNodesWithPriority(self, start, end):
@@ -420,13 +422,19 @@ showPath                void        Display graphic of best path between nodes
         param2: int - end index to return priority
         return: [[int, int]] - node names with priority from start-end
         """
-        return
+        
         self.getNodesWithPriorityErrorCheck(start, end)  # comment for speed
 
-        nodesString = sorted(self.dictionary, key=self.dictionary.get)[start : end + 1]
-        nodesArray = [self.stringAsNode(x) for x in nodesString]
+        correctedStart = None if start == 0 else -start # if start is 0 then list will be empty
+        correctedEnd = -end - 1
 
-        return nodesArray[::-1]
+        flat = self.board.flatten() # squish NxM matrix into 1xNM
+        indexList = np.argpartition(flat, correctedEnd)[correctedEnd:] # get indices of nth largest values
+        valueList = flat[indexList] # get values of these indices
+
+        sortedIndices = [index for _,index in sorted(zip(valueList, indexList))][:correctedStart][::-1] # sort by values and slice appropriately
+
+        return [[index // self.width, index % self.width] for index in sortedIndices] # get coordinates from flat indices
 
 
     def getNodesWithPriorityErrorCheck(self, start, end):
@@ -436,9 +444,13 @@ showPath                void        Display graphic of best path between nodes
         param1: int - start index to return priority
         param2: int - end index to return priority
         """
-        return
+        
         self.checkInt(start)
         self.checkInt(end)
+        if start >= end:
+            raise ValueError('start must be less than end')
+        if start < 0 or end >= self.board.size:
+            raise ValueError('value is out of bounds')
 
 
     def isNodeWeightUnique(self, u):

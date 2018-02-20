@@ -190,14 +190,10 @@ class TestBoard(unittest.TestCase):
         coords = [[15, 15], [2, 7], [9, 25]]
         weights = [20, -1, 100]
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            bd.setWeight(coord[0], coord[1], weights[i])
+        for coord, weight in zip(coords, weights):
+            bd.setWeight(coord[0], coord[1], weight)
             bd.multiplyWeight(coord[0], coord[1], fraction)
-
-        for i in range(len(coords)):
-            coord = coords[i]
-            self.assertEquals(bd.getWeight(coord[0], coord[1]), weights[i] * fraction)
+            self.assertEquals(bd.getWeight(coord[0], coord[1]), weight * fraction)
 
     def test_multiply_weight_int(self):
         """
@@ -208,14 +204,12 @@ class TestBoard(unittest.TestCase):
         coords = [[15, 15], [2, 7], [9, 25]]
         weights = [6, -14, 90]
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            bd.setWeight(coord[0], coord[1], weights[i])
+        for coord, weight in zip(coords, weights):
+            bd.setWeight(coord[0], coord[1], weight)
             bd.multiplyWeight(coord[0], coord[1], multiplier)
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            desiredWeight = weights[i] * multiplier
+        for coord, weight in zip(coords, weights):
+            desiredWeight = weight * multiplier
             if desiredWeight < -100:
                 desiredWeight = -100
             elif desiredWeight > 100:
@@ -231,14 +225,12 @@ class TestBoard(unittest.TestCase):
         coords = [[15, 15], [2, 7], [9, 25]]
         weights = [20, -99, 99]
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            bd.setWeight(coord[0], coord[1], weights[i])
+        for coord, weight in zip(coords, weights):
+            bd.setWeight(coord[0], coord[1], weight)
             bd.divideWeight(coord[0], coord[1], divisor)
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            self.assertEquals(bd.getWeight(coord[0], coord[1]), weights[i] / divisor)
+        for coord, weight in zip(coords, weights):
+            self.assertEquals(bd.getWeight(coord[0], coord[1]), weight / divisor)
 
     def test_add_weight(self):
         """
@@ -249,14 +241,12 @@ class TestBoard(unittest.TestCase):
         coords = [[15, 15], [2, 7], [9, 25]]
         weights = [20, -99, 99]
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            bd.setWeight(coord[0], coord[1], weights[i])
+        for coord, weight in zip(coords, weights):
+            bd.setWeight(coord[0], coord[1], weight)
             bd.addWeight(coord[0], coord[1], addend)
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            desiredWeight = weights[i] + addend
+        for coord, weight in zip(coords, weights):
+            desiredWeight = weight + addend
             if desiredWeight < -100:
                 desiredWeight = -100
             elif desiredWeight > 100:
@@ -272,14 +262,12 @@ class TestBoard(unittest.TestCase):
         coords = [[15, 15], [2, 7], [9, 25]]
         weights = [20, -99, 99]
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            bd.setWeight(coord[0], coord[1], weights[i])
+        for coord, weight in zip(coords, weights):
+            bd.setWeight(coord[0], coord[1], weight)
             bd.subtractWeight(coord[0], coord[1], subtrahend)
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            desiredWeight = weights[i] - subtrahend
+        for coord, weight in zip(coords, weights):
+            desiredWeight = weight - subtrahend
             if desiredWeight < -100:
                 desiredWeight = -100
             elif desiredWeight > 100:
@@ -295,15 +283,13 @@ class TestBoard(unittest.TestCase):
         coords = [[15, 15], [2, 7], [9, 25]]
         weights = [20, -99, 99]
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            bd.setWeight(coord[0], coord[1], weights[i])
+        for coord, weight in zip(coords, weights):
+            bd.setWeight(coord[0], coord[1], weight)
 
         bd.modifyWeights('*', coords, multiplier)
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            desiredWeight = weights[i] * multiplier
+        for coord, weight in zip(coords, weights):
+            desiredWeight = weight * multiplier
             if desiredWeight < -100:
                 desiredWeight = -100
             elif desiredWeight > 100:
@@ -319,20 +305,18 @@ class TestBoard(unittest.TestCase):
         coords = [[15, 15], [2, 7], [9, 25]]
         weights = [21, -99, 99]
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            bd.setWeight(coord[0], coord[1], weights[i])
+        for coord, weight in zip(coords, weights):
+            bd.setWeight(coord[0], coord[1], weight)
 
         bd.modifyWeights('/', coords, divisor)
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            desiredWeight = weights[i] / divisor
+        for coord, weight in zip(coords, weights):
+            desiredWeight = weight / divisor
             if desiredWeight < -100:
                 desiredWeight = -100
             elif desiredWeight > 100:
                 desiredWeight = 100
-            self.assertAlmostEquals(bd.getWeight(coord[0], coord[1]), weights[i] / divisor, places=4)
+            self.assertAlmostEquals(bd.getWeight(coord[0], coord[1]), weight / divisor, places=4)
 
     def test_add_many_nodes(self):
         """
@@ -343,15 +327,13 @@ class TestBoard(unittest.TestCase):
         coords = [[15, 15], [2, 7], [9, 25]]
         weights = [20, -99, 99]
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            bd.setWeight(coord[0], coord[1], weights[i])
+        for coord, weight in zip(coords, weights):
+            bd.setWeight(coord[0], coord[1], weight)
 
         bd.modifyWeights('+', coords, addend)
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            desiredWeight = weights[i] + addend
+        for coord, weight in zip(coords, weights):
+            desiredWeight = weight + addend
             if desiredWeight < -100:
                 desiredWeight = -100
             elif desiredWeight > 100:
@@ -367,15 +349,13 @@ class TestBoard(unittest.TestCase):
         coords = [[15, 15], [2, 7], [9, 25]]
         weights = [20, -99, 99]
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            bd.setWeight(coord[0], coord[1], weights[i])
+        for coord, weight in zip(coords, weights):
+            bd.setWeight(coord[0], coord[1], weight)
 
         bd.modifyWeights('-', coords, subtrahend)
 
-        for i in range(len(coords)):
-            coord = coords[i]
-            desiredWeight = weights[i] - subtrahend
+        for coord, weight in zip(coords, weights):
+            desiredWeight = weight - subtrahend
             if desiredWeight < -100:
                 desiredWeight = -100
             elif desiredWeight > 100:
@@ -390,17 +370,33 @@ class TestBoard(unittest.TestCase):
         with self.assertRaises(ValueError):
             bd.modifyWeightsErrorCheck('^')
 
-    def test_get_priority_node(self):
+    def test_get_priority_node_positive(self):
         """
         Tests getting node of highest priority.
         """
         bd = Board(30, 30)
         coords = [[5, 5], [17, 7], [19, 9], [29, 16], [5, 14]]
-        weights = [96, 43, 31, 75, 4]
+        weights = [96, 47, 31, 75, 4]
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord, weight)
-        priority = coords[weights.index(max(weights))]
-        self.assertEquals(bd.getNodeWithPriority(0), priority)
+            bd.setWeight(coord[0], coord[1], weight)
+        
+        for i in range(len(coords)):
+            priority = coords[weights.index(sorted(weights)[-1 - i])] # test all weighted squares
+            self.assertEquals(bd.getNodeWithPriority(i), priority)
+
+    def test_get_priority_node_negative(self):
+        """
+        Tests getting node of highest priority.
+        """
+        bd = Board(30, 30)
+        coords = [[5, 5], [17, 7], [19, 9], [29, 16], [5, 14]]
+        weights = [-96, -47, -31, -75, -4]
+        for coord, weight in zip(coords, weights):
+            bd.setWeight(coord[0], coord[1], weight)
+        
+        for i in range(len(coords)):
+            priority = coords[weights.index(sorted(weights)[i])] # test all weighted squares
+            self.assertEquals(bd.getNodeWithPriority(-1 - i), priority)
 
     def test_get_priority_nodes(self):
         """
@@ -410,9 +406,9 @@ class TestBoard(unittest.TestCase):
         coords = [[5, 5], [17, 7], [19, 9], [29, 16], [5, 14]]
         weights = [51, 55, 60, 65, 70]
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord, weight)
+            bd.setWeight(coord[0], coord[1], weight)
         # Returns lowest priority first
-        self.assertEquals(bd.getNodesWithPriority(0, 4), coords)
+        self.assertEquals(bd.getNodesWithPriority(0, 4), coords[::-1])
 
     def test_unique_weights_negative(self):
         """
