@@ -181,17 +181,46 @@ class TestBoard(unittest.TestCase):
             failMsg = "%2.1F != %2.1f at %s" % (bd.getWeight(coord[0], coord[1]), 0, coord)
             self.assertEquals(bd.getWeight(coord[0], coord[1]), 0, msg=failMsg)
 
-    def test_multiply_weight(self):
+    def test_multiply_weight_float(self):
         """
         Tests multiplying node weight.
         """
         fraction = 0.5
         bd = Board(30, 30)
         coords = [[15, 15], [2, 7], [9, 25]]
-        for coord in coords:
-            bd.multiplyWeight(coord, fraction)
-        for coord in coords:
-            self.assertEquals(bd.getWeight(coord), 50.0 * fraction)
+        weights = [20, -1, 100]
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            bd.setWeight(coord[0], coord[1], weights[i])
+            bd.multiplyWeight(coord[0], coord[1], fraction)
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            self.assertEquals(bd.getWeight(coord[0], coord[1]), weights[i] * fraction)
+
+    def test_multiply_weight_int(self):
+        """
+        Tests multiplying node weight.
+        """
+        multiplier = 5
+        bd = Board(30, 30)
+        coords = [[15, 15], [2, 7], [9, 25]]
+        weights = [6, -14, 90]
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            bd.setWeight(coord[0], coord[1], weights[i])
+            bd.multiplyWeight(coord[0], coord[1], multiplier)
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            desiredWeight = weights[i] * multiplier
+            if desiredWeight < -100:
+                desiredWeight = -100
+            elif desiredWeight > 100:
+                desiredWeight = 100
+            self.assertEquals(bd.getWeight(coord[0], coord[1]), desiredWeight)
 
     def test_divide_weight(self):
         """
@@ -199,11 +228,17 @@ class TestBoard(unittest.TestCase):
         """
         divisor = 4
         bd = Board(30, 30)
-        coords = [[29, 3], [16, 22], [6, 2]]
-        for coord in coords:
-            bd.divideWeight(coord, divisor)
-        for coord in coords:
-            self.assertAlmostEquals(bd.getWeight(coord), 50.0 / divisor, places=4)
+        coords = [[15, 15], [2, 7], [9, 25]]
+        weights = [20, -99, 99]
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            bd.setWeight(coord[0], coord[1], weights[i])
+            bd.divideWeight(coord[0], coord[1], divisor)
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            self.assertEquals(bd.getWeight(coord[0], coord[1]), weights[i] / divisor)
 
     def test_add_weight(self):
         """
@@ -211,11 +246,22 @@ class TestBoard(unittest.TestCase):
         """
         addend = 35
         bd = Board(30, 30)
-        coords = [[23, 9], [15, 15], [6, 19]]
-        for coord in coords:
-            bd.addWeight(coord, addend)
-        for coord in coords:
-            self.assertEquals(bd.getWeight(coord), 50.0 + addend)
+        coords = [[15, 15], [2, 7], [9, 25]]
+        weights = [20, -99, 99]
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            bd.setWeight(coord[0], coord[1], weights[i])
+            bd.addWeight(coord[0], coord[1], addend)
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            desiredWeight = weights[i] + addend
+            if desiredWeight < -100:
+                desiredWeight = -100
+            elif desiredWeight > 100:
+                desiredWeight = 100
+            self.assertEquals(bd.getWeight(coord[0], coord[1]), desiredWeight)
 
     def test_subtract_weight(self):
         """
@@ -223,22 +269,46 @@ class TestBoard(unittest.TestCase):
         """
         subtrahend = 23
         bd = Board(30, 30)
-        coords = [[26, 24], [5, 1], [19, 13]]
-        for coord in coords:
-            bd.subtractWeight(coord, subtrahend)
-        for coord in coords:
-            self.assertEquals(bd.getWeight(coord), 50.0 - subtrahend)
+        coords = [[15, 15], [2, 7], [9, 25]]
+        weights = [20, -99, 99]
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            bd.setWeight(coord[0], coord[1], weights[i])
+            bd.subtractWeight(coord[0], coord[1], subtrahend)
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            desiredWeight = weights[i] - subtrahend
+            if desiredWeight < -100:
+                desiredWeight = -100
+            elif desiredWeight > 100:
+                desiredWeight = 100
+            self.assertEquals(bd.getWeight(coord[0], coord[1]), desiredWeight)
 
     def test_multiply_many_nodes(self):
         """
         Tests multiplying many nodes weights.
         """
-        fraction = 0.5
+        multiplier = 2
         bd = Board(30, 30)
         coords = [[15, 15], [2, 7], [9, 25]]
-        bd.modifyWeights('*', coords, fraction)
-        for coord in coords:
-            self.assertEquals(bd.getWeight(coord), 50.0 * fraction)
+        weights = [20, -99, 99]
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            bd.setWeight(coord[0], coord[1], weights[i])
+
+        bd.modifyWeights('*', coords, multiplier)
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            desiredWeight = weights[i] * multiplier
+            if desiredWeight < -100:
+                desiredWeight = -100
+            elif desiredWeight > 100:
+                desiredWeight = 100
+            self.assertEquals(bd.getWeight(coord[0], coord[1]), desiredWeight)
 
     def test_divide_many_weights(self):
         """
@@ -246,22 +316,23 @@ class TestBoard(unittest.TestCase):
         """
         divisor = 3
         bd = Board(30, 30)
-        coords = [[29, 3], [16, 22], [6, 2]]
-        bd.modifyWeights('/', coords, divisor)
-        for coord in coords:
-            self.assertAlmostEquals(bd.getWeight(coord), 50.0 / divisor, places=4)
+        coords = [[15, 15], [2, 7], [9, 25]]
+        weights = [21, -99, 99]
 
-    def test_divide_many_weights_cleanly(self):
-        """
-        Tests dividing many nodes weights using a divisor that cleanly divides the weight.
-        i.e. weight % divisor = 0
-        """
-        divisor = 5
-        bd = Board(30, 30)
-        coords = [[29, 3], [16, 22], [6, 2]]
+        for i in range(len(coords)):
+            coord = coords[i]
+            bd.setWeight(coord[0], coord[1], weights[i])
+
         bd.modifyWeights('/', coords, divisor)
-        for coord in coords:
-            self.assertAlmostEquals(bd.getWeight(coord), 50.0 / divisor, places=4)
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            desiredWeight = weights[i] / divisor
+            if desiredWeight < -100:
+                desiredWeight = -100
+            elif desiredWeight > 100:
+                desiredWeight = 100
+            self.assertAlmostEquals(bd.getWeight(coord[0], coord[1]), weights[i] / divisor, places=4)
 
     def test_add_many_nodes(self):
         """
@@ -269,10 +340,23 @@ class TestBoard(unittest.TestCase):
         """
         addend = 35
         bd = Board(30, 30)
-        coords = [[23, 9], [15, 15], [6, 19]]
+        coords = [[15, 15], [2, 7], [9, 25]]
+        weights = [20, -99, 99]
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            bd.setWeight(coord[0], coord[1], weights[i])
+
         bd.modifyWeights('+', coords, addend)
-        for coord in coords:
-            self.assertEquals(bd.getWeight(coord), 50.0 + addend)
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            desiredWeight = weights[i] + addend
+            if desiredWeight < -100:
+                desiredWeight = -100
+            elif desiredWeight > 100:
+                desiredWeight = 100
+            self.assertEquals(bd.getWeight(coord[0], coord[1]), desiredWeight)
 
     def test_subtract_many_nodes(self):
         """
@@ -280,10 +364,23 @@ class TestBoard(unittest.TestCase):
         """
         subtrahend = 23
         bd = Board(30, 30)
-        coords = [[26, 24], [5, 1], [19, 13]]
+        coords = [[15, 15], [2, 7], [9, 25]]
+        weights = [20, -99, 99]
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            bd.setWeight(coord[0], coord[1], weights[i])
+
         bd.modifyWeights('-', coords, subtrahend)
-        for coord in coords:
-            self.assertEquals(bd.getWeight(coord), 50.0 - subtrahend)
+
+        for i in range(len(coords)):
+            coord = coords[i]
+            desiredWeight = weights[i] - subtrahend
+            if desiredWeight < -100:
+                desiredWeight = -100
+            elif desiredWeight > 100:
+                desiredWeight = 100
+            self.assertEquals(bd.getWeight(coord[0], coord[1]), desiredWeight)
 
     def test_modify_weights_invalid_operator(self):
         """

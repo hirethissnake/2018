@@ -159,11 +159,11 @@ showPath                void        Display graphic of best path between nodes
 
 
     def normalizeWeight(self, weight):
+        
         if weight < -100:  # ensure weight is in bounds
-            weight = -100
+            return -100
         elif weight > 100:
-            weight = 100
-            
+            return 100
         return weight
 
 
@@ -176,8 +176,7 @@ showPath                void        Display graphic of best path between nodes
         """
         
         self.modifyWeightErrorCheck(x, y, weight)  # comment this out for speed
-        x = self.normalizeWeight(x)
-        y = self.normalizeWeight(y)
+        weight = self.normalizeWeight(weight)
         
         self.board[x, y] = weight
 
@@ -210,9 +209,9 @@ showPath                void        Display graphic of best path between nodes
         param2: float/int - weight to set
         """
         
-        # we create a lists of columns and rows to be modified
-        cols = [self.normalizeWeight(x) for [x, y] in nodes]
-        rows = [self.normalizeWeight(y) for [x, y] in nodes]
+        cols, rows = map(list, zip(*nodes)) # create a lists of columns and rows to be modified
+
+        weight = self.normalizeWeight(weight)
 
         for i in range(len(nodes)):
             self.modifyWeightErrorCheck(cols[i], rows[i], weight)  # comment this out for speed
@@ -228,20 +227,25 @@ showPath                void        Display graphic of best path between nodes
         param2: [[int, int]] - array of nodes in the form <integer>,<integer>
         param3: float/int - value to modify by
         """
-        return
-        self.modifyWeightsErrorCheck(operator)  # comment speed
+        
+        self.modifyWeightsErrorCheck(operator)  # comment these out for speed
+        self.checkNumber(value)
 
-        tempLen = len(nodes)
+        cols, rows = map(list, zip(*nodes)) # create a lists of columns and rows to be modified
 
-        for nodeIndex in range(tempLen):
-            if operator == '*':
-                self.multiplyWeight(nodes[nodeIndex], value)
-            elif operator == '/':
-                self.divideWeight(nodes[nodeIndex], value)
-            elif operator == '+':
-                self.addWeight(nodes[nodeIndex], value)
-            elif operator == '-':
-                self.subtractWeight(nodes[nodeIndex], value)
+        for i in range(len(nodes)):
+            self.checkNode(cols[i], rows[i])  # comment this out for speed
+
+        if operator == "*":
+            self.board[cols, rows] *= value
+        elif operator == "/":
+            self.board[cols, rows] /= value
+        elif operator == "+":
+            self.board[cols, rows] += value
+        elif operator == "-":
+            self.board[cols, rows] -= value
+
+        self.board.clip(-100, 100, out=self.board) # enforce constraints
 
 
     @staticmethod
@@ -257,60 +261,60 @@ showPath                void        Display graphic of best path between nodes
             raise ValueError('invalid operator')
 
 
-    def multiplyWeight(self, u, multiplier):
+    def multiplyWeight(self, x, y, multiplier):
         """
         Multiply weight of node u by multiplier.
 
         param1: [int, int] - node in the form [x, y]
         param2: integer/float - number to multiply weight by
         """
-        return
-        self.modifyWeightErrorCheck(u, multiplier)  # comment this out for speed
+        
+        self.modifyWeightErrorCheck(x, y, multiplier)  # comment this out for speed
 
-        currentWeight = self.getWeight(u)
-        self.setWeight(u, currentWeight * multiplier)
+        currentWeight = self.getWeight(x, y)
+        self.setWeight(x, y, currentWeight * multiplier)
 
 
-    def divideWeight(self, u, divisor):
+    def divideWeight(self, x, y, divisor):
         """
         Divide weight of node u by divisor.
 
         param1: [int, int] - node in the form [x, y]
         param2: integer/float - number to divide weight by
         """
-        return
-        self.modifyWeightErrorCheck(u, divisor)  # comment this out for speed
+        
+        self.modifyWeightErrorCheck(x, y, divisor)  # comment this out for speed
 
-        currentWeight = self.getWeight(u)
-        self.setWeight(u, currentWeight / divisor)
+        currentWeight = self.getWeight(x, y)
+        self.setWeight(x, y, currentWeight / divisor)
 
 
-    def addWeight(self, u, addend):
+    def addWeight(self, x, y, addend):
         """
         Increase weight of node u by addend.
 
         param1: [int, int] - node in the form [x, y]
         param2: integer/float - number to add to weight
         """
-        return
-        self.modifyWeightErrorCheck(u, addend)  # comment this out for speed
+        
+        self.modifyWeightErrorCheck(x, y, addend)  # comment this out for speed
 
-        currentWeight = self.getWeight(u)
-        self.setWeight(u, currentWeight + addend)
+        currentWeight = self.getWeight(x, y)
+        self.setWeight(x, y, currentWeight + addend)
 
 
-    def subtractWeight(self, u, subtrahend):
+    def subtractWeight(self, x, y, subtrahend):
         """
         Decrease weight of node u by subtrahend.
 
         param1: [int, int] - node in the form [x, y]
         param2: integer/float - number to subtract from weight
         """
-        return
-        self.modifyWeightErrorCheck(u, subtrahend)  # comment this out for speed
+        
+        self.modifyWeightErrorCheck(x, y, subtrahend)  # comment this out for speed
 
-        currentWeight = self.getWeight(u)
-        self.setWeight(u, currentWeight - subtrahend)
+        currentWeight = self.getWeight(x, y)
+        self.setWeight(x, y, currentWeight - subtrahend)
 
 
     def modifyWeightErrorCheck(self, x, y, num):
@@ -320,7 +324,7 @@ showPath                void        Display graphic of best path between nodes
         param1: unknown - item to confirm if node
         param2: unknown - item to confirm if integer/float
         """
-        return
+        
         self.checkNode(x, y)
         self.checkNumber(num)
 
