@@ -4,11 +4,6 @@ Includes vertices and edges.
 """
 
 import colorsys
-#import igraph
-try:
-    from appJar import gui
-except ImportError:
-    print('Failed to import appJar')
 
 
 class Board:
