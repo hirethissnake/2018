@@ -98,7 +98,6 @@ class Game:
                 priorityTarget += 1
             else:
                 numDuplicates = self.weightGrid.countNodeWeightCopies(topPriorityNode)
-                return # TODO: remove this
                 duplicateNodes = self.weightGrid.getNodesWithPriority(priorityTarget, \
                 priorityTarget + numDuplicates - 1)
                 closestLen = sys.maxsize
@@ -175,32 +174,31 @@ class Game:
 
     def weightFood(self):
         """Weight grid with food necessity"""
-        #TODO
-            #How desperately do we need food
-            #Goes through all food and returns the closest according to optimumPath
+        #How desperately do we need food
+        #Goes through all food and returns the closest according to optimumPath
+
         pathLength = 500
         shortestPath = sys.maxsize
         oursnake = self.snakes[self.you]
         head = oursnake.getHeadPosition()
         # health = oursnake.getHealth()
         for foodCoords in self.food:
-            return # TODO: remove this
             pathLength = len(self.weightGrid.optimumPath(head, foodCoords))
             if pathLength < shortestPath:
                 shortestPath = pathLength
                 #closestFoodCoord = foodCoords
 
             #foodCoord += 1
-            foodWeight = 100# - health - pathLength # this will change based on health decrementation
+            # this will change based on health decrementation
+            foodWeight = 100 # - health - pathLength
             self.weightGrid.setWeight(foodCoords, foodWeight)
 
 
     def weightSmallSnakes(self):
         """Positively weight smaller snakes for murdering purposes"""
-        #TODO
-            #Compare size
-            #How long will it take to get to the snake?
-            #How much food is around for the snake to grow?
+        #Compare size
+        #How long will it take to get to the snake?
+        #How much food is around for the snake to grow?
         oursnake = self.snakes[self.you]
         ourSize = oursnake.getSize()
         weightAdd = 0
@@ -218,16 +216,15 @@ class Game:
                         self.weightGrid.addWeight(headCoord, weightAdd)
 
 
-    def headArea(self, snek):
+    def headArea(self, snake):
         """Return an area around the head so that it can be weighted
         param1: snake whose head area needs to be evaluated"""
 
-        #TODO
-            #find head
-            #find area
-            #find body
-            #return coordinates
-        head = snek.getHeadPosition()
+        #find head
+        #find area
+        #find body
+        #return coordinates
+        head = snake.getHeadPosition()
         xCoord = head[0]
         yCoord = head[1]
         upperBoundX = xCoord+2
@@ -258,7 +255,7 @@ class Game:
 
 
     def weightLargeSnakes(self):
-        """Negativly weight squares where larger snake heads could move to next round"""
+        """Negatively weight squares where larger snake heads could move to next round"""
 
         ourSnake = self.snakes[self.you]
         ourSize = ourSnake.getSize()
@@ -293,7 +290,8 @@ class Game:
 
 
     def weightSafeTails(self):
-        #TODO
+        """Weight locations that will be moved out of next turn as safe"""
+
         #For all snakes whose head is not adjacent to a food:
         #Weight the space occupied by their tail as 50 (or other positive value)
 
@@ -308,7 +306,7 @@ class Game:
                 moveOptions = []
                 foodOpt = False
 
-                #Save posible moves that are within the board (including body)
+                #Save possible moves that are within the board (including body)
                 if (headX - 1) >= 0:
                     moveOptions.append([headX - 1, headY])
                 if (headX + 1) < self.width:
@@ -325,7 +323,7 @@ class Game:
                         foodOpt = True
                         break
 
-                if foodOpt == False:
+                if not foodOpt:
                     self.weightGrid.setWeight(tailPos, 50)
 
 
@@ -377,7 +375,8 @@ class Game:
 
         otherOptions.remove(path[1]) #Remove from other options our current option
         if len(ourSnake.getAllPositions()) > 1 and ourSnake.getAllPositions()[1] in otherOptions:
-            otherOptions.remove(ourSnake.getAllPositions()[1]) # Remove our 'neck' from other otherOptions
+            # Remove our 'neck' from other otherOptions
+            otherOptions.remove(ourSnake.getAllPositions()[1])
         for ot in otherOptions:
             if self.weightGrid.getWeight(ot) == 0:
                 otherOptions.remove(ot)
@@ -389,7 +388,7 @@ class Game:
         if dont:
             return otherOptions[0]
         return path[1]
-        #set other snak eotpions to 1
+        #set other snake options to 1
 
 
 
@@ -398,20 +397,18 @@ class Game:
 
 
         # Do not kill ourselves by picking a corner where we trap ourselves
-        #TODO
-            # How long are we?
-            # Are we giving other people the opportunity to block off our exit?
-            # What is the optimal traversal path to maximize future space opportunities
-            # Don't limit our moves (against a surface) unless advantageous or necessary
+        # How long are we?
+        # Are we giving other people the opportunity to block off our exit?
+        # What is the optimal traversal path to maximize future space opportunities
+        # Don't limit our moves (against a surface) unless advantageous or necessary
 
 
     def weightTrapSnakes(self):
         """Positively weight squares that will allow us to block other snakes off"""
-        #TODO
-            #How long are they?
-            #How much traversal room are we leaving them?
-            #Do they need food? Do they have it in the trapped location?
-            #How long are we? Can we effectively block them for long enough?
+        #How long are they?
+        #How much traversal room are we leaving them?
+        #Do they need food? Do they have it in the trapped location?
+        #How long are we? Can we effectively block them for long enough?
 
 
     def convertNodeToDirection(self, node, identifer):
