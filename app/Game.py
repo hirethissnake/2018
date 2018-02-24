@@ -3,8 +3,8 @@ health, and providing Main with the best next move."""
 
 import sys
 import random
-from Snake import Snake
-from Board import Board
+from app.Snake import Snake
+from app.Board import Board
 
 
 class Game:
@@ -70,7 +70,7 @@ class Game:
 
     def getNextMove(self):
         """"Use all algorithms to determine the next best move for our snake."""
-
+        return "up"
         self.weightGrid.resetWeights()
 
         # RUN WEIGHTING ALGORITHMS HERE vvv

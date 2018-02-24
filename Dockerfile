@@ -1,9 +1,9 @@
 # Use an official Python runtime as a parent image
-FROM python:2 
+FROM python:3 
 # Add requirements file to pre-process python requirements
 ADD requirements.txt /data/
 # Set working directory
-WORKDIR /app
+WORKDIR /data
 # VOLUME - create mount-point for a volume
 VOLUME /data/app
 # Install any needed packages specified in requirements.txt

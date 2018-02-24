@@ -7,7 +7,7 @@
 import os
 import time
 import bottle
-from Game import Game
+from app.Game import Game
 
 gameDic = {}
 

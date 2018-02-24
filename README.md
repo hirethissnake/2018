@@ -58,17 +58,17 @@ source code. We manage this by mounting a volume in docker. Run this command:
 
 **Linux / Mac**
 ```
-docker run -p 8080:8080 -v $(pwd)/app:/data/app hirethissnake python /data/app/main.py
+docker run --rm -it -p 8080:8080 -v $(pwd)/app:/data/app hirethissnake python "-mapp.main"
 ```
 
 **Windows - Command Prompt**
 ```
-docker run -p 8080:8080 -v %cd%/app:/data/app hirethissnake python /data/app/main.py
+docker run --rm -it -p 8080:8080 -v %cd%/app:/data/app hirethissnake python "-mapp.main"
 ```
 
 **Windows - Power Shell**
 ```
-docker run -p 8080:8080 -v $pwd/app:/data/app hirethissnake python /data/app/main.py
+docker run --rm -it -p 8080:8080 -v $pwd/app:/data/app hirethissnake python "-mapp.main"
 ```
 
 Oh boy, there is a lot to unpack here. What are all these things? Why do

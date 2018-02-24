@@ -32,7 +32,7 @@ class TestSnake(unittest.TestCase):
         positions_expected = initParams['coords']
         identifier_expected = initParams['id']
 
-        self.assertEquals(s1.getSize(), size_expected)
+        self.assertEqual(s1.getSize(), size_expected)
         self.assertEqual(s1.getState(), state_expected)
         self.assertEqual(s1.getHealth(), health_expected)
         self.assertEqual(s1.getHeadPosition(), headPosition_expected)
@@ -136,7 +136,7 @@ class TestSnake(unittest.TestCase):
         }
 
         s1 = Snake(initParams)
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             s1.update(updateParams)
 
 if __name__ == "__main__":
