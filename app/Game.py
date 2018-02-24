@@ -37,6 +37,10 @@ class Game:
         self.deadSnakes = {}
         self.newDead = 'False'      #Stores new deaths as id so must be string
 
+    def firstMove(self, data):
+        """Perform necessary actions upon receiving the first
+        dictionary of the game"""
+
     def update(self, data):
         """Update game with current board from server.
 

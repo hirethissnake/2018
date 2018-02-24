@@ -3,7 +3,10 @@ Test state transitions, game operation.
 """
 
 import unittest
+from unittest.mock import MagicMock
 from app.StateMachine import StateMachine
+from app.Board import Board
+from app.Snake import Snake
 
 
 class TestStateMachine(unittest.TestCase):
@@ -15,13 +18,23 @@ class TestStateMachine(unittest.TestCase):
         """
         Create a fresh StateMachine object.
         """
-        self.machine = StateMachine()
+        self.board = MagicMock()
+
+        otherSnake = {'length': 3}
+        us = {'length': 3}        
+        self.snakes = {'mean-snake-uuid': otherSnake, 'glorious-us-uuid': us}
+
+        self.machine = StateMachine(self.board, self.snakes, "glorious-us-uuid")
 
     def test_initialization(self):
         """
         Ensure proper default state.
         """
         self.assertEqual(self.machine.getState(), "IDLE")
+        self.assertEqual(self.machine.board, self.board)
+        self.assertEqual(self.machine.us, self.snakes['glorious-us-uuid'])
+        del self.snakes['glorious-us-uuid']
+        self.assertEqual(self.machine.otherSnakes, self.snakes)
 
     def test_set_and_recall_state(self):
         """
@@ -49,6 +62,12 @@ class TestStateMachine(unittest.TestCase):
         """
         self.assertRaises(KeyError, self.machine.setState, "INVALID")
         self.assertRaises(KeyError, self.machine.setState, 2)
+
+    def test_transition(self):
+        """
+        Make sure you cannot set an invalid state.
+        """
+        self.machine.transition()
 
 
 if __name__ == "__main__":

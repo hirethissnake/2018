@@ -11,12 +11,24 @@ class StateMachine:
     and interface with Game class.
 
     Has following attributes:
-    TODO          (board)     - Board object"""
+    state           (State)         - State enum
+    board           (Board)         - Board object
+    otherSnakes     ({UUID:Snake})  - dict of UUIDs to Snake objects 
+    us              (Snake)         - Snake object representing us"""
 
-    def __init__(self):
-        """Initialize the state machine."""
+    def __init__(self, board, snakes, us):
+        """Initialize the state machine.
+        
+        param1: Board - board object
+        param2: {UUID:Snake} - dict mapping UUIDs to snakes
+        param3: string - our snake's UUID 
+        """
         self.state = State.IDLE
-
+        self.board = board
+        self.otherSnakes = dict(snakes) # perform shallow copy
+        del self.otherSnakes[us]
+        self.us = snakes[us]
+        
     def getState(self):
         """
         Return the current state.
@@ -27,11 +39,20 @@ class StateMachine:
 
     def setState(self, stateName):
         """
-        Set the current state.
+        Set the current state. Internal use only.
 
         param1: string - enum name of new state
         """
         self.state = State[stateName]
+
+    def transition(self):
+        """
+        Use the available information to pick a new state.
+        """
+        currentState = self.getState()
+        if currentState is "IDLE":
+            print("we did it!")
+
 
 class State(Enum):
     """Our state enumeration. Provides a consistent way to
