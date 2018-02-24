@@ -25,6 +25,14 @@ class StateMachine:
         """
         return self.state.name
 
+    def setState(self, stateName):
+        """
+        Set the current state.
+
+        param1: string - enum name of new state
+        """
+        self.state = State[stateName]
+
 class State(Enum):
     """Our state enumeration. Provides a consistent way to
     reference the list of available states."""
