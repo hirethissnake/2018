@@ -1,5 +1,5 @@
-"""Process all game data. Handles getting in new board states, analyzing snake
-health, and providing Main with the best next move."""
+"""Process all game data. Handles interfacing with the hidden state machine,
+passing data to the right places, and returning the best move given a game dictionary."""
 
 import sys
 import random
@@ -16,7 +16,7 @@ class Game:
     width           (int)       - Board width
     height          (int)       - Board height
     you             (string)    - UUID representing what our snake's ID is
-    food   (array)     - array of coord arrays
+    food            (array)     - array of coord arrays
     turn            (int)       - 0-indexed int representing completed turns
     snakes          (dict)      - dict of Snake objects currently in play
     deadSnakes      (dict)      - dict of Snake objects that no longer compete"""
