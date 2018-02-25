@@ -76,11 +76,13 @@ Windows and Linux / Mac have different commands?
 
 In a list:
 
- - docker : runs docker on CLI
- - run : execute an image (either start it and keep it started, or execute
+ - docker : Runs docker on CLI
+ - run : Execute an image (either start it and keep it started, or execute
    command in that environment)
- - -p 4000:8080 : Pass all data from port 4000 on the host computer into the
-   docker image on port 8080, and vice-versa. 4000 can be changed on the CLI,
+ - --rm : Deletes the container when it closes (to keep your comptuter clean)
+ - -it : Make the container interactive, so we can see what's going on!
+ - -p 4000:8080 : Pass all data from port 8080 on the host computer into the
+   docker image on port 8080, and vice-versa. 8080 can be changed on the CLI,
 but 8080 is the port that main.py executes on.
  - -v $(pwd)/app:/data/app : (**Linux**) The command is roughly the same on
    Windows. $(pwd) == %cd%, and returns the current location of the terminal.
@@ -88,10 +90,9 @@ but 8080 is the port that main.py executes on.
 computer to the folder after the colon on the Docker image. In this way, files
 located at %cd%/app are available inside the image at /data/app everytime you
 run the command, instead of having to re-build the image.
- - hirethissnake : the name of the image. This can be changed, and if you have
+ - hirethissnake : The name of the image. This can be changed, and if you have
    many images, should be changed.
- - python /data/app/main.py : This command is passed along to the Docker image,
-   and is executed inside its environment. It runs the server.
+ - python "-mapp.main" : This command tells the docker image that we would like to use the python executable, and that we would like to run the file in the 'app' module called 'main'. This file is then executed inside its environment, running the server.
 
 You can now make any changes you'd like to the local files in ./app and then
 run the `docker run` command above, and see those changes represented.
