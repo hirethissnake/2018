@@ -84,7 +84,7 @@ class Game:
                     self.deadSnakes[snakeId] = snake
 
     def getNextMove(self):
-        """'
+        """
         Use all algorithms to determine the next best move for our snake.
         """
         return 'up' # Remove this when Board.py is complete
