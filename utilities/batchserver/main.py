@@ -80,6 +80,11 @@ def printError(option, parser):
 
 def main():
     parser = OptionParser()
+    parser.set_defaults(outputDirectory='replays')
+    parser.set_defaults(numFood=2)
+    parser.set_defaults(snakeFile='snakes.txt')
+    parser.set_defaults(numGames=5)
+
     parser.add_option("-d", "--directory", dest="outputDirectory", help="Output directory for saved game.json files")
     parser.add_option("-f", "--food", dest="numFood", help="Amount of food on board at any given time")
     parser.add_option("-s", "--snakes", dest="snakeFile", help="File containing snake URLs")
