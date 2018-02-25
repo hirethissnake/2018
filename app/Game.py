@@ -93,16 +93,21 @@ class Game:
         state = self.machine.getState()
         nextMove = []
 
-        if state = "IDLE":
+        if state is "IDLE":
             # run algorithms here
-        elif state = "HUNGRY":
+            pass
+        elif state is "HUNGRY":
             # eat food here
-        elif state = "TRAPPED":
+            pass
+        elif state is "TRAPPED":
             # be claustrophobic here
-        elif state = "STARVING":
+            pass
+        elif state is "STARVING":
             # stuff your face here
-        elif state = "CONFINED":
+            pass
+        elif state is "CONFINED":
             # get out of here
+            pass
 
         """
         THIS IS LEGACY CODE AND IS A CANDIDATE FOR REMOVAL
