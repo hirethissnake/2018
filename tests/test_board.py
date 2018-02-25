@@ -399,6 +399,22 @@ class TestBoard(unittest.TestCase):
         # Returns lowest priority first
         self.assertEqual(bd.getNodesWithPriority(0, 4), coords[::-1])
 
+    def test_priority_node_error_check(self):
+        """
+        Tests invalid nodes in getNodesWithPriorityErrorCheck
+        """
+        bd = Board(5, 5)
+        indices = [3, 2, -5, 25]
+        with self.assertRaises(ValueError):
+            # "Start must be less than end"
+            bd.getNodesWithPriorityErrorCheck(indices[0], indices[1])
+        with self.assertRaises(ValueError):
+            # "value is out of bounds" (start < 0)
+            bd.getNodesWithPriorityErrorCheck(indices[2], indices[0])
+        with self.assertRaises(ValueError):
+            # "value is out of bounds" (end >= self.board.size)
+            bd.getNodesWithPriorityErrorCheck(indices[0], indices[3])
+
     def test_unique_weights_negative(self):
         """
         Tests to confirm negative result with more than 1 of the same weight across all nodes.
@@ -440,6 +456,14 @@ class TestBoard(unittest.TestCase):
         with self.assertRaises(ValueError):
             bd.optimumPathErrorCheck([coord, coord])
 
+    def test_optimum_path_too_many_indices(self):
+        """
+        Tests that we cannot find a path for more than two vertices.
+        """
+        bd = Board(5, 5)
+        indices = [[0, 1], [0, 0], [1, 0], [2, 0], [3, 0]]
+        with self.assertRaises(ValueError):
+            bd.optimumPath([indices])
 
     def test_optimum_path_regular(self):
         """
@@ -494,6 +518,23 @@ class TestBoard(unittest.TestCase):
 
         # Confirm returned path is same as ideal path from start to end (inclusive)
         self.assertEqual(ideal_path, path)
+    
+    def test_no_optimum_path(self):
+        """
+        Tests a board which has no optimum path.
+        """
+        bd = Board(5, 5)
+        coords = [[0, 1], [1, 0], [1, 1]]
+        start = [2, 0]
+        end = [0, 0]
+        ideal_path = None
+        weight = 0
+        for coord in coords:
+            bd.setWeight(*coord, weight)
+        path = bd.optimumPath([start, end])
+
+        # Confirm returned path is same as ideal path from start to end (inclusive)
+        self.assertEqual(ideal_path, path)
 
     def test_optimum_path_length(self):
         """
@@ -510,6 +551,17 @@ class TestBoard(unittest.TestCase):
             bd.setWeight(*coord, weight)
         path_length = bd.optimumPathLength([start, end])
         self.assertEqual(path_length, (len(ideal_path)))
+
+    def test_optimum_path_error_check(self):
+        """
+        Tests optimum path error check for duplicate values and okay values.
+        """
+        bd = Board(5, 5)
+        coords1 = [[1, 2], [1, 3], [2, 3], [3, 3], [3, 2]]
+        coords2 = [[1, 1,], [1, 3], [3, 4], [1, 1]]
+        self.assertEqual(bd.optimumPathErrorCheck(coords1), True)
+        with self.assertRaises(ValueError):
+            bd.optimumPathErrorCheck(coords2)
 
 if __name__ == "__main__":
     unittest.main()

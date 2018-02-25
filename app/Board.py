@@ -87,31 +87,6 @@ showPath                void        Display graphic of best path between nodes
             raise ValueError('height must be greater than 1')
 
 
-    @staticmethod
-    def nodeAsString(u):
-        """
-        Return a node as a string
-
-        param1: [[x, y]] - node to convert
-        return: string - node representation
-        """
-
-        return str(u[0]) + ',' + str(u[1])
-
-
-    @staticmethod
-    def stringAsNode(u):
-        """
-        Return a string as a node
-
-        param1: [int, int] - node in form [x, y]
-        return: [[x, y]] - node representation
-        """
-
-        coords = u.split(',')
-        return [int(coords[0]), int(coords[1])]
-
-
     def checkNode(self, x, y):
         """
         Check if u is a valid node.
@@ -170,7 +145,7 @@ showPath                void        Display graphic of best path between nodes
         # However, djikstra's minimizes distances so lower is better.
         if weight > 100:
             return 0
-        elif weight < 0:
+        elif weight <= 0:
             return np.inf
         return 100 - weight
 
@@ -329,8 +304,10 @@ showPath                void        Display graphic of best path between nodes
         self.checkNode(x, y)  # comment this out for speed
         weight = self.board[x, y]
         returnable = 0
-        if weight < 100:
-            returnable = int(100 - self.board[x, y])
+        if weight < 0:
+            returnable = 0
+        elif weight < 100:
+            returnable = int(100 - weight)
         return returnable
 
 
@@ -439,8 +416,6 @@ showPath                void        Display graphic of best path between nodes
             for x in range(b_width):
                 # map x, y coords to a range from 0 to (b_height * b_width)
                 i = y * b_width + x
-                if i >= b_width * b_height:
-                    continue
                 if x > 0:
                     adj_matrix[i - 1, i] = self.board[i // b_width][i % b_width]
                     adj_matrix[i, i - 1] = self.board[i // b_width][i % b_width]
@@ -455,7 +430,6 @@ showPath                void        Display graphic of best path between nodes
         path = []
         i = end
         if np.isinf(distances[i]):
-            print('There is no available path.')
             return None
         else:
             while i != start:
