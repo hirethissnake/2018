@@ -5,18 +5,18 @@ class Snake:
     Feisty snake object.
 
     Has the following attributes:
-    size            (int)       - > 0, describes length of snake
-    identifier      (uuid)      - unique identifier describing for each snake
-    coords          ([coords])  - array of [x,y] describing snakes body
-    healthPoints   (int)       - 0..100, describes moves a snake has before
-                                    death, unless that snake eats food.
-    oldHealthPoints(int)       - health_points of snake on last move
-    oldCoords      ([[coords]])- array of array of [x,y] describing past
-                                    locations the snake was at
-    state           (string)    - (unknown | food | attack | flee), describes
-                                    past actions of snake
-    taunt           (string)    - snake's current taunt
-    name            (string)    - name of snake
+    size            (int)           - describes length of snake
+    identifier      (uuid)          - unique identifier describing for each snake
+    coords          ([coords])      - array of [x,y] describing snakes body
+    healthPoints    (int)           - 0..100, describes moves a snake has before
+                                        death, unless that snake eats food.
+    oldHealthPoints (int)           - health_points of snake on last move
+    oldCoords       ([[coords]])    - array of array of [x,y] describing past
+                                        locations the snake was at
+    state           (string)        - (unknown | food | attack | flee), describes
+                                        past actions of snake
+    taunt           (string)        - snake's current taunt
+    name            (string)        - name of snake
     """
 
     def __init__(self, data):
@@ -154,10 +154,10 @@ class Snake:
         Return Snake attribues as a string.
         """
 
-        asString = "identifer: " + str(self.identifier) + "\n\
-healthPoints: " + str(self.healthPoints) + "\n\
-state: " + str(self.state) + "\n\
-coords: " + str(self.coords)
+        asString = "identifer: " + str(self.identifier) + "\n" \
+                    + "healthPoints: " + str(self.healthPoints) + "\n" \
+                    + "state: " + str(self.state) + "\n" \
+                    + "coords: " + str(self.coords)
 
         return asString
 
