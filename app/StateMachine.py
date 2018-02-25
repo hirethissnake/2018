@@ -123,7 +123,7 @@ class StateMachine:
         param1: value - value to compare against
         return: boolean - True if health less than 'value'
         """
-        return True
+        return False
 
 
 class State(Enum):

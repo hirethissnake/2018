@@ -66,13 +66,28 @@ class TestStateMachine(unittest.TestCase):
         """
         Test transitioning between states based.
         """
-        self.us.getSize.return_value = 3
-        self.us.getHealth.return_value = 100
-        self.us.getHeadPosition.return_value = [1, 1]
-        self.food.getPositions.return_value = [[0, 0]]
-
+        self.us.getHealth.return_value = 50
         self.machine.step()
-        self.assertEqual(self.machine.getState(), "CONFINED")
+        self.assertEqual(self.machine.getState(), "HUNGRY")
+
+        self.food.getPositions.return_value = [[0, 0]]
+        self.us.getHealth.return_value = 30
+        self.board.optimumPathLength.return_value = 40
+        self.machine.step()
+        self.assertEqual(self.machine.getState(), "STARVING")
+
+        self.us.getSize.return_value = 5
+        self.us.getHealth.return_value = 70
+        self.machine.step()
+        self.assertEqual(self.machine.getState(), "IDLE")
+
+        self.us.getHealth.return_value = 50
+        self.machine.step()
+        self.assertEqual(self.machine.getState(), "HUNGRY")
+
+        self.us.getHealth.return_value = 70
+        self.machine.step()
+        self.assertEqual(self.machine.getState(), "IDLE")
 
     def test_path_to_food_less(self):
         """
