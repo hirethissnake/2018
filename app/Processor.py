@@ -87,8 +87,8 @@ class Processor:
             if otherSnake != self.us:
                 otherSnakeSize = self.snakes[otherSnake].getSize()
                 if  otherSnakeSize < ourSize:
-                    """Run this code for every snake on the board that's
-                    not you AND smaller than you"""
+                    # Run this code for every snake on the board that's
+                    # not you AND smaller than you
                     headA = self.headArea(self.snakes[otherSnake])
                     #this algorithm could be altered to add varying values not just a blanket range
                     weightAdd = 12

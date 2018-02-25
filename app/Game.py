@@ -90,17 +90,27 @@ class Game:
         return "up" # Remove this when Board.py is complete
 
         self.board.resetWeights()
-        self.state = self.machine.getState()
+        state = self.machine.getState()
+        nextMove = []
 
-        
-        # RUN WEIGHTING ALGORITHMS HERE vvv
+        if state = "IDLE":
+            # run algorithms here
+        elif state = "HUNGRY":
+            # eat food here
+        elif state = "TRAPPED":
+            # be claustrophobic here
+        elif state = "STARVING":
+            # stuff your face here
+        elif state = "CONFINED":
+            # get out of here
+
+        """
+        THIS IS LEGACY CODE AND IS A CANDIDATE FOR REMOVAL
 
         self.processor.weightNotHitSnakes()
         self.processor.weightFood()
         self.processor.weightSmallSnakes()
         self.processor.weightLargeSnakes()
-
-        # RUN WEIGHTING ALGORITHMS HERE ^^^
 
         self.board.setEdges()
 
@@ -140,8 +150,9 @@ class Game:
             elif self.board.optimumPathLength(ourSnake.getHeadPosition(), target) != \
             float("inf"):
                 nodeValid = True
-
         nextMove = self.processor.weightEnclosedSpaces(target)
+        """
+
         return self.processor.nodeToDirection(nextMove, self.us)
 
     def getTaunt(self):
