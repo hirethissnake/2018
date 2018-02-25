@@ -11,5 +11,5 @@ git clone https://github.com/phildenhoff/hirethissnake
 `cd` into the new folder. To perform the tests, you'll have to execute the `test_suite` file in  `tests` package, as such:
 
 ```shell
-python -m tests.test_suite -v
+python3 -m tests.test_suite -v
 ```
