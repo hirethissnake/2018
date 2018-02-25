@@ -2,11 +2,11 @@
 passing data to the right places, and returning the best move given a game dictionary."""
 
 import random
-from app.Snake import Snake
-from app.Food import Food
+from app.obj.Snake import Snake
+from app.obj.Food import Food
+from app.util.StateMachine import StateMachine
+from app.util.Processor import Processor
 from app.Board import Board
-from app.StateMachine import StateMachine
-from app.Processor import Processor
 
 
 class Game:

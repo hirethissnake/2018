@@ -3,7 +3,7 @@ Test the Snake module & all its components.
 """
 #!/usr/bin/python
 import unittest
-from app.Snake import Snake
+from app.obj.Snake import Snake
 
 class TestSnake(unittest.TestCase):
     """

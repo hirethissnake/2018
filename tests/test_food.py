@@ -3,7 +3,7 @@ Test the Food module & all its components.
 """
 #!/usr/bin/python
 import unittest
-from app.Food import Food
+from app.obj.Food import Food
 
 class TestSnake(unittest.TestCase):
     """

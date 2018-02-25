@@ -2,9 +2,6 @@
 decisions based on a variety of factors in order to produce the optimal next move."""
 
 from enum import Enum
-from app.Snake import Snake
-from app.Board import Board
-
 
 class StateMachine:
     """The main state machine. Entry point for this file,
@@ -14,7 +11,7 @@ class StateMachine:
     state           (State)         - State enum
     board           (Board)         - Board object
     otherSnakes     ({UUID:Snake})  - dict of UUIDs to Snake objects 
-    us              (Snake)         - Snake object representing us
+    us              (UUID)          - The UUID of our snake
     food            (Food)          - Food object representing food coordinates"""
 
     def __init__(self, board, snakes, us, food):

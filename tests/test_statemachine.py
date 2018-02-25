@@ -4,10 +4,7 @@ Test state transitions, game operation.
 
 import unittest
 from unittest.mock import Mock
-from app.StateMachine import StateMachine
-from app.Board import Board
-from app.Snake import Snake
-
+from app.util.StateMachine import StateMachine
 
 class TestStateMachine(unittest.TestCase):
     """
