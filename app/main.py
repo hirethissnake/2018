@@ -1,7 +1,6 @@
-"""Team Sneaky Snake Battlesnake implementation.
-    Reponds to POST /start and POST /move.
-
-    Picks movments depending on Djikstra's algortithm (thanks, python-igraph).
+"""
+Team Sneaky Snake Battlesnake implementation.
+Responds to POST /start and POST /move.
 """
 
 import os
@@ -9,22 +8,17 @@ import time
 import bottle
 from app.Game import Game
 
-gameDic = {}
+gameDict = {}
 
 @bottle.route('/static/<path:path>')
 def static(path):
-    """???."""
+    """I have no idea what this does."""
     return bottle.static_file(path, root='static/')
-
 
 @bottle.post('/start')
 def start():
     """Respond to POST /start with important details like what our snake looks
     like, and what our taunt is."""
-    # E1136 Value 'data' is insubscriptable
-    # pylint: disable=E1136
-
-
     data = bottle.request.json
 
     print('We have begun a new game!')
@@ -33,11 +27,10 @@ def start():
     #Create a game object with the data given
     game_id = data['game_id']
     battle = Game(data)
-    #Enter the game into the GameDictionary with the key value set to it's id
-    gameDic[game_id] = battle
+    #Enter the game into the gameDict with the key value set to its id
+    gameDict[game_id] = battle
 
     head_url = '%s://%s/static/head.png' % (
-        # pylint: disable=E1101
         bottle.request.urlparts.scheme,
         bottle.request.urlparts.netloc
     )
@@ -46,7 +39,7 @@ def start():
         'color': '#FFEBD0',
         'taunt': 'SSssssSSSsSSsssS',
         'head_url': head_url,
-        'name': 'Sneakysnake',
+        'name': 'SneakySnake',
         'head_type': 'tongue',
         'tail_type': 'curled'
     }
@@ -57,22 +50,20 @@ def start():
 @bottle.post('/move')
 def move():
     """Respond to POST /move with an adequate choice of movement."""
-    # E1135 Value 'data' doesn't support membership test
-    # E1136 Value 'data' is insubscriptable
-    # pylint: disable=E1135, E1136
     data = bottle.request.json
-    print(data)
 
-    #Store the id of this game and then access the matching object in GameDict
+    print("We have received a move")
+    print(data)
 
     # get game_id
     if 'game_id' in data:
         curGame = data['game_id']
     else:
         print('Data missing game_id')
-    # get curGame from gameDic
-    if curGame in gameDic:
-        battle = gameDic[curGame]
+
+    # get curGame from gameDict
+    if curGame in gameDict:
+        battle = gameDict[curGame]
         #Update the game with new gamestate
         start = time.time()
         battle.update(data)
@@ -82,10 +73,9 @@ def move():
         print("--- %s seconds ---" % (time.time() - start))
     else:
         print('ERROR: Received request for game that does not exist')
-        print('  To avoid collateral damage to other games, responding with default move')
+        print('To avoid collateral damage to other games, responding with default move')
         nextMove = 'up'
 
-    nextMove = 'up' #TODO: remove
     sendingData = {
         'move': nextMove,
         'taunt': 'please no'

@@ -1,7 +1,6 @@
 """The brains of the operation. Maintains a persistant state that allows our snake to make
 decisions based on a variety of factors in order to produce the optimal next move."""
 
-import sys
 from enum import Enum
 from app.Snake import Snake
 from app.Board import Board
