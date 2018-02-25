@@ -5,18 +5,18 @@ class Snake:
     Feisty snake object.
 
     Has the following attributes:
-    size            (int)           - describes length of snake
-    identifier      (uuid)          - unique identifier describing for each snake
-    coords          ([coords])      - array of [x,y] describing snakes body
-    healthPoints    (int)           - 0..100, describes moves a snake has before
+    size            int             - describes length of snake
+    identifier      uuid            - unique identifier describing for each snake
+    coords          [[x,y]]         - array of [x,y] describing snakes body
+    healthPoints    int             - 0..100, describes moves a snake has before
                                         death, unless that snake eats food.
-    oldHealthPoints (int)           - health_points of snake on last move
-    oldCoords       ([[coords]])    - array of array of [x,y] describing past
+    oldHealthPoints int             - health_points of snake on last move
+    oldCoords       [[x,y]]         - array of array of [x,y] describing past
                                         locations the snake was at
-    state           (string)        - (unknown | food | attack | flee), describes
+    state           string          - (unknown | food | attack | flee), describes
                                         past actions of snake
-    taunt           (string)        - snake's current taunt
-    name            (string)        - name of snake
+    taunt           string          - snake's current taunt
+    name            string          - name of snake
     """
 
     def __init__(self, data):

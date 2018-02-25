@@ -5,7 +5,7 @@ class Food:
     Tracks all food in the game.
 
     Has the following attributes:
-    positions       ([coords])  - list of food positions
+    positions       [[x,y]]  - list of food positions
     """
 
     def __init__(self, positions):

@@ -8,11 +8,12 @@ class StateMachine:
     and interface with Game class.
 
     Has following attributes:
-    state           (State)         - State enum
-    board           (Board)         - Board object
-    otherSnakes     ({UUID:Snake})  - dict of UUIDs to Snake objects 
-    us              (UUID)          - The UUID of our snake
-    food            (Food)          - Food object representing food coordinates"""
+    state           State         - State enum
+    board           Board         - Board object
+    snakes          {UUID:Snake}  - dict of UUIDs to Snake objects 
+    us              UUID          - The UUID of our snake
+    food            Food          - Food object representing food coordinates
+    """
 
     def __init__(self, board, snakes, us, food):
         """

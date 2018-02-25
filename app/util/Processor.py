@@ -3,11 +3,16 @@
 import sys
 
 class Processor:
-    """
-    A collection of decision making algorithms.
+    """The main state machine. Entry point for this file,
+    and interface with Game class.
 
-    Has the following attributes:
-    positions       ([coords])  - list of food positions
+    Has following attributes:
+    board           Board           - Board object
+    width           int             - width of the Board object
+    height          int             - height of the Board object
+    snakes          {UUID:Snake}    - dict of UUIDs to Snake objects 
+    us              UUID            - The UUID of our snake
+    food            Food            - Food object representing food coordinates
     """
 
     def __init__(self, board, snakes, us, food):
