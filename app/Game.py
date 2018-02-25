@@ -39,6 +39,7 @@ class Game:
         self.turn = 0
         self.deadSnakes = {}
         self.machine = None
+        self.processor = None
 
     def firstMove(self, data):
         """
@@ -167,5 +168,4 @@ class Game:
          'Snakes? I hate snakes', 'Where can a snake get a bite to eat around here', 'up', 'down',\
           'left', 'right', 'Trying to catch garter snakes']
 
-        nextTaunt = random.choice(taunts)
-        return nextTaunt
+        return random.choice(taunts)

@@ -12,7 +12,7 @@ gameDict = {}
 
 @bottle.route('/static/<path:path>')
 def static(path):
-    """I have no idea what this does."""
+    """Provides access to static files such as images."""
     return bottle.static_file(path, root='static/')
 
 @bottle.post('/start')
