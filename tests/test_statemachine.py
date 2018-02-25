@@ -21,15 +21,16 @@ class TestStateMachine(unittest.TestCase):
         self.board = Mock()
         self.otherSnake = Mock()
         self.us = Mock()
+        self.food = Mock()
         snakes = {'mean-snake-uuid': self.otherSnake, 'glorious-us-uuid': self.us}
 
-        self.machine = StateMachine(self.board, snakes, "glorious-us-uuid")
+        self.machine = StateMachine(self.board, snakes, "glorious-us-uuid", self.food)
 
     def test_initialization(self):
         """
         Ensure proper default state.
         """
-        self.assertEqual(self.machine.getState(), "IDLE")
+        self.assertEqual(self.machine.state.name, "IDLE")
         self.assertEqual(self.machine.board, self.board)
         self.assertEqual(self.machine.us, self.us)
         self.assertEqual(self.machine.otherSnakes, {'mean-snake-uuid': self.otherSnake})
@@ -61,15 +62,31 @@ class TestStateMachine(unittest.TestCase):
         self.assertRaises(KeyError, self.machine.setState, "INVALID")
         self.assertRaises(KeyError, self.machine.setState, 2)
 
-    def test_transition(self):
+    def test_transition(self): # TODO
         """
         Test transitioning between states based.
         """
         self.us.getSize.return_value = 3
         self.us.getHealth.return_value = 100
-        
+        self.us.getHeadPosition.return_value = [1, 1]
+        self.food.getPositions.return_value = [[0, 0]]
+
         self.machine.step()
         self.assertEqual(self.machine.getState(), "CONFINED")
+
+    def test_path_to_food_less(self):
+        """
+        Test pathToFoodLess(value) utility function.
+        """
+        self.board.optimumPathLength.return_value = 10
+        self.food.getPositions.return_value = [[0, 0]] # these don't matter since optimumPathLength()
+        self.us.getHeadPosition.return_value = [10, 0] # return value is constantly defined
+        self.assertTrue(self.machine.pathToFoodLess(11))
+        self.assertFalse(self.machine.pathToFoodLess(10))
+
+        self.board.optimumPathLength.return_value = 1
+        self.food.getPositions.return_value = [[0, 0], [0, 1], [0, 2]]
+        self.assertTrue(self.machine.pathToFoodLess(2))
 
 
 if __name__ == "__main__":
