@@ -52,7 +52,7 @@ def move():
     """Respond to POST /move with an adequate choice of movement."""
     data = bottle.request.json
 
-    print("We have received a move")
+    print('We have received a move')
     print(data)
 
     # get game_id
@@ -70,7 +70,7 @@ def move():
         #Request next best move
         nextMove = battle.getNextMove()
         #nextTaunt = battle.getTaunt()
-        print("--- %s seconds ---" % (time.time() - start))
+        print('--- %s seconds ---' % (time.time() - start))
     else:
         print('ERROR: Received request for game that does not exist')
         print('To avoid collateral damage to other games, responding with default move')

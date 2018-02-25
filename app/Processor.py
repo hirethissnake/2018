@@ -298,15 +298,15 @@ class Processor:
         head = snake.getHeadPosition()
 
         if node[0] == (head[0] + 1):
-            return "right"
+            return 'right'
         if node[0] == (head[0] - 1):
-            return "left"
+            return 'left'
         if node[1] == (head[1] + 1):
-            return "down"
+            return 'down'
         if node[1] == (head[1] - 1):
-            return "up"
+            return 'up'
         else:
-            raise ValueError("node must be adjacent")
+            raise ValueError('node must be adjacent')
 
     def showBoard(self):
         """Use to show board with weight and colours """

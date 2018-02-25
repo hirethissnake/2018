@@ -46,7 +46,7 @@ setWeights              void        Set incoming edges of array of vertexes to
                                         matching weight in array
 
 ## DISPLAY ##
-showWeights             void        Opens visualiation of weights of all nodes
+showWeights             void        Opens visualization of weights of all nodes
 showPath                void        Display graphic of best path between nodes
     """
 
@@ -200,7 +200,7 @@ showPath                void        Display graphic of best path between nodes
         self.modifyWeightErrorCheck(u, weight)  # comment this out for speed
 
         if weight <= 0:  # ensure weight is in bounds
-            weight = float("-inf")  # do not visit under any circumstances
+            weight = float('-inf')  # do not visit under any circumstances
         elif weight > 100:
             weight = float(100)
 
@@ -258,13 +258,13 @@ showPath                void        Display graphic of best path between nodes
         tempLen = len(nodes)
 
         for nodeIndex in range(tempLen):
-            if operator == "*":
+            if operator == '*':
                 self.multiplyWeight(nodes[nodeIndex], value)
-            elif operator == "/":
+            elif operator == '/':
                 self.divideWeight(nodes[nodeIndex], value)
-            elif operator == "+":
+            elif operator == '+':
                 self.addWeight(nodes[nodeIndex], value)
-            elif operator == "-":
+            elif operator == '-':
                 self.subtractWeight(nodes[nodeIndex], value)
 
 
@@ -613,7 +613,7 @@ showPath                void        Display graphic of best path between nodes
                     hexCode = '#66ffff'
 
                 if numbers: # add numbers
-                    app.addLabel(nodeName, "%.2f" % weight, col, row)
+                    app.addLabel(nodeName, '%.2f' % weight, col, row)
                 else:
                     app.addLabel(nodeName, '', col, row)
 

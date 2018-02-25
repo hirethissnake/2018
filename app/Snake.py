@@ -75,7 +75,7 @@ class Snake:
         return len(self.coords)
 
     def getHealth(self):
-        """"
+        """
         Return snake healthPoints
         return: int - healthPoints
         """
@@ -154,10 +154,10 @@ class Snake:
         Return Snake attribues as a string.
         """
 
-        asString = "identifer: " + str(self.identifier) + "\n" \
-                    + "healthPoints: " + str(self.healthPoints) + "\n" \
-                    + "state: " + str(self.state) + "\n" \
-                    + "coords: " + str(self.coords)
+        asString = 'identifer: ' + str(self.identifier) + '\n' \
+                    + 'healthPoints: ' + str(self.healthPoints) + '\n' \
+                    + 'state: ' + str(self.state) + '\n' \
+                    + 'coords: ' + str(self.coords)
 
         return asString
 
