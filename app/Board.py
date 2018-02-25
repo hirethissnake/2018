@@ -4,6 +4,10 @@ Includes vertices and edges.
 """
 
 import colorsys
+"""try:
+    from appJar import gui
+except ImportError:
+    print 'Failed to import appJar'"""
 
 
 class Board:
@@ -21,7 +25,7 @@ modifyWeights           void        Operate on array of vertexes by array of
 multiplyWeight          void        Multiply weight of node by multiplier
 divideWeight            void        Divide weight of node by divisor
 addWeight               void        Increase weight of node by addend
-subtractWeight          void        Decrease weight of ndoe by subtrahend
+subtractWeight          void        Decrease weight of node by subtrahend
 
 ## GETTERS ##
 

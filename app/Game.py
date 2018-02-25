@@ -1,7 +1,6 @@
 """Process all game data. Handles interfacing with the hidden state machine,
 passing data to the right places, and returning the best move given a game dictionary."""
 
-import sys
 import random
 from app.Snake import Snake
 from app.Food import Food

@@ -55,6 +55,7 @@ class Processor:
 
     def weightFood(self):
         """Weight grid with food necessity"""
+        #TODO
         #How desperately do we need food
         #Goes through all food and returns the closest according to optimumPath
 
@@ -76,6 +77,7 @@ class Processor:
 
     def weightSmallSnakes(self):
         """Positively weight smaller snakes for murdering purposes"""
+        #TODO
         #Compare size
         #How long will it take to get to the snake?
         #How much food is around for the snake to grow?
@@ -99,6 +101,7 @@ class Processor:
         """Return an area around the head so that it can be weighted
         param1: snake whose head area needs to be evaluated"""
 
+        #TODO
         #find head
         #find area
         #find body
@@ -168,7 +171,7 @@ class Processor:
 
     def weightSafeTails(self):
         """Weight locations that will be moved out of next turn as safe"""
-
+        #TODO
         #For all snakes whose head is not adjacent to a food:
         #Weight the space occupied by their tail as 50 (or other positive value)
 
@@ -264,6 +267,7 @@ class Processor:
         if dont:
             return otherOptions[0]
         return path[1]
+        #TODO
         #set other snake options to 1
         # Do not kill ourselves by picking a corner where we trap ourselves
         # How long are we?
@@ -273,6 +277,7 @@ class Processor:
 
     def weightTrapSnakes(self):
         """Positively weight squares that will allow us to block other snakes off"""
+        #TODO
         #How long are they?
         #How much traversal room are we leaving them?
         #Do they need food? Do they have it in the trapped location?

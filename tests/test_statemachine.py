@@ -64,7 +64,7 @@ class TestStateMachine(unittest.TestCase):
         self.assertRaises(KeyError, self.machine.setState, "INVALID")
         self.assertRaises(KeyError, self.machine.setState, 2)
 
-    def test_transition(self): # TODO
+    def test_transition(self):
         """
         Test transitioning between states based.
         """
