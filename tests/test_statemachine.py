@@ -19,12 +19,14 @@ class TestStateMachine(unittest.TestCase):
         Create a fresh StateMachine object.
         """
         self.board = Mock()
-        self.otherSnake = Mock()
-        self.us = Mock()
         self.food = Mock()
-        snakes = {'mean-snake-uuid': self.otherSnake, 'glorious-us-uuid': self.us}
 
-        self.machine = StateMachine(self.board, snakes, "glorious-us-uuid", self.food)
+        otherSnake = Mock()
+        ourSnake = Mock()
+        self.us = "glorious-us-uuid"
+        self.snakes = {"mean-snake-uuid": otherSnake, self.us: ourSnake}
+
+        self.machine = StateMachine(self.board, self.snakes, self.us, self.food)
 
     def test_initialization(self):
         """
@@ -33,7 +35,7 @@ class TestStateMachine(unittest.TestCase):
         self.assertEqual(self.machine.state.name, "IDLE")
         self.assertEqual(self.machine.board, self.board)
         self.assertEqual(self.machine.us, self.us)
-        self.assertEqual(self.machine.otherSnakes, {'mean-snake-uuid': self.otherSnake})
+        self.assertEqual(self.machine.snakes, self.snakes)
 
     def test_set_and_recall_state(self):
         """
@@ -66,26 +68,27 @@ class TestStateMachine(unittest.TestCase):
         """
         Test transitioning between states based.
         """
-        self.us.getHealth.return_value = 50
+        ourSnake = self.snakes[self.us]
+        ourSnake.getHealth.return_value = 50
         self.machine.step()
         self.assertEqual(self.machine.getState(), "HUNGRY")
 
         self.food.getPositions.return_value = [[0, 0]]
-        self.us.getHealth.return_value = 30
+        ourSnake.getHealth.return_value = 30
         self.board.optimumPathLength.return_value = 40
         self.machine.step()
         self.assertEqual(self.machine.getState(), "STARVING")
 
-        self.us.getSize.return_value = 5
-        self.us.getHealth.return_value = 70
+        ourSnake.getSize.return_value = 5
+        ourSnake.getHealth.return_value = 70
         self.machine.step()
         self.assertEqual(self.machine.getState(), "IDLE")
 
-        self.us.getHealth.return_value = 50
+        ourSnake.getHealth.return_value = 50
         self.machine.step()
         self.assertEqual(self.machine.getState(), "HUNGRY")
 
-        self.us.getHealth.return_value = 70
+        ourSnake.getHealth.return_value = 70
         self.machine.step()
         self.assertEqual(self.machine.getState(), "IDLE")
 
@@ -93,9 +96,11 @@ class TestStateMachine(unittest.TestCase):
         """
         Test pathToFoodLess(value) utility function.
         """
+        ourSnake = self.snakes[self.us]
+
         self.board.optimumPathLength.return_value = 10
         self.food.getPositions.return_value = [[0, 0]] # these don't matter since optimumPathLength()
-        self.us.getHeadPosition.return_value = [10, 0] # return value is constantly defined
+        ourSnake.getHeadPosition.return_value = [10, 0] # return value is constantly defined
         self.assertTrue(self.machine.pathToFoodLess(11))
         self.assertFalse(self.machine.pathToFoodLess(10))
 

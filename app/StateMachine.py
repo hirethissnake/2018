@@ -18,7 +18,8 @@ class StateMachine:
     food            (Food)          - Food object representing food coordinates"""
 
     def __init__(self, board, snakes, us, food):
-        """Initialize the state machine.
+        """
+        Initialize the state machine.
         
         param1: Board - board object
         param2: {UUID:Snake} - dict mapping UUIDs to snakes
@@ -27,9 +28,8 @@ class StateMachine:
         """
         self.state = State.IDLE
         self.board = board
-        self.otherSnakes = dict(snakes) # perform shallow copy
-        del self.otherSnakes[us]
-        self.us = snakes[us]
+        self.snakes = snakes
+        self.us = us
         self.food = food
         
     def getState(self):
@@ -52,8 +52,9 @@ class StateMachine:
         """
         Use the available information to pick a new state.
         """
-        size = self.us.getSize()
-        health = self.us.getHealth()
+        ourSnake = self.snakes[self.us]
+        size = ourSnake.getSize()
+        health = ourSnake.getHealth()
 
         currentState = self.getState()
         if currentState is "IDLE":
@@ -108,7 +109,8 @@ class StateMachine:
         param1: value - value to compare against
         return: boolean - True if 'snake' is closer than 'value'
         """
-        headPos = self.us.getHeadPosition()
+        ourSnake = self.snakes[self.us]
+        headPos = ourSnake.getHeadPosition()
         for pos in self.food.getPositions():
             distance = self.board.optimumPathLength(pos, headPos)
             if distance < value:
