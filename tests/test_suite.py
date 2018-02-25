@@ -10,7 +10,7 @@ if __name__ == '__main__':
 
     #this is temporary, as Board class is broken currently
     suite = unittest.TestSuite()
-    for name in ['snake', 'main', 'statemachine']:
+    for name in ['snake', 'food', 'main', 'statemachine']:
         suite.addTest(unittest.defaultTestLoader.loadTestsFromName('tests.test_' + name))
 
     runner = unittest.TextTestRunner(verbosity=2)
