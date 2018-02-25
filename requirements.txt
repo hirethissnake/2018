@@ -3,3 +3,4 @@ appJar==0.42
 requests
 codecov
 numpy
+scipy
