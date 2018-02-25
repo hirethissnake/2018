@@ -15,13 +15,19 @@ class TestSnake(unittest.TestCase):
         Create a fresh Food object.
         """
         self.food = Food([])
-        
+
     def test_init(self):
         """
         Test the Food init function.
         """
         self.assertEqual(self.food.getPositions(), [])
-    
+
+        self.food = Food([[1, 1], [2, 2]])
+        self.assertEqual(self.food.getPositions(), [[1, 1], [2, 2]])
+
+        self.food = Food([[]])
+        self.assertEqual(self.food.getPositions(), [[]])
+
     def test_update(self):
         """
         Test the Food update function.

@@ -41,21 +41,20 @@ class TestStateMachine(unittest.TestCase):
         """
         Check if setting state corresponds to receiving that state.
         """
-        for _ in range(5):
-            self.machine.setState("HUNGRY")
-            self.assertEqual(self.machine.getState(), "HUNGRY")
-            self.machine.setState("TRAPPED")
-            self.assertEqual(self.machine.getState(), "TRAPPED")
-            self.machine.setState("STARVING")
-            self.assertEqual(self.machine.getState(), "STARVING")
-            self.machine.setState("IDLE")
-            self.assertEqual(self.machine.getState(), "IDLE")
-            self.machine.setState("CONFINED")
-            self.assertEqual(self.machine.getState(), "CONFINED")
-            self.machine.setState("HUNGRY")
-            self.machine.setState("HUNGRY")
-            self.machine.setState("IDLE")
-            self.assertEqual(self.machine.getState(), "IDLE")
+        self.machine.setState("HUNGRY")
+        self.assertEqual(self.machine.getState(), "HUNGRY")
+        self.machine.setState("TRAPPED")
+        self.assertEqual(self.machine.getState(), "TRAPPED")
+        self.machine.setState("STARVING")
+        self.assertEqual(self.machine.getState(), "STARVING")
+        self.machine.setState("IDLE")
+        self.assertEqual(self.machine.getState(), "IDLE")
+        self.machine.setState("CONFINED")
+        self.assertEqual(self.machine.getState(), "CONFINED")
+        self.machine.setState("HUNGRY")
+        self.machine.setState("HUNGRY")
+        self.machine.setState("IDLE")
+        self.assertEqual(self.machine.getState(), "IDLE")
 
     def test_set_invalid_state(self):
         """
