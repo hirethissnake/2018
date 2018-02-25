@@ -22,6 +22,7 @@ class StateMachine:
         param1: Board - board object
         param2: {UUID:Snake} - dict mapping UUIDs to snakes
         param3: string - our snake's UUID 
+        param4: [[x,y]] - list of food coordinates
         """
         self.state = State.IDLE
         self.board = board
@@ -45,13 +46,88 @@ class StateMachine:
         """
         self.state = State[stateName]
 
-    def transition(self):
+    def step(self):
         """
         Use the available information to pick a new state.
         """
+        size = self.us.getSize()
+        health = self.us.getHealth()
+
         currentState = self.getState()
         if currentState is "IDLE":
-            print("we did it!")
+            if self.snakeHealthLess(60):
+                self.setState("HUNGRY")
+            elif self.availableSpaceLess(2 * size):
+                self.setState("CONFINED")
+            elif self.availableSpaceLess(3 * size):
+                self.setState("TRAPPED")
+        elif currentState is "HUNGRY":
+            if not self.pathToFoodLess(health + 10) \
+                    or self.snakeHealthLess(15):
+                self.setState("STARVING")
+            elif self.availableSpaceLess(1.5 * size):
+                self.setState("CONFINED")
+            elif self.availableSpaceLess(2.5 * size):
+                self.setState("TRAPPED")
+            elif not self.snakeHealthLess(60):
+                self.setState("IDLE")
+        elif currentState is "TRAPPED":
+            if not self.pathToFoodLess(health + 5) \
+                    or self.snakeHealthLess(15):
+                self.setState("STARVING")
+            elif not self.availableSpaceLess(4 * size) and self.snakeHealthLess(60):
+                self.setState("HUNGRY")
+            elif self.availableSpaceLess(1.5 * size):
+                self.setState("CONFINED")
+            elif not self.availableSpaceLess(4 * size) and not self.snakeHealthLess(60):
+                self.setState("IDLE")
+        elif currentState is "STARVING":
+            if not self.snakeHealthLess(40) and self.availableSpaceLess(3 * size):
+                self.setState("TRAPPED")
+            elif (self.availableSpaceLess(1.5 * size) and not self.snakeHealthLess(10) and not self.pathToFoodLess(health)) \
+                    or self.availableSpaceLess(size):
+                self.setState("CONFINED")
+            elif not self.snakeHealthLess(60):
+                self.setState("IDLE")
+        elif currentState is "CONFINED":
+            if self.snakeHealthLess(10) and not self.availableSpaceLess(size):
+                self.setState("STARVING")
+            elif not self.availableSpaceLess(4 * size) and self.snakeHealthLess(50):
+                self.setState("HUNGRY")
+            elif not self.availableSpaceLess(2.5 * size) and self.availableSpaceLess(4 * size):
+                self.setState("TRAPPED")
+            elif not self.availableSpaceLess(4 * size) and not self.snakeHealthLess(60):
+                self.setState("IDLE")
+
+    def snakeHealthLess(self, value):
+        """
+        Determine if a snake has health lower than 'value'
+
+        param1: Snake - snake to retrieve health from
+        param2: int - value to compare against
+        return: boolean - True if health less than 'value'
+        """
+        return self.us.getHealth() < value
+
+    def pathToFoodLess(self, value):
+        """
+        Determine if a snake is closer than 'value' squares from food
+
+        param1: Snake - snake to retrieve position from
+        param2: value - value to compare against
+        return: boolean - True if 'snake' is closer than 'value'
+        """
+        return True
+
+    def availableSpaceLess(self, value):
+        """
+        Determine if a snake has health lower than 'value'
+
+        param1: Snake - snake to retrieve position from
+        param2: value - value to compare against
+        return: boolean - True if health less than 'value'
+        """
+        return True
 
 
 class State(Enum):

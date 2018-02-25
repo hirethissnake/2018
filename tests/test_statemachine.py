@@ -3,7 +3,7 @@ Test state transitions, game operation.
 """
 
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import Mock
 from app.StateMachine import StateMachine
 from app.Board import Board
 from app.Snake import Snake
@@ -18,13 +18,12 @@ class TestStateMachine(unittest.TestCase):
         """
         Create a fresh StateMachine object.
         """
-        self.board = MagicMock()
+        self.board = Mock()
+        self.otherSnake = Mock()
+        self.us = Mock()
+        snakes = {'mean-snake-uuid': self.otherSnake, 'glorious-us-uuid': self.us}
 
-        otherSnake = {'length': 3}
-        us = {'length': 3}        
-        self.snakes = {'mean-snake-uuid': otherSnake, 'glorious-us-uuid': us}
-
-        self.machine = StateMachine(self.board, self.snakes, "glorious-us-uuid")
+        self.machine = StateMachine(self.board, snakes, "glorious-us-uuid")
 
     def test_initialization(self):
         """
@@ -32,9 +31,8 @@ class TestStateMachine(unittest.TestCase):
         """
         self.assertEqual(self.machine.getState(), "IDLE")
         self.assertEqual(self.machine.board, self.board)
-        self.assertEqual(self.machine.us, self.snakes['glorious-us-uuid'])
-        del self.snakes['glorious-us-uuid']
-        self.assertEqual(self.machine.otherSnakes, self.snakes)
+        self.assertEqual(self.machine.us, self.us)
+        self.assertEqual(self.machine.otherSnakes, {'mean-snake-uuid': self.otherSnake})
 
     def test_set_and_recall_state(self):
         """
@@ -65,9 +63,13 @@ class TestStateMachine(unittest.TestCase):
 
     def test_transition(self):
         """
-        Make sure you cannot set an invalid state.
+        Test transitioning between states based.
         """
-        self.machine.transition()
+        self.us.getSize.return_value = 3
+        self.us.getHealth.return_value = 100
+        
+        self.machine.step()
+        self.assertEqual(self.machine.getState(), "CONFINED")
 
 
 if __name__ == "__main__":
