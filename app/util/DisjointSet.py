@@ -142,6 +142,9 @@ class DisjointSet:
 
 
 class Node:
+    """Represents an abstract node in a
+    connected component."""
+
     def __init__(self, name):
         self.name = name
         self.parent = None
