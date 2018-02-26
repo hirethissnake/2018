@@ -7,10 +7,10 @@ import colorsys
 import numpy as np
 #import igraph
 from scipy.sparse.csgraph import dijkstra
-try:
-    from appJar import gui
-except ImportError:
-    print('Failed to import appJar')
+#try:
+#    from appJar import gui
+#except ImportError:
+#    print('Failed to import appJar')
 
 
 class Board:

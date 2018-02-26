@@ -24,29 +24,34 @@ class DisjointSet:
         Update connectivity based on Snake objects.
         """
         self.map = {}
-        boardWidth = self.board.getWidth()
-        boardHeight = self.board.getHeight()
+        boardWidth = self.board.width
+        boardHeight = self.board.height
         for x in range(boardWidth):
             for y in range(boardHeight):
-                strCoord = '[' + str(x) + ', ' + str(y) + ']'                
+                weight = self.board.getWeight([x, y])
+                strCoord = '[' + str(x) + ', ' + str(y) + ']'
+                if weight is 0:
+                    self.map[strCoord] = None
+                    continue
+                
                 newNode = Node(strCoord)
                 self.map[strCoord] = newNode
-
-                weight = self.board.getWeight([x, y])
-                if weight is not 0:
-                    surrounding = []
-                    if (x - 1) >= 0:
-                        surrounding.append(str([x - 1, y]))
-                    if (x + 1) < boardWidth:
-                        surrounding.append(str([x + 1, y]))
-                    if (y + 1) < boardHeight:
-                        surrounding.append(str([x, y + 1]))
-                    if (y - 1) >= 0:
-                        surrounding.append(str([x, y - 1]))
-                    
-                    for coord in surrounding:
-                        if coord in self.map:
-                            self.union(self.map[coord], newNode)
+                
+                surrounding = []
+                if (x - 1) >= 0:
+                    surrounding.append(str([x - 1, y]))
+                if (x + 1) < boardWidth:
+                    surrounding.append(str([x + 1, y]))
+                if (y + 1) < boardHeight:
+                    surrounding.append(str([x, y + 1]))
+                if (y - 1) >= 0:
+                    surrounding.append(str([x, y - 1]))
+                
+                for coord in surrounding:
+                    if coord in self.map:
+                        adjacentNode = self.map[coord]
+                        if adjacentNode is not None:
+                            self.union(adjacentNode, newNode)
 
     def find(self, child):
         """
@@ -95,7 +100,10 @@ class DisjointSet:
         return: [[x,y]] - list of connected squares
         """
         # TODO: this currently only return one level, it must be recursive
-        root = self.find(self.map[str(coord)])
+        child = self.map[str(coord)]
+        if child is None:
+            return [coord]
+        root = self.find(child)
         return [eval(node.name) for node in root.directChildren] + [eval(root.name)]
 
     def areConnected(self, coord1, coord2):
@@ -106,7 +114,12 @@ class DisjointSet:
         param2: [x,y] - second node position
         return: bool - True if connected, False otherwise
         """
-        return self.find(self.map[str(coord1)]) == self.find(self.map[str(coord2)])
+        node1 = self.map[str(coord1)]
+        node2 = self.map[str(coord2)]
+        if node1 is None or node2 is None:
+            return False
+
+        return self.find(node1) == self.find(node2)
 
     def getNode(self, coord):
         """
