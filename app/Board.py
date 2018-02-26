@@ -69,6 +69,9 @@ showPath                void        Display graphic of best path between nodes
 
         self.board = np.full((width, height), 50, dtype='f')
 
+        self.adjMatrixOutOfDate = True
+        self.adjMatrix = None
+
 
     def initErrorCheck(self, width, height):
         """
@@ -87,16 +90,16 @@ showPath                void        Display graphic of best path between nodes
             raise ValueError('height must be greater than 1')
 
 
-    def checkNode(self, x, y):
+    def checkNode(self, u):
         """
-        Check if u is a valid node.
+        Check if there is a node u.
 
         param1: [int, int] - node in the form [x, y]
         """
 
-        if not isinstance(x, int) or not isinstance(y, int):
+        if not isinstance(u[0], int) or not isinstance(u[1], int):
             raise ValueError('indices should be integers')
-        if x >= self.width or x < 0 or y >= self.height or y < 0:
+        if u[0] >= self.width or u[0] < 0 or u[1] >= self.height or u[1] < 0:
             raise ValueError('node is out of bounds')
 
 
@@ -128,7 +131,7 @@ showPath                void        Display graphic of best path between nodes
         """
         Return board size.
 
-        return: [integer] - array with [width, height]
+        return: [int, int] - board size as [width, height]
         """
 
         return list(self.board.shape)
@@ -147,21 +150,21 @@ showPath                void        Display graphic of best path between nodes
             return 0
         elif weight <= 0:
             return np.inf
-        return 100 - weight
+        return int(100 - weight)
 
 
-    def setWeight(self, x, y, weight):
+    def setWeight(self, u, weight):
         """
-        Set incoming edges of vertex u to weight.
+        Set willingness of going to node to given weight.
 
-        param1: [int, int] - node in the form [x, y]
+        param1: [int, int] - node as [x, y]
         param2: integer/float - weight to set
         """
 
-        self.modifyWeightErrorCheck(x, y, weight)  # comment this out for speed
+        self.modifyWeightErrorCheck(u, weight)  # comment this out for speed
         weight = self.normalizeWeight(weight)
 
-        self.board[x, y] = weight
+        self.board[u[0], u[1]] = weight
 
 
     def resetWeights(self):
@@ -170,13 +173,14 @@ showPath                void        Display graphic of best path between nodes
         """
 
         self.board = np.full((self.width, self.height), 50, dtype='f')
+        self.adjMatrixOutOfDate = True
 
 
     def setWeights(self, nodes, weight):
         """
         Modify a list of node weights.
 
-        param1: [[int, int]] - array of nodes in the form [<integer>,<integer>]
+        param1: [[int, int]] - array of nodes in the form [<integer>, <integer>]
         param2: float/int - weight to set
         """
 
@@ -185,9 +189,10 @@ showPath                void        Display graphic of best path between nodes
         weight = self.normalizeWeight(weight)
 
         for i in range(len(nodes)):
-            self.modifyWeightErrorCheck(cols[i], rows[i], weight)  # comment this out for speed
+            self.modifyWeightErrorCheck([cols[i], rows[i]], weight)  # comment this out for speed
 
         self.board[cols, rows] = weight
+        self.adjMatrixOutOfDate = True
 
 
     def modifyWeights(self, operator, nodes, value):
@@ -195,7 +200,7 @@ showPath                void        Display graphic of best path between nodes
         Modify a list of node weights.
 
         param1: string - operator ('*', '/', '+', '-')
-        param2: [[int, int]] - array of nodes in the form <integer>,<integer>
+        param2: [[int, int], ] - array of nodes, each as [int, int]
         param3: float/int - value to modify by
         """
 
@@ -203,15 +208,15 @@ showPath                void        Display graphic of best path between nodes
         self.checkNumber(value)
 
         for node in nodes:
-            self.checkNode(*node)  # comment this out for speed
+            self.checkNode(node)  # comment this out for speed
             if operator == "*":
-                self.multiplyWeight(*node, value)
+                self.multiplyWeight(node, value)
             elif operator == "/":
-                self.divideWeight(*node, value)
+                self.divideWeight(node, value)
             elif operator == "+":
-                self.addWeight(*node, value)
+                self.addWeight(node, value)
             elif operator == "-":
-                self.subtractWeight(*node, value)
+                self.subtractWeight(node, value)
 
 
     @staticmethod
@@ -227,88 +232,86 @@ showPath                void        Display graphic of best path between nodes
             raise ValueError('invalid operator')
 
 
-    def multiplyWeight(self, x, y, multiplier):
+    def multiplyWeight(self, u, multiplier):
         """
-        Multiply weight of node u by multiplier.
+        Multiply weight of node by multiplier.
 
-        param1: [int, int] - node in the form [x, y]
+        param1: [int, int] - node as [x, y]
         param2: integer/float - number to multiply weight by
         """
 
-        self.modifyWeightErrorCheck(x, y, multiplier)  # comment this out for speed
+        self.modifyWeightErrorCheck(u, multiplier)  # comment this out for speed
 
-        self.setWeight(x, y, (self.getWeight(x, y) * multiplier))
+        self.setWeight(u, self.getWeight(u) * multiplier)
 
 
-    def divideWeight(self, x, y, divisor):
+    def divideWeight(self, u, divisor):
         """
-        Divide weight of node u by divisor.
+        Divide weight of node by divisor.
 
-        param1: [int, int] - node in the form [x, y]
+        param1: [int, int] - node as [x, y]
         param2: integer/float - number to divide weight by
         """
 
-        self.modifyWeightErrorCheck(x, y, divisor)  # comment this out for speed
+        self.modifyWeightErrorCheck(u, divisor)  # comment this out for speed
 
-        self.setWeight(x, y, self.getWeight(x, y) // divisor)
+        self.setWeight(u, self.getWeight(u) // divisor)
 
 
-    def addWeight(self, x, y, addend):
+    def addWeight(self, u, addend):
         """
-        Increase weight of node u by addend.
+        Increase weight of node by addend.
 
-        param1: [int, int] - node in the form [x, y]
+        param1: [int, int] - node as [x, y]
         param2: integer/float - number to add to weight
         """
 
-        self.modifyWeightErrorCheck(x, y, addend)  # comment this out for speed
+        self.modifyWeightErrorCheck(u, addend)  # comment this out for speed
 
-        currentWeight = self.getWeight(x, y)
-        self.setWeight(x, y, currentWeight + addend)
+        self.setWeight(u, self.getWeight(u) + addend)
 
 
-    def subtractWeight(self, x, y, subtrahend):
+    def subtractWeight(self, u, subtrahend):
         """
-        Decrease weight of node u by subtrahend.
+        Decrease weight of node by subtrahend.
 
-        param1: [int, int] - node in the form [x, y]
+        param1: [int, int] - node as [x, y]
         param2: integer/float - number to subtract from weight
         """
 
-        self.modifyWeightErrorCheck(x, y, subtrahend)  # comment this out for speed
+        self.modifyWeightErrorCheck(u, subtrahend)  # comment this out for speed
 
-        currentWeight = self.getWeight(x, y)
-        self.setWeight(x, y, currentWeight - subtrahend)
+        self.setWeight(u, self.getWeight(u) - subtrahend)
 
 
-    def modifyWeightErrorCheck(self, x, y, num):
+    def modifyWeightErrorCheck(self, u, num):
         """
         Check weight modification method for errors.
 
-        param1: unknown - item to confirm if node
-        param2: unknown - item to confirm if integer/float
+        param1: unknown - item to confirm as node
+        param2: unknown - item to confirm as integer/float
         """
 
-        self.checkNode(x, y)
+        self.checkNode(u)
         self.checkNumber(num)
 
 
-    def getWeight(self, x, y):
+    def getWeight(self, u):
         """
-        Return the weight of the node u from the dictionary.
+        Return the weight of the node u.
 
-        param1: [int, int] - node in the form [x, y]
+        param1: [int, int] - node as [x, y]
         return: integer/float - weight of node u
         """
 
-        self.checkNode(x, y)  # comment this out for speed
-        weight = self.board[x, y]
+        self.checkNode(u) # comment this out for speed
+        weight = self.board[u[0], u[1]]
         returnable = 0
         if weight < 0:
             returnable = 0
         elif weight < 100:
-            returnable = int(100 - weight)
-        return returnable
+            returnable = 100 - weight
+        return int(returnable)
 
 
     def getNodeWithPriority(self, offset):
@@ -360,33 +363,35 @@ showPath                void        Display graphic of best path between nodes
             raise ValueError('value is out of bounds')
 
 
-    def isNodeWeightUnique(self, x, y):
+    def isNodeWeightUnique(self, u):
         """
         Return False if weight appears more than once in the graph.
 
-        param1: [int, int] - node in the form [x, y]
-        return: boolean - True if weight is unique, Fale otherwise
+        param1: [int, int] - node as [x, y]
+        return: boolean - True if weight is unique, False otherwise
         """
-        if self.countNodeWeightCopies(x, y) > 1:
+        if self.countNodeWeightCopies(u) > 1:
             return False
         return True
 
 
-    def countNodeWeightCopies(self, x, y):
+    def countNodeWeightCopies(self, u):
         """
         Returns the number of nodes with the same weight as the given node (minimum 1).
 
-        param1: [int, int] - node in the form [x, y]
+        param1: [int, int] - node as [x, y]
         return: int - Returns number of other nodes with same weight
         """
 
-        self.checkNode(x, y)  # comment this out for speed
+        self.checkNode(u)  # comment this out for speed
 
-        targetWeight = 100 - self.getWeight(x, y)
+        targetWeight = 100 - self.getWeight(u)
+        # counts non-zero elements within board that satisfy the condition
+        # element == targetWeight
         return np.count_nonzero(self.board == targetWeight)
 
 
-    def optimumPath(self, vertices):
+    def optimumPath(self, u, v):
         """
         Return shortest path between nodes from u to v.
 
@@ -394,16 +399,12 @@ showPath                void        Display graphic of best path between nodes
         v: [int, int] - end node in the form [x, y]
         return: [[int, int]] - node names in the optimum path from u to v
         """
-        # pylint: disable=C0301
-        # credit to https://stackoverflow.com/questions/16329403/how-can-you-make-an-adjacency-matrix-which-would-emulate-a-2d-grid
+        # credit to https://stackoverflow.com/questions/16329403/
         # and http://codegists.com/snippet/python/dijkstra_examplepy_myjr52_python
         # for assisting in making this method happen
 
-        # Check that we're given two vertices to pathfind between
-        if len(vertices) != 2:
-            raise ValueError("Can only find path between two vertices.")
-
         # Make some nice variables for working with
+<<<<<<< HEAD
         b_height, b_width = self.board.shape
         u = vertices[0]
         v = vertices[1]
@@ -424,6 +425,32 @@ showPath                void        Display graphic of best path between nodes
                     adj_matrix[i, i - b_width] = self.board[i // b_width][i % b_width]
         # Perform the Dikstra
         (distances, previous) = dijkstra(adj_matrix, indices=start,\
+=======
+        bHeight, bWidth = self.board.shape
+        adjMatrixSide = bHeight * bWidth
+        start = u[1] * bWidth + u[0]
+        end = v[1] * bWidth + v[0]
+
+        # Update the adjacency matrix if it's out-of-date
+        if self.adjMatrixOutOfDate:
+            self.adjMatrixOutOfDate = False
+            self.adjMatrix = np.zeros((adjMatrixSide, adjMatrixSide), dtype=self.board.dtype)
+
+            for y in range(bHeight):
+                for x in range(bWidth):
+                    # map x, y coords to a range from 0 to (bHeight * bWidth)
+                    i = y * bWidth + x
+                    iWeight = self.board[i // bWidth][i % bWidth]
+                    if x > 0:
+                        self.adjMatrix[i - 1, i] = iWeight
+                        self.adjMatrix[i, i - 1] = iWeight
+                    if y > 0:
+                        self.adjMatrix[i - bWidth, i] = iWeight
+                        self.adjMatrix[i, i - bWidth] = iWeight
+
+        # Perform the Djikstra
+        (distances, previous) = dijkstra(self.adjMatrix, indices=start,\
+>>>>>>> Appease Daniel
                                          directed=True, return_predecessors=True)
 
         # Collect the path between points using the previous array, but avoid if there are no paths
@@ -433,37 +460,22 @@ showPath                void        Display graphic of best path between nodes
             return None
         else:
             while i != start:
-                path.append([i % b_width, i // b_width])
+                path.append([i % bWidth, i // bWidth])
                 i = previous[i]
-            path.append([start % b_width, start // b_width])
+            path.append([start % bWidth, start // bWidth])
 
         return path[::-1]
 
 
-    def optimumPathErrorCheck(self, vertices):
-        """
-        Check optimumPath() method for errors.
-
-        Mostly checks for duplicate vertices.
-
-        vertices: list - items to confirm as nodes ([x, y])
-        """
-        if len(vertices) != len(set([(x, y) for x, y in vertices])):
-            raise ValueError("There cannot be duplicate vertices in a path.")
-        for vertex in vertices:
-            self.checkNode(vertex[0], vertex[1])
-
-        return True
-
-
-    def optimumPathLength(self, vertices):
+    def optimumPathLength(self, u, v):
         """
         Return length of optimal path between two vertices.
 
-        vertices: [start, finish] - from start to finish, both as [int, int]
+        param1: [int, int] - start node as [x, y]
+        param2: [int, int] - end node
         return: int - length of path
         """
-        return len(self.optimumPath(vertices))
+        return len(self.optimumPath(u, v))
 
 
     def showWeights(self, colours, numbers):
@@ -494,16 +506,15 @@ showPath                void        Display graphic of best path between nodes
             raise ValueError('numbers must be a boolean')
 
 
-    def showPath(self, vertices):
+    def showPath(self, u, v):
         """
         Visualize optimal path between two vertices.
 
-        vertices: [start, finish] - from start to finish, both as [int, int]
+        param1: [int, int] - start node as [x, y]
+        param2: [int, int] - end node
         """
 
-        self.optimumPathErrorCheck(vertices)  # comment this out for speed
-
-        self.showCombiner(self.optimumPath(vertices), True, True)
+        self.showCombiner(self.optimumPath(u, v), True, True)
 
 
     def showCombiner(self, pathValues, colours, numbers):
@@ -523,7 +534,7 @@ showPath                void        Display graphic of best path between nodes
             for col in range(self.width):
 
                 nodeName = str(row) + ',' + str(col)
-                weight = self.getWeight(col, row)
+                weight = self.getWeight([col, row])
 
                 # interpolate square value from gridValue into HSV value
                 # between red and green, convert to RGB, convert to hex

@@ -47,7 +47,7 @@ class TestBoard(unittest.TestCase):
         bd = Board(width, height)
         for x in range(width):
             for y in range(height):
-                self.assertEqual(bd.getWeight(x, y), 50)
+                self.assertEqual(bd.getWeight([x, y]), 50)
 
     def test_check_number_int(self):
         """
@@ -98,7 +98,7 @@ class TestBoard(unittest.TestCase):
         for x in range(width):
             for y in range(height):
                 try:
-                    bd.checkNode(x, y)
+                    bd.checkNode([x, y])
                 except ValueError:
                     self.fail(msg="Valid node raised ValueError")
 
@@ -109,21 +109,21 @@ class TestBoard(unittest.TestCase):
         height = 30
         width = 30
         bd = Board(width, height)
-        self.assertRaises(ValueError, bd.checkNode, -1, -1)                   # above, left corner
-        self.assertRaises(ValueError, bd.checkNode, -1, width / 2)            # left of
-        self.assertRaises(ValueError, bd.checkNode, height + 1, width / 2)    # directly above
-        self.assertRaises(ValueError, bd.checkNode, height / 2, width + 1)    # right of
-        self.assertRaises(ValueError, bd.checkNode, height + 1, width + 1)    # below
-        self.assertRaises(ValueError, bd.checkNode, height / 2, -1)
+        self.assertRaises(ValueError, bd.checkNode, [-1, -1])                   # above, left corner
+        self.assertRaises(ValueError, bd.checkNode, [-1, width / 2])            # left of
+        self.assertRaises(ValueError, bd.checkNode, [height + 1, width / 2])    # directly above
+        self.assertRaises(ValueError, bd.checkNode, [height / 2, width + 1])    # right of
+        self.assertRaises(ValueError, bd.checkNode, [height + 1, width + 1])    # below
+        self.assertRaises(ValueError, bd.checkNode, [height / 2, -1])
 
     def test_check_node_invalid_format(self):
         """
         Tests checkNode for invalid formats.
         """
         bd = Board(30, 30)
-        self.assertRaises(ValueError, bd.checkNode, 'test', 'test')
-        self.assertRaises(ValueError, bd.checkNode, [1], [2])
-        self.assertRaises(ValueError, bd.checkNode, {1}, {2})
+        self.assertRaises(ValueError, bd.checkNode, ['test', 'test'])
+        self.assertRaises(ValueError, bd.checkNode, [[1], [2]])
+        self.assertRaises(ValueError, bd.checkNode, [{1}, {2}])
 
     def test_set_and_get_node_weight(self):
         """
@@ -134,8 +134,8 @@ class TestBoard(unittest.TestCase):
          [4, 17], [1, 7], [27, 2], [21, 25], [10, 22], [25, 12]]
         weights = [54, 82, 42, 12, 32, 95, 87, 0, 53, 89, 10, 34, 15, 46, 72]
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord[0], coord[1], weight)
-            self.assertEqual(bd.getWeight(coord[0], coord[1]), weight)
+            bd.setWeight(coord, weight)
+            self.assertEqual(bd.getWeight(coord), weight)
 
     def test_set_weight_too_large(self):
         """
@@ -143,8 +143,8 @@ class TestBoard(unittest.TestCase):
         """
         bd = Board(30, 30)
         coord = [0, 5]
-        bd.setWeight(coord[0], coord[1], 105)
-        self.assertEqual(bd.getWeight(coord[0], coord[1]), 100)
+        bd.setWeight(coord, 105)
+        self.assertEqual(bd.getWeight(coord), 100)
 
     def test_set_weight_too_small(self):
         """
@@ -152,8 +152,8 @@ class TestBoard(unittest.TestCase):
         """
         bd = Board(30, 30)
         coord = [0, 5]
-        bd.setWeight(coord[0], coord[1], -105)
-        self.assertEqual(bd.getWeight(coord[0], coord[1]), 0)
+        bd.setWeight(coord, -105)
+        self.assertEqual(bd.getWeight(coord), 0)
 
     def test_set_many_weights(self):
         """
@@ -164,9 +164,9 @@ class TestBoard(unittest.TestCase):
         weight = 75
         bd.setWeights(coords, weight)
         for coord in coords:
-            if bd.getWeight(coord[0], coord[1]) != weight:
-                self.fail(msg="Weight %2.1f != %2.1f for node [%i, %i]" % \
-                (bd.getWeight(coord[0], coord[1]), weight, coord[0], coord[1]))
+            if bd.getWeight(coord) != weight:
+                self.fail(msg="Weight {:2.1f} != {:2.1f} for node {}".format(bd.getWeight(coord),\
+                          weight, coord))
 
     def test_reset_node_weights(self):
         """
@@ -177,11 +177,11 @@ class TestBoard(unittest.TestCase):
         coords = [[11, 21], [10, 22], [20, 26], [17, 3], [12, 13], [16, 13], [16, 3], [19, 29],\
          [27, 21], [13, 11], [18, 14], [2, 6], [26, 27], [12, 23], [28, 29]]
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord[0], coord[1], weight)
+            bd.setWeight(coord, weight)
         bd.resetWeights()
         for coord in coords:
-            failMsg = "%2.1F != %2.1f at %s" % (bd.getWeight(coord[0], coord[1]), 0, coord)
-            self.assertEqual(bd.getWeight(coord[0], coord[1]), 50, msg=failMsg)
+            failMsg = "%2.1F != %2.1f at %s" % (bd.getWeight(coord), 0, coord)
+            self.assertEqual(bd.getWeight(coord), 50, msg=failMsg)
 
     def test_multiply_weight_float(self):
         """
@@ -193,9 +193,9 @@ class TestBoard(unittest.TestCase):
         weights = [20, 2, 100]
 
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord[0], coord[1], weight)
-            bd.multiplyWeight(coord[0], coord[1], fraction)
-            self.assertEqual(bd.getWeight(coord[0], coord[1]), weight * fraction)
+            bd.setWeight(coord, weight)
+            bd.multiplyWeight(coord, fraction)
+            self.assertEqual(bd.getWeight(coord), weight * fraction)
 
     def test_multiply_weight_int(self):
         """
@@ -207,8 +207,8 @@ class TestBoard(unittest.TestCase):
         weights = [6, 14, 90]
 
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord[0], coord[1], weight)
-            bd.multiplyWeight(coord[0], coord[1], multiplier)
+            bd.setWeight(coord, weight)
+            bd.multiplyWeight(coord, multiplier)
 
         for coord, weight in zip(coords, weights):
             desiredWeight = weight * multiplier
@@ -216,7 +216,7 @@ class TestBoard(unittest.TestCase):
                 desiredWeight = -100
             elif desiredWeight > 100:
                 desiredWeight = 100
-            self.assertEqual(bd.getWeight(coord[0], coord[1]), desiredWeight)
+            self.assertEqual(bd.getWeight(coord), desiredWeight)
 
     def test_divide_weight(self):
         """
@@ -228,11 +228,11 @@ class TestBoard(unittest.TestCase):
         weights = [20, 0, 99]
 
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord[0], coord[1], weight)
-            bd.divideWeight(coord[0], coord[1], divisor)
+            bd.setWeight(coord, weight)
+            bd.divideWeight(coord, divisor)
 
         for coord, weight in zip(coords, weights):
-            self.assertEqual(bd.getWeight(coord[0], coord[1]), weight // divisor)
+            self.assertEqual(bd.getWeight(coord), weight // divisor)
 
     def test_add_weight(self):
         """
@@ -244,8 +244,8 @@ class TestBoard(unittest.TestCase):
         weights = [20, -99, 99]
 
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord[0], coord[1], weight)
-            bd.addWeight(coord[0], coord[1], addend)
+            bd.setWeight(coord, weight)
+            bd.addWeight(coord, addend)
 
         for coord, weight in zip(coords, weights):
             desiredWeight = weight + addend
@@ -253,7 +253,7 @@ class TestBoard(unittest.TestCase):
                 desiredWeight = 100
             elif desiredWeight < 0:
                 desiredWeight = addend
-            self.assertEqual(bd.getWeight(coord[0], coord[1]), desiredWeight)
+            self.assertEqual(bd.getWeight(coord), desiredWeight)
 
     def test_subtract_weight(self):
         """
@@ -265,8 +265,8 @@ class TestBoard(unittest.TestCase):
         weights = [20, -99, 99]
 
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord[0], coord[1], weight)
-            bd.subtractWeight(coord[0], coord[1], subtrahend)
+            bd.setWeight(coord, weight)
+            bd.subtractWeight(coord, subtrahend)
 
         for coord, weight in zip(coords, weights):
             desiredWeight = weight - subtrahend
@@ -274,7 +274,7 @@ class TestBoard(unittest.TestCase):
                 desiredWeight = 100
             elif desiredWeight < 0:
                 desiredWeight = 0
-            self.assertEqual(bd.getWeight(coord[0], coord[1]), desiredWeight)
+            self.assertEqual(bd.getWeight(coord), desiredWeight)
 
     def test_multiply_many_nodes(self):
         """
@@ -286,7 +286,7 @@ class TestBoard(unittest.TestCase):
         weights = [20, -99, 99]
 
         for coord, weight in zip(coords, weights):
-            bd.setWeight(*coord, weight)
+            bd.setWeight(coord, weight)
 
         bd.modifyWeights('*', coords, multiplier)
 
@@ -296,7 +296,7 @@ class TestBoard(unittest.TestCase):
                 desiredWeight = 100
             elif desiredWeight < 0:
                 desiredWeight = 0
-            self.assertEqual(bd.getWeight(*coord), desiredWeight)
+            self.assertEqual(bd.getWeight(coord), desiredWeight)
 
     def test_divide_many_weights(self):
         """
@@ -308,7 +308,7 @@ class TestBoard(unittest.TestCase):
         weights = [21, -99, 99]
 
         for coord, weight in zip(coords, weights):
-            bd.setWeight(*coord, weight)
+            bd.setWeight(coord, weight)
 
         bd.modifyWeights('/', coords, divisor)
 
@@ -318,7 +318,7 @@ class TestBoard(unittest.TestCase):
                 desiredWeight = 100
             elif desiredWeight < 0:
                 desiredWeight = 0
-            self.assertAlmostEqual(bd.getWeight(coord[0], coord[1]), desiredWeight, places=4)
+            self.assertAlmostEqual(bd.getWeight(coord), desiredWeight, places=4)
 
     def test_add_many_nodes(self):
         """
@@ -330,7 +330,7 @@ class TestBoard(unittest.TestCase):
         weights = [20, -99, 99]
 
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord[0], coord[1], weight)
+            bd.setWeight(coord, weight)
 
         bd.modifyWeights('+', coords, addend)
 
@@ -340,7 +340,7 @@ class TestBoard(unittest.TestCase):
                 desiredWeight = 100
             elif desiredWeight < 0:
                 desiredWeight = addend
-            self.assertEqual(bd.getWeight(coord[0], coord[1]), desiredWeight)
+            self.assertEqual(bd.getWeight(coord), desiredWeight)
 
     def test_subtract_many_nodes(self):
         """
@@ -352,7 +352,7 @@ class TestBoard(unittest.TestCase):
         weights = [20, -99, 99]
 
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord[0], coord[1], weight)
+            bd.setWeight(coord, weight)
 
         bd.modifyWeights('-', coords, subtrahend)
 
@@ -362,7 +362,7 @@ class TestBoard(unittest.TestCase):
                 desiredWeight = 100
             elif desiredWeight < 0:
                 desiredWeight = 0
-            self.assertEqual(bd.getWeight(coord[0], coord[1]), desiredWeight)
+            self.assertEqual(bd.getWeight(coord), desiredWeight)
 
     def test_modify_weights_invalid_operator(self):
         """
@@ -380,7 +380,7 @@ class TestBoard(unittest.TestCase):
         coords = [[5, 5], [17, 7], [19, 9], [29, 16], [5, 14]]
         weights = [96, 55, 65, 75, 83]
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord[0], coord[1], weight)
+            bd.setWeight(coord, weight)
 
         for i in range(len(coords)):
             priority = coords[weights.index(sorted(weights)[::-1][i])] # test all weighted squares
@@ -395,7 +395,7 @@ class TestBoard(unittest.TestCase):
         coords = [[5, 5], [17, 7], [19, 9], [29, 16], [5, 14]]
         weights = [51, 55, 60, 65, 70]
         for coord, weight in zip(coords, weights):
-            bd.setWeight(coord[0], coord[1], weight)
+            bd.setWeight(coord, weight)
         # Returns lowest priority first
         self.assertEqual(bd.getNodesWithPriority(0, 4), coords[::-1])
 
@@ -423,8 +423,8 @@ class TestBoard(unittest.TestCase):
         coords = [[5, 15], [25, 3]]
         weight = 85
         for coord in coords:
-            bd.setWeight(coord[0], coord[1], weight)
-        self.assertEqual(bd.isNodeWeightUnique(coords[0][0], coords[0][1]), False)
+            bd.setWeight(coord, weight)
+        self.assertEqual(bd.isNodeWeightUnique(coords[0]), False)
 
     def test_unique_weights_positive(self):
         """
@@ -433,8 +433,8 @@ class TestBoard(unittest.TestCase):
         bd = Board(30, 30)
         coord = [5, 15]
         weight = 85
-        bd.setWeight(coord[0], coord[1], weight)
-        self.assertEqual(bd.isNodeWeightUnique(coord[0], coord[1]), True)
+        bd.setWeight(coord, weight)
+        self.assertEqual(bd.isNodeWeightUnique(coord), True)
 
     def test_count_nodes_with_weight(self):
         """
@@ -444,26 +444,8 @@ class TestBoard(unittest.TestCase):
         weight = 65
         coords = [[5, 5], [17, 7], [19, 9], [29, 16], [5, 14]]
         for coord in coords:
-            bd.setWeight(coord[0], coord[1], weight)
-        self.assertEqual(bd.countNodeWeightCopies(*coords[0]), len(coords))
-
-    def test_optimum_path_error_check_same_node(self):
-        """
-        Tests that optimumPathErrorCheck raises an error if `u` and `v` are the same.
-        """
-        coord = [0, 1]
-        bd = Board(30, 30)
-        with self.assertRaises(ValueError):
-            bd.optimumPathErrorCheck([coord, coord])
-
-    def test_optimum_path_too_many_indices(self):
-        """
-        Tests that we cannot find a path for more than two vertices.
-        """
-        bd = Board(5, 5)
-        indices = [[0, 1], [0, 0], [1, 0], [2, 0], [3, 0]]
-        with self.assertRaises(ValueError):
-            bd.optimumPath([indices])
+            bd.setWeight(coord, weight)
+        self.assertEqual(bd.countNodeWeightCopies(coords[0]), len(coords))
 
     def test_optimum_path_regular(self):
         """
@@ -477,8 +459,8 @@ class TestBoard(unittest.TestCase):
         ideal_path = [start] + coords + [end]
         weight = 75
         for coord in coords:
-            bd.setWeight(*coord, weight)
-        path = bd.optimumPath([start, end])
+            bd.setWeight(coord, weight)
+        path = bd.optimumPath(start, end)
 
         # Confirm returned path is same as ideal path from start to end (inclusive)
         self.assertEqual(path, ideal_path)
@@ -495,8 +477,8 @@ class TestBoard(unittest.TestCase):
         ideal_path = [start, [1, 2], [2, 2], [3, 2], end]
         weight = 60
         for coord in coords:
-            bd.setWeight(*coord, weight)
-        path = bd.optimumPath([start, end])
+            bd.setWeight(coord, weight)
+        path = bd.optimumPath(start, end)
 
         # Confirm returned path is same as ideal path from start to end (inclusive)
         self.assertEqual(ideal_path, path)
@@ -513,12 +495,12 @@ class TestBoard(unittest.TestCase):
         ideal_path = [start, [1, 0], end]
         weight = 60
         for coord in coords:
-            bd.setWeight(*coord, weight)
-        path = bd.optimumPath([start, end])
+            bd.setWeight(coord, weight)
+        path = bd.optimumPath(start, end)
 
         # Confirm returned path is same as ideal path from start to end (inclusive)
         self.assertEqual(ideal_path, path)
-    
+
     def test_no_optimum_path(self):
         """
         Tests a board which has no optimum path.
@@ -530,8 +512,8 @@ class TestBoard(unittest.TestCase):
         ideal_path = None
         weight = 0
         for coord in coords:
-            bd.setWeight(*coord, weight)
-        path = bd.optimumPath([start, end])
+            bd.setWeight(coord, weight)
+        path = bd.optimumPath(start, end)
 
         # Confirm returned path is same as ideal path from start to end (inclusive)
         self.assertEqual(ideal_path, path)
@@ -548,20 +530,10 @@ class TestBoard(unittest.TestCase):
         ideal_path = [start, end, [1, 2], [2, 2], [3, 2]]
         weight = 60
         for coord in coords:
-            bd.setWeight(*coord, weight)
-        path_length = bd.optimumPathLength([start, end])
+            bd.setWeight(coord, weight)
+        path_length = bd.optimumPathLength(start, end)
         self.assertEqual(path_length, (len(ideal_path)))
 
-    def test_optimum_path_error_check(self):
-        """
-        Tests optimum path error check for duplicate values and okay values.
-        """
-        bd = Board(5, 5)
-        coords1 = [[1, 2], [1, 3], [2, 3], [3, 3], [3, 2]]
-        coords2 = [[1, 1,], [1, 3], [3, 4], [1, 1]]
-        self.assertEqual(bd.optimumPathErrorCheck(coords1), True)
-        with self.assertRaises(ValueError):
-            bd.optimumPathErrorCheck(coords2)
 
 if __name__ == "__main__":
     unittest.main()
