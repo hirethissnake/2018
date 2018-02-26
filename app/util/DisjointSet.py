@@ -98,6 +98,16 @@ class DisjointSet:
         root = self.find(self.map[str(coord)])
         return [eval(node.name) for node in root.directChildren] + [eval(root.name)]
 
+    def areConnected(self, coord1, coord2):
+        """
+        Determine if 2 nodes are connected.
+
+        param1: [x,y] - first node position
+        param2: [x,y] - second node position
+        return: bool - True if connected, False otherwise
+        """
+        return self.find(self.map[str(coord1)]) == self.find(self.map[str(coord2)])
+
     def getNode(self, coord):
         """
         Return the Node object that corresponds to a gives square.
