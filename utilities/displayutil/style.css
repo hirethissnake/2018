@@ -2,50 +2,72 @@ table {
     border-collapse: collapse;
     text-align: center;
   }
-  /* *{
-    background-color: rgba(0,0,0,0.1);
-  }*/
-  
-  body {
-    font-family: arial;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-  
-  .selectionSquare {
-    cursor:pointer;
-    font-size: 12px;
-  }
-  
-  #selectorTable {
-    cursor:pointer;
-  }
-  
-  button {
-      background-color: #4CAF50; /* Green */
-      border: none;
-      color: white;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 12px;
-      margin: 5px 2px;
-      -webkit-transition-duration: 0.4s; /* Safari */
-      transition-duration: 0.4s;
-      cursor: pointer;
-      background-color: #008CBA;
-      color: white;
-      border-radius: 3px;
-      border: 2px solid #008CBA;
-  }
-  
-  button:hover {
-      background-color: white;
-      color: black;
-      border: 2px solid #008CBA;
-  }
-  
+
+body {
+  font-family: arial;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#buttons {
+  display: flex;
+}
+#displayArea {
+  display: flex;
+}
+#tableDiv {
+  flex: 0 0 65%;
+  display:  table;
+  width:auto;
+  background-color:#eee;
+  border:2px solid  black;
+}
+#status {
+  flex: 1;
+}
+#status div{
+  height: 100px;
+  width: 400px;
+}
+.boardRow {
+  display:table-row;
+  width:auto;
+}
+.boardTile {
+  text-align: center;
+  float:left;/*fix for  buggy browsers*/
+  display: table-column;
+  width: 30px;
+  height: 30px;
+  border: 0.5px solid grey;
+  background-color: white;
+  font-size: 15;
+}
+
+button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    margin: 5px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    background-color: #008CBA;
+    color: white;
+    border-radius: 3px;
+    border: 2px solid #008CBA;
+}
+
+button:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid #008CBA;
+}

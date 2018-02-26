@@ -1,27 +1,35 @@
 const snakeColours = ["#607D8B","#E91E63","#9C27B0", "#3F51B5", "#03A9F4", "#009688", "#CDDC39", "#FFEB3B", "#FF9800", "#FF5722", "#795548"];
 const snakeFaces = [":)", ":O", "xD", ":P", ">:(", "8)", ":C", ":3", ":E"]
-var snakesHead = [false, true, true, true, true, true, true, true, true, true, true, true, true];
 
-var currentSelected = 0;
-var tableSize = 20;
-var mouseDown = 0;  // store mouse status
-var width = 0;
-var height = 0;
-var tableWidth = 0;
-var tableHeight = 0;
-var turnCounter = 0;
+const tableSize = 20;
+let width = 0;
+let height = 0;
+let tableWidth = 0;
+let tableHeight = 0;
+let turnCounter = 0;
 let interLength = 200;
-var interID;
-var paused = true;
+let interID;
+let paused = true;
 
 var openFile = function(event) {
-    var input = event.target;
+    const input = event.target;
 
-    var reader = new FileReader();
+    const reader = new FileReader();
     reader.onload = function(){
-        var text = reader.result;
+        const text = reader.result;
         turnData = JSON.parse(text);
-        renderTurn(0)
+        let status = document.getElementById("status")
+
+        for (member in turnData[0].snakes) {
+            const name = turnData[0].snakes[member].name
+            snakeStat = document.createElement("div")
+            snakeStat.setAttribute("id", name)
+            snakeStat.style.backgroundColor = snakeColours[member];
+
+            status.appendChild(snakeStat)
+        }
+
+        playTurn()
     };
     reader.readAsText(input.files[0]);
 };
@@ -33,10 +41,12 @@ function main() {
     snakeColours.sort(function() { return 0.5 - Math.random() });
     snakeFaces.sort(function() { return 0.5 - Math.random() });
 
-    tableCreate();
+    //tableCreate()
+    createTable()
 }
 
 function start() {
+    console.log(turnData.length)
     if (paused) {
         interID = setInterval(playTurn, interLength)
         paused = false
@@ -44,30 +54,54 @@ function start() {
         console.log("Already playing!")
     }
 }
+
 function playTurn() {
+    turnCounter++
+    if (turnCounter >= turnData.length-1) {
+        console.log("Woahboi")
+        pause()
+    }
     clearCells()
     renderTurn(turnCounter)
     turnDisplay(turnCounter)
-    turnCounter++
-    if (turnCounter >= turnData.length) {
-        clearInterval(interID);
-    }
+    displayHealth(turnCounter)
 }
-function turnDisplay(curTurn) {
-    document.getElementById('turnDisplay').innerText = curTurn
-}
+
 function pause() {
     clearInterval(interID)
     paused = true
 }
-function jumpTo() {
-    jumpToTurn = document.getElementById('thisTurn').value;
-    console.log("Jumping to "+jumpToTurn)
-    turnCounter = jumpToTurn;
-    clearCells()
-    renderTurn(turnCounter)
-    turnDisplay(turnCounter)
+
+function turnDisplay(curTurn) {
+    document.getElementById('turnDisplay').innerText = "Current Turn: "+curTurn
 }
+
+function displayHealth(curTurn){
+    for (member in turnData[curTurn].snakes) {
+        const name = turnData[curTurn].snakes[member].name
+        const health = turnData[curTurn].snakes[member].health_points
+        document.getElementById(name).innerText = name+"\'s "+"health: "+health
+    }
+}
+function jumpSubmit() {
+    const jumpToTurn = document.getElementById('thisTurn').value;
+    jumpTo(jumpToTurn)
+}
+
+function jumpTo(toHere) {
+    if (1 <= toHere && toHere <= turnData.length) {
+        console.log("Jumping to "+toHere)
+        turnCounter = toHere
+        clearCells()
+        renderTurn(turnCounter)
+        turnDisplay(turnCounter)
+        displayHealth(turnCounter)
+        if (turnCounter >= turnData.length) {
+            pause()
+        }
+    }
+}
+
 //Update delay between turn rendering. If currently playing, call setInterval
 function playbackSpeed() {
     clearInterval(interID)
@@ -77,6 +111,15 @@ function playbackSpeed() {
         interID = setInterval(playTurn, interLength)
     }
 }
+
+function minusOne() {
+    jumpTo(turnCounter-1)
+}
+
+function plusOne() {
+    jumpTo(turnCounter+1)
+}
+
 //Remove all colors from board
 function clearCells() {
 
@@ -88,20 +131,21 @@ function clearCells() {
         }
     }
 }
+
 //Render the colors for a specific turn
 function renderTurn(turnToRender) {
-    const curTurn = turnData[turnToRender]
+    const curTurn = turnData[turnToRender-1]
 
     //Add food for new turn
     for (x in curTurn.food){
-        var kibbles = curTurn.food[x];
+        const kibbles = curTurn.food[x];
         document.getElementById(kibbles[0]+','+kibbles[1]).style.backgroundColor = "rgb(76, 175, 80)";
     }
     //Add snakes for new turn
     for (x in curTurn.snakes){
-        var curSnake = curTurn.snakes[x];
+        const curSnake = curTurn.snakes[x];
         for (k in curSnake.coords){
-            var curCoord = curSnake.coords[k];
+            const curCoord = curSnake.coords[k];
             document.getElementById(curCoord[0]+','+curCoord[1]).style.backgroundColor = snakeColours[x];
             if (k == 0) {
                 document.getElementById(curCoord[0]+','+curCoord[1]).innerText = snakeFaces[x];
@@ -109,54 +153,21 @@ function renderTurn(turnToRender) {
         }
     }
 }
-function tableCreate() {
-    
-    var body = document.getElementsByTagName("body")[0];  // get body
 
-    var tbl = document.createElement("table");  // declare table
-    tbl.setAttribute("border", "1");
-    tbl.setAttribute("id", "table");
+function createTable() {
+    let table = document.getElementById("tableDiv")
 
-    if (width > height){
-        var desiredWidth = width;
-        if (height < width / 2){
-          tableWidth = tbl.style.width = height;
-          tableHeight = tbl.style.height = height;
-        } else {
-          tableWidth = tbl.style.width = width / 2;
-          tableHeight = tbl.style.height = (width / 2);
+    for (let row = 0; row < tableSize; row++) {
+        let tableRow = document.createElement("div")
+        tableRow.setAttribute("class", "boardRow")
+
+        for (let col = 0; col < tableSize; col++) {
+            let tableCell = document.createElement("div")
+            tableCell.setAttribute("id", col+","+row)
+            tableCell.setAttribute("class", "boardTile")
+
+            tableRow.appendChild(tableCell)
         }
-    } else {
-        tableWidth = tbl.style.width = width;
-        tableHeight = tbl.style.height = (width);
+        table.appendChild(tableRow)
     }
-
-    var tbdy = document.createElement("tbody");  // declare body
-
-    for (var row = 0; row < tableSize; row++) {  // for table size
-
-        var tr = document.createElement("tr");  // declare row
-
-        for (var col = 0; col < tableSize; col++) {
-
-            var td = document.createElement("td");
-            td.setAttribute("id", col + "," + row);  // set name
-            td.setAttribute("class", "selectionSquare");
-
-            td.style.width = ((100 / tableSize) / 2) + "%";
-            td.style.height = (100 / tableSize) + "%";
-
-            td.appendChild(document.createTextNode("\u0020"))  // add empty text
-
-            tr.appendChild(td)  // append cell to row
-
-        }
-
-        tbdy.appendChild(tr);  // append row to table
-
-    }
-
-    tbl.appendChild(tbdy);  // add table to HTML
-    body.appendChild(tbl);
-
 }
