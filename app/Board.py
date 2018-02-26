@@ -209,13 +209,13 @@ showPath                void        Display graphic of best path between nodes
 
         for node in nodes:
             self.checkNode(node)  # comment this out for speed
-            if operator == "*":
+            if operator == '*':
                 self.multiplyWeight(node, value)
-            elif operator == "/":
+            elif operator == '/':
                 self.divideWeight(node, value)
-            elif operator == "+":
+            elif operator == '+':
                 self.addWeight(node, value)
-            elif operator == "-":
+            elif operator == '-':
                 self.subtractWeight(node, value)
 
 

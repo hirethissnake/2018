@@ -72,26 +72,26 @@ class TestMain(unittest.TestCase):
         Test required responses to '/move' POST
         """
         paramData = {
-            "snakes": [
+            'snakes': [
                 {
-                    "taunt": "git gud",
-                    "name": "my-snake",
-                    "id": "25229082-f0d7-4315-8c52-6b0ff23fb1fb",
-                    "health_points": 93,
-                    "coords": [[0, 0], [0, 1], [0, 2]]},
+                    'taunt': 'git gud',
+                    'name': 'my-snake',
+                    'id': '25229082-f0d7-4315-8c52-6b0ff23fb1fb',
+                    'health_points': 93,
+                    'coords': [[0, 0], [0, 1], [0, 2]]},
                 {
-                    "taunt":
-                    "cash me outside",
-                    "name": "angry-whitegirl",
-                    "id": "ex-uuid",
-                    "health_points": 93,
-                    "coords": [[15, 14], [15, 13], [15, 12]]}
+                    'taunt':
+                    'cash me outside',
+                    'name': 'angry-whitegirl',
+                    'id': 'ex-uuid',
+                    'health_points': 93,
+                    'coords': [[15, 14], [15, 13], [15, 12]]}
             ],
-            "width":20,
-            "height":20,
-            "game_id": "game1",
-            "food": [[4, 5], [8, 9]],
-            "you": "25229082-f0d7-4315-8c52-6b0ff23fb1fb"
+            'width':20,
+            'height':20,
+            'game_id': 'game1',
+            'food': [[4, 5], [8, 9]],
+            'you': '25229082-f0d7-4315-8c52-6b0ff23fb1fb'
         }
         headers = {
             'Content-Type': 'application/json'
