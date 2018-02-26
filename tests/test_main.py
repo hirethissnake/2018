@@ -25,7 +25,7 @@ class TestMain(unittest.TestCase):
         try:
             requests.get(str(self.URL))
         except requests.ConnectionError:
-            print("Was not able to connect to server. Confirm server is running at %s" % self.URL)
+            print('Was not able to connect to server. Confirm server is running at {}'.format(self.URL))
             self.skipTest(TestMain)
 
     def test_start_response(self):
