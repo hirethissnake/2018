@@ -415,7 +415,7 @@ class TestBoard(unittest.TestCase):
             # "value is out of bounds" (end >= self.board.size)
             bd.getNodesWithPriorityErrorCheck(indices[0], indices[3])
 
-    def test_unique_weights_negative(self):
+    def test_unique_weights_false(self):
         """
         Tests to confirm negative result with more than 1 of the same weight across all nodes.
         """
@@ -426,7 +426,7 @@ class TestBoard(unittest.TestCase):
             bd.setWeight(coord, weight)
         self.assertEqual(bd.isNodeWeightUnique(coords[0]), False)
 
-    def test_unique_weights_positive(self):
+    def test_unique_weights_true(self):
         """
         Tests to confirm positive result when node weight is unique.
         """
@@ -435,6 +435,36 @@ class TestBoard(unittest.TestCase):
         weight = 85
         bd.setWeight(coord, weight)
         self.assertEqual(bd.isNodeWeightUnique(coord), True)
+
+    def test_unique_weights(self):
+        """
+        Tests to confirm many weights can be unique on a board.
+        """
+        bd = Board(30, 30)
+        weights = [60, 39, 67, 46, 61, 77, 62, 47, 13, 79, 66, 4, 58, 86, 49]
+        coords = [[11, 21], [10, 22], [20, 26], [17, 3], [12, 13], [16, 13], [16, 3], [19, 29],\
+         [27, 21], [13, 11], [18, 14], [2, 6], [26, 27], [12, 23], [28, 29]]
+        for coord, weight in zip(coords, weights):
+            bd.setWeight(coord, weight)
+        for coord in coords:
+            self.assertEqual(bd.isNodeWeightUnique(coord), True)
+
+    def test_unique_weights_stress_test(self):
+        """
+        Stress test finding a unique weight on a board with a large size.
+        """
+        bd = Board(500, 500)
+        coord = [5, 15]
+        weight = 51
+        bd.setWeight(coord, weight)
+        self.assertEqual(bd.isNodeWeightUnique(coord), True)
+
+    def test_unique_weights_50(self):
+        """
+        Test unique weights when all weights are 50.
+        """
+        bd = Board(30, 30)
+        self.assertEqual(bd.isNodeWeightUnique([0, 0]), False)
 
     def test_count_nodes_with_weight(self):
         """
@@ -447,7 +477,7 @@ class TestBoard(unittest.TestCase):
             bd.setWeight(coord, weight)
         self.assertEqual(bd.countNodeWeightCopies(coords[0]), len(coords))
 
-    def test_optimum_path_regular(self):
+    def test_optimum_path_by_weight(self):
         """
         Tests a board which has no optimal path by length, but does by weight.
         Path is expected to be `coords`.
@@ -465,7 +495,7 @@ class TestBoard(unittest.TestCase):
         # Confirm returned path is same as ideal path from start to end (inclusive)
         self.assertEqual(path, ideal_path)
 
-    def test_optimum_path_long(self):
+    def test_optimum_path_longer_by_count(self):
         """
         Tests a board which has a shortest path that is shorter than the path by optimal weight.
         Path is expected to be `ideal_path`.
@@ -483,7 +513,7 @@ class TestBoard(unittest.TestCase):
         # Confirm returned path is same as ideal path from start to end (inclusive)
         self.assertEqual(ideal_path, path)
 
-    def test_optimum_path_very_long(self):
+    def test_optimum_path_many_coords(self):
         """
         Tests a board which has a path obviously much shorter by length, but not as highly weighted.
         Path is expected to be `ideal_path`.

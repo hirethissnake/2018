@@ -404,28 +404,6 @@ showPath                void        Display graphic of best path between nodes
         # for assisting in making this method happen
 
         # Make some nice variables for working with
-<<<<<<< HEAD
-        b_height, b_width = self.board.shape
-        u = vertices[0]
-        v = vertices[1]
-        start = u[1] * b_width + u[0]
-        end = v[1] * b_width + v[0]
-
-        # Create the adjacency matrix
-        adj_matrix = np.zeros((b_height * b_width, b_height * b_width), dtype=self.board.dtype)
-        for y in range(b_height):
-            for x in range(b_width):
-                # map x, y coords to a range from 0 to (b_height * b_width)
-                i = y * b_width + x
-                if x > 0:
-                    adj_matrix[i - 1, i] = self.board[i // b_width][i % b_width]
-                    adj_matrix[i, i - 1] = self.board[i // b_width][i % b_width]
-                if y > 0:
-                    adj_matrix[i - b_width, i] = self.board[i // b_width][i % b_width]
-                    adj_matrix[i, i - b_width] = self.board[i // b_width][i % b_width]
-        # Perform the Dikstra
-        (distances, previous) = dijkstra(adj_matrix, indices=start,\
-=======
         bHeight, bWidth = self.board.shape
         adjMatrixSide = bHeight * bWidth
         start = u[1] * bWidth + u[0]
@@ -450,7 +428,6 @@ showPath                void        Display graphic of best path between nodes
 
         # Perform the Djikstra
         (distances, previous) = dijkstra(self.adjMatrix, indices=start,\
->>>>>>> Appease Daniel
                                          directed=True, return_predecessors=True)
 
         # Collect the path between points using the previous array, but avoid if there are no paths
