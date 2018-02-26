@@ -65,33 +65,44 @@ class TestMain(unittest.TestCase):
 
         self.assertIn('head_type', responseData)
         self.assertIn('tail_type', responseData)
-        # self.assertIn('secondary_color', responseData)
 
     def test_move_responses(self):
         """
         Test required responses to '/move' POST
         """
         paramData = {
-            'snakes': [
+            "snakes": [
                 {
-                    'taunt': 'git gud',
-                    'name': 'my-snake',
-                    'id': '25229082-f0d7-4315-8c52-6b0ff23fb1fb',
-                    'health_points': 93,
-                    'coords': [[0, 0], [0, 1], [0, 2]]},
+                    "taunt": "git gud",
+                    "name": "my-snake",
+                    "id": "25229082-f0d7-4315-8c52-6b0ff23fb1fb",
+                    "health_points": 93,
+                    "coords": [[0, 0], [0, 1], [0, 2]]
+                },
                 {
-                    'taunt':
-                    'cash me outside',
-                    'name': 'angry-whitegirl',
-                    'id': 'ex-uuid',
-                    'health_points': 93,
-                    'coords': [[15, 14], [15, 13], [15, 12]]}
+                    "taunt": "cash me outside",
+                    "name": "angry-whitegirl",
+                    "id": "ex-uuid",
+                    "health_points": 93,
+                    "coords": [[15, 14], [15, 13], [15, 12]]
+                }
             ],
-            'width':20,
-            'height':20,
-            'game_id': 'game1',
-            'food': [[4, 5], [8, 9]],
-            'you': '25229082-f0d7-4315-8c52-6b0ff23fb1fb'
+            "width": 20,
+            "height": 20,
+            "game_id": 1,
+            "food": [[4, 5], [8, 9]],
+            "you": {
+                "id": "25229082-f0d7-4315-8c52-6b0ff23fb1fb",
+                "taunt": "1-800-267-2001 ALARMFORCE",
+                "name": "sneakysnake",
+                "health_points": 100,
+                "coords": [
+                    [3, 3], 
+                    [3, 4],
+                    [4, 4]
+                ]
+            },
+            "turn": 0
         }
         headers = {
             'Content-Type': 'application/json'

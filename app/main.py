@@ -1,90 +1,123 @@
 """
-Team Sneaky Snake Battlesnake implementation.
+Team SneakySnake's Battlesnake implementation.
 Responds to POST /start and POST /move.
 """
 
 import os
 import time
-import bottle
+from bottle import request, route, post, run, static_file
 from app.Game import Game
 
 gameDict = {}
+VERBOSE = True
 
-@bottle.route('/static/<path:path>')
+def log(msg, level):
+    """
+    Provides easy logging of notifications, warnings, and errors.
+
+    ### Levels:
+    0 - notifications,
+    1 - warning,
+    2 - critical error
+    """
+    # 0 - Notification, 1 - Warning, 2 - Critical error
+    levels = [0, 1, 2]
+    colors = ['\033[0m', '\033[93m', '\033[91m']
+
+    if level not in levels:
+        level = min(level)
+
+    # Print text in colored version, then default color
+    print('{}{}{}'.format(colors[level], msg, colors[0]))
+
+
+@route('/static/<path:path>')
 def static(path):
-    """Provides access to static files such as images."""
-    return bottle.static_file(path, root='static/')
+    """
+    Provides access to static files such as images.
+    """
+    return static_file(path, root='static/')
 
-@bottle.post('/start')
+
+@post('/start')
 def start():
-    """Respond to POST /start with important details like what our snake looks
-    like, and what our taunt is."""
-    data = bottle.request.json
+    """
+    Respond to POST /start with important details like what our snake looks
+    like, and what our taunt is.
+    """
+    data = request.json
+    log('Beginning new game', 1)
+    if VERBOSE: log(data, 0)
 
-    print('We have begun a new game!')
-    print(data)
-
-    #Create a game object with the data given
+    #Create a game object with the data given, add it to the list of games
     game_id = data['game_id']
     battle = Game(data)
-    #Enter the game into the gameDict with the key value set to its id
     gameDict[game_id] = battle
 
     head_url = '%s://%s/static/head.png' % (
-        bottle.request.urlparts.scheme,
-        bottle.request.urlparts.netloc
+        request.urlparts.scheme,
+        request.urlparts.netloc
     )
 
     sendingData = {
         'color': '#FFEBD0',
-        'taunt': 'SSssssSSSsSSsssS',
+        'taunt': battle.getTaunt(),
         'head_url': head_url,
         'name': 'SneakySnake',
         'head_type': 'tongue',
         'tail_type': 'curled'
     }
 
-    # log and return
     return sendingData
 
-@bottle.post('/move')
+
+@post('/move')
 def move():
-    """Respond to POST /move with an adequate choice of movement."""
-    data = bottle.request.json
+    """
+    Respond to POST /move with an adequate choice of movement.
+    """
+    data = request.json
+    # Default move and taunt
+    nextMove = 'up'
+    nextTaunt = 'oh_noes!'
+    currentGame = None
 
-    print('We have received a move')
-    print(data)
+    log('We received a move request.', 0)
+    if VERBOSE: log(data, 0)
 
-    # get game_id
     if 'game_id' in data:
-        curGame = data['game_id']
+        currentGame = data['game_id']
     else:
-        print('Data missing game_id')
+        log('No game_id in request', 1)
 
-    # get curGame from gameDict
-    if curGame in gameDict:
-        battle = gameDict[curGame]
-        #Update the game with new gamestate
-        start = time.time()
+    # get currentGame from gameDict
+    if currentGame in gameDict:
+        battle = gameDict[currentGame]
+        # Update Game with new game state
+        startTime = time.time()
         battle.update(data)
-        #Request next best move
-        nextMove = battle.getNextMove()
-        #nextTaunt = battle.getTaunt()
-        print('--- %s seconds ---' % (time.time() - start))
+        # Request next move
+        try:
+            nextMove = battle.getNextMove()
+            nextTaunt = battle.getTaunt()
+        except Exception as e:
+            log('ERROR: {}'.format(e), 2)
+
+        if VERBOSE:
+            endTime = time.time()
+            log('Processing time: {} ms'.format((endTime - startTime) * 1000), 0)
+            log('Move chosen: {}'.format(nextMove), 0)
     else:
-        print('ERROR: Received request for game that does not exist')
-        print('To avoid collateral damage to other games, responding with default move')
-        nextMove = 'up'
+        log('ERROR: Received request for game that does not exist\n' +
+        'To avoid collateral damage to other games, responding with default move "up"' , 2)
 
     sendingData = {
         'move': nextMove,
-        'taunt': 'please no'
+        'taunt': nextTaunt
     }
 
     return sendingData
 
-
-# Expose WSGI app (so gunicorn can find it)
-APPLICATION = bottle.default_app()
 if __name__ == '__main__':
-    bottle.run(APPLICATION, host=os.getenv('IP', '0.0.0.0'), port=os.getenv('PORT', '8080'))
+    # TODO: Set VERBOSE based on environment variable or command line argument
+    run(host=os.getenv('IP', '0.0.0.0'), port=os.getenv('PORT', '8080'))
