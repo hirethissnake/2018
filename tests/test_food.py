@@ -20,10 +20,20 @@ class TestSnake(unittest.TestCase):
         """
         Test the Food init function.
         """
-        self.assertEqual(self.food.getPositions(), [])
+        self.assertEqual(self.food.getPositions(), [[]])
 
-        self.food = Food([[1, 1], [2, 2]])
-        self.assertEqual(self.food.getPositions(), [[1, 1], [2, 2]])
+        world = {
+            'object': 'world',
+            'food': {
+                'object': 'list',
+                'data': [
+                    [1, 1], [2, 2]
+                ]
+            }
+        }
+
+        self.food = Food(world['food'])
+        self.assertEqual(self.food.getPositions(), world['food']['data'])
 
         self.food = Food([[]])
         self.assertEqual(self.food.getPositions(), [[]])
@@ -32,13 +42,41 @@ class TestSnake(unittest.TestCase):
         """
         Test the Food update function.
         """
-        self.food.update([[0, 0]])
-        self.assertEqual(self.food.getPositions(), [[0, 0]])
-        self.food.update([[2, 2]])
-        self.assertEqual(self.food.getPositions(), [[2, 2]])
-        self.food.update([[0, 0], [1, 1], [2, 2], [3, 3]])
-        self.assertEqual(self.food.getPositions(), [[0, 0], [1, 1], [2, 2], [3, 3]])
+
+        world1 = {
+            'object': 'world',
+            'food': {
+                'object': 'list',
+                'data': [
+                    [0, 0]
+                ]
+            }
+        }
+        world2 = {
+            'object': 'world',
+            'food': {
+                'object': 'list',
+                'data': [
+                    [2, 2]
+                ]
+            }
+        }
+        world3 = {
+            'object': 'world',
+            'food': {
+                'object': 'list',
+                'data': [
+                    [0, 0], [1, 1], [2, 2], [3, 3]
+                ]
+            }
+        }
+        self.food.update(world1['food'])
+        self.assertEqual(self.food.getPositions(), world1['food']['data'])
+        self.food.update(world2['food'])
+        self.assertEqual(self.food.getPositions(), world2['food']['data'])
+        self.food.update(world3['food'])
+        self.assertEqual(self.food.getPositions(), world3['food']['data'])
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

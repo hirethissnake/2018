@@ -17,7 +17,7 @@ class Game:
     width           (int)            - Board width
     height          (int)            - Board height
     you             (Snake)          - Snake object representing our snake
-    food            (List<Point>     - List object containing an array of points
+    food            (List<Point>]     - List object containing an array of points
     turn            (int)            - 0-indexed int representing completed turns
     snakes          (List<Snake>)    - dict of Snake objects currently in play
     """

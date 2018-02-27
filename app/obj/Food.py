@@ -14,7 +14,10 @@ class Food:
 
         param1: [[x, y]] - list of all food on the board
         """
-        self.positions = foodList.data
+        if 'data' in foodList:
+            self.positions = foodList['data']
+        else:
+            self.positions = [[]]
 
     def update(self, foodList):
         """
@@ -22,7 +25,7 @@ class Food:
 
         param1: [[x, y]] - list of all food on the board
         """
-        self.positions = foodList.data
+        self.positions = foodList['data']
 
     def getPositions(self):
         """
