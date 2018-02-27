@@ -2,6 +2,7 @@
 Run all the tests available in this folder.
 """
 import unittest
+import sys
 
 if __name__ == '__main__':
     loader = unittest.TestLoader()
@@ -9,4 +10,5 @@ if __name__ == '__main__':
     suite = loader.discover(start_dir)
 
     runner = unittest.TextTestRunner(verbosity=2)
-    runner.run(suite)
+    result = runner.run(suite)
+    sys.exit(not result.wasSuccessful())
