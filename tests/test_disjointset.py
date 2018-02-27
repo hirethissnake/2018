@@ -24,18 +24,16 @@ class TestDisjointSet(unittest.TestCase):
         """
         Ensure proper default state.
         """
-        self.set.areConnected([0,0], [10, 10])
         self.assertEqual(self.set.board, self.board)
-
-    def test_update_all_or_nothing(self):
-        """
-        Ensure basic update is performed properly.
-        """
         connected = self.set.getConnected([0, 0])
         for x in range(self.board.width):
             for y in range(self.board.width):
                 self.assertTrue([x, y] in connected)
 
+    def test_update_all_walls(self):
+        """
+        Ensure basic update is performed properly.
+        """
         self.board.getWeight.return_value = 0
         self.set.update()
         for x in range(self.board.width):

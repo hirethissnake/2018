@@ -1,9 +1,7 @@
 """Tracks connectedness of our board. Provides lightning fast lookups to see exactly
 what squares are reachable from where."""
 
-from app.Board import Board
 import numpy as np
-import time
 
 
 class Node(object):
