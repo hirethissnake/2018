@@ -43,13 +43,13 @@ class Game:
         """
         Perform necessary actions upon receiving the first
         dictionary of the game
-        
+
         param1: dictionary - all data from Battlesnake server.
         """
-        for snake in data['snakes']:
+        for snake in data['snakes']['data']:
             snakeId = snake['id']
             self.snakes[snakeId] = Snake(snake)
-        
+
         self.us = data['you']['id']
         self.food = Food(data['food'])
         self.machine = StateMachine(self.board, self.snakes, self.us, self.food)
@@ -66,20 +66,12 @@ class Game:
             return
 
         # update all of our snakes
-        for snake in data['snakes']:
+        for snake in data['snakes']['data']:
             snakeId = snake['id']
             self.snakes[snakeId].update(snake)
 
         self.food.update(data['food'])
         self.turn = data['turn']
-
-        # remove dead snakes
-        if 'dead_snakes' in data:
-            for snake in data['dead_snakes']:
-                snakeId = snake['id']
-                if snakeId in self.snakes:
-                    del self.snakes[snakeId]
-                    self.deadSnakes[snakeId] = snake
 
     def getNextMove(self):
         """

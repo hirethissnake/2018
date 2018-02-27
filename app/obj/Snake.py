@@ -29,12 +29,13 @@ class Snake:
 
         # often updated
         self.identifier = data['id']
-        self.coords = data['coords']
-        self.healthPoints = data['health_points']
+        self.coords = data['body']['data']
+        self.healthPoints = data['health']
+        self.size = data['length']
         # old
-        self.oldSize = len(self.coords)
-        self.oldHealthPoints = data['health_points']
-        self.oldCoords = [data['coords']]
+        self.oldSize = data['length']
+        self.oldHealthPoints = data['health']
+        self.oldCoords = [data['body']['data']]
         # snake personality
         if 'taunt' in data:
             self.taunt = data['taunt']
@@ -44,18 +45,22 @@ class Snake:
     def update(self, data):
         """
         Update snake after previous move.
-
         param1: data - all snake-related data from server
+
         """
 
-        healthPoints = data['health_points']
+        healthPoints = data['health']
         if healthPoints > 100 or healthPoints < 0:
             raise ValueError('health_points must be between 100 and 0')
 
         self.oldHealthPoints = self.healthPoints
         self.healthPoints = healthPoints
 
-        self.coords = data['coords']
+        size = data['length']
+        self.oldSize = self.size
+        self.size = size
+
+        self.coords = data['body']['data']
 
         if 'taunt' in data:
             self.taunt = data['taunt']
@@ -68,7 +73,7 @@ class Snake:
         return: int - snake
         """
 
-        return len(self.coords)
+        return self.size
 
     def getHealth(self):
         """
