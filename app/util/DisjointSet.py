@@ -1,6 +1,9 @@
 """Tracks connectedness of our board. Provides lightning fast lookups to see exactly
 what squares are reachable from where."""
 
+from app.Board import Board
+import time
+
 class DisjointSet:
     """The disjointed set that provides information
     on the connectedness of the board.
@@ -83,14 +86,17 @@ class DisjointSet:
         
         if rank1 < rank2:
             root1.parent = root2
-            root2.directChildren.add(root1)
+            root2.children.add(root1)
+            root2.children.update(list(root1.children))
         elif rank1 > rank2:
             root2.parent = root1
-            root1.directChildren.add(root2)
+            root1.children.add(root2)
+            root1.children.update(list(root2.children))
         else:
             root1.parent = root2
             root2.rank = rank2 + 1
-            root2.directChildren.add(root1)
+            root2.children.add(root1)
+            root2.children.update(list(root1.children))
 
     def getConnected(self, coord):
         """
@@ -104,7 +110,7 @@ class DisjointSet:
         if child is None:
             return [coord]
         root = self.find(child)
-        return [eval(node.name) for node in root.directChildren] + [eval(root.name)]
+        return [eval(node.name) for node in root.children] + [eval(root.name)]
 
     def areConnected(self, coord1, coord2):
         """
@@ -137,7 +143,7 @@ class DisjointSet:
         param1: string - name of root to display from
         """
         print('\t'*(5 - root.rank) + root.name) # NOTE: Incredibly crude implementation
-        for child in root.directChildren:
+        for child in root.children:
             self.toString(child)
 
 
@@ -148,5 +154,5 @@ class Node:
     def __init__(self, name):
         self.name = name
         self.parent = None
-        self.directChildren = set()
+        self.children = set()
         self.rank = 0
