@@ -109,7 +109,7 @@ def move():
             log('Move chosen: {}'.format(nextMove), 0)
     else:
         log('ERROR: Received request for game that does not exist\n' +
-        'To avoid collateral damage to other games, responding with default move "up"' , 2)
+        'To avoid collateral damage to other games, responding with default move "up"', 2)
 
     sendingData = {
         'move': nextMove,
