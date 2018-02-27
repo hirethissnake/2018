@@ -1,6 +1,6 @@
 # Utilities
 
-This folder stores classes that have processing data as their primary purpose.
+This folder stores classes that have processing data as their primary purpose. The should accept objects from their parent classes, and perform calculations on them.
 
 ## Requirements
 
