@@ -66,7 +66,7 @@ class TestDisjointSet(unittest.TestCase):
 
     def test_update_worst_case(self):
         """
-        Test update with a crafted set of walls to invoke tree explosion.
+        Test update with a crafted set of walls to maximize data structure height.
         """
         board = Board(20, 20)
         dset = DisjointSet(board)
