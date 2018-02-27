@@ -13,8 +13,6 @@ class Snake:
     oldHealthPoints int             - health_points of snake on last move
     oldCoords       [[x,y]]         - array of array of [x,y] describing past
                                         locations the snake was at
-    state           string          - (unknown | food | attack | flee), describes
-                                        past actions of snake
     taunt           string          - snake's current taunt
     name            string          - name of snake
     """
@@ -42,8 +40,6 @@ class Snake:
             self.taunt = data['taunt']
         if 'name' in data:
             self.name = data['name']
-
-        self.state = 'unknown'
 
     def update(self, data):
         """
@@ -117,29 +113,6 @@ class Snake:
 
         return self.coords[-1]
 
-    def setState(self, state):
-        """
-        Set snake state. One of (unknown | food | attack | flee).
-
-            Raises: ValueError
-                if: state does not match four options
-        """
-        if state == 'unknown' or state == 'food' or state == 'attack' or \
-        state == 'flee':
-            self.state = state
-            return
-        else:
-            raise ValueError('invalid state')
-
-    def getState(self):
-        """
-        Return snake state.
-
-        return: string
-        """
-
-        return self.state
-
     def getIdentifier(self):
         """
         Return snake's identifier.
@@ -156,7 +129,6 @@ class Snake:
 
         asString = 'identifer: ' + str(self.identifier) + '\n' \
                     + 'healthPoints: ' + str(self.healthPoints) + '\n' \
-                    + 'state: ' + str(self.state) + '\n' \
                     + 'coords: ' + str(self.coords)
 
         return asString
