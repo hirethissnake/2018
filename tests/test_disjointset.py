@@ -16,34 +16,26 @@ class TestDisjointSet(unittest.TestCase):
         """
         Create a fresh DisjointSet object.
         """
-
-        self.board = Board(20, 20)
+        self.board = Mock(width=20, height=20)
         self.set = DisjointSet(self.board)
-        self.enclosedSpace = [[0, 0], [1, 0], [1, 1], [2, 0], [2, 1], [3, 0]]
-        self.wall = [[0, 1], [1, 2], [2, 2], [3, 2], [3, 1], [4, 0]]
-        
-        self.board.setWeights(self.wall, 0) # disconnect top left
-
         self.set.update()
         
-
     def test_initialization(self):
         """
         Ensure proper default state.
         """
         self.set.areConnected([0,0], [10, 10])
-        #self.assertEqual(self.set.board, self.board)
+        self.assertEqual(self.set.board, self.board)
 
     def test_update_all_or_nothing(self):
         """
         Ensure basic update is performed properly.
         """
-        self.set.update()
         connected = self.set.getConnected([0, 0])
         for x in range(self.board.width):
             for y in range(self.board.width):
                 self.assertTrue([x, y] in connected)
-        
+
         self.board.getWeight.return_value = 0
         self.set.update()
         for x in range(self.board.width):

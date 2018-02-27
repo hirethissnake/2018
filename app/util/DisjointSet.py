@@ -2,7 +2,20 @@
 what squares are reachable from where."""
 
 from app.Board import Board
+import numpy as np
 import time
+
+
+class Node(object):
+    """Represents an abstract node in a
+    connected component."""
+
+    def __init__(self, pos):
+        self.pos = pos
+        self.parent = None
+        self.children = set()
+        self.rank = 0
+
 
 class DisjointSet:
     """The disjointed set that provides information
@@ -20,41 +33,38 @@ class DisjointSet:
         param1: Board - Board object
         """
         self.board = board
-        self.map = {} # maps coords to Node objects
+        self.map = np.empty((board.width, board.height), dtype=object) # maps coords to Node objects
         
     def update(self):
         """
         Update connectivity based on Snake objects.
         """
-        self.map = {}
+        self.map = np.empty((self.board.width, self.board.height), dtype=object)
         boardWidth = self.board.width
         boardHeight = self.board.height
         for x in range(boardWidth):
             for y in range(boardHeight):
                 weight = self.board.getWeight([x, y])
-                strCoord = '[' + str(x) + ', ' + str(y) + ']'
                 if weight is 0:
-                    self.map[strCoord] = None
                     continue
                 
-                newNode = Node(strCoord)
-                self.map[strCoord] = newNode
+                newNode = Node([x, y])
+                self.map[x, y] = newNode
                 
                 surrounding = []
                 if (x - 1) >= 0:
-                    surrounding.append(str([x - 1, y]))
+                    surrounding.append([x - 1, y])
                 if (x + 1) < boardWidth:
-                    surrounding.append(str([x + 1, y]))
+                    surrounding.append([x + 1, y])
                 if (y + 1) < boardHeight:
-                    surrounding.append(str([x, y + 1]))
+                    surrounding.append([x, y + 1])
                 if (y - 1) >= 0:
-                    surrounding.append(str([x, y - 1]))
+                    surrounding.append([x, y - 1])
                 
                 for coord in surrounding:
-                    if coord in self.map:
-                        adjacentNode = self.map[coord]
-                        if adjacentNode is not None:
-                            self.union(adjacentNode, newNode)
+                    adjacentNode = self.map[coord[0], coord[1]]
+                    if adjacentNode is not None:
+                        self.union(adjacentNode, newNode)
 
     def find(self, child):
         """
@@ -87,16 +97,16 @@ class DisjointSet:
         if rank1 < rank2:
             root1.parent = root2
             root2.children.add(root1)
-            root2.children.update(list(root1.children))
+            root2.children.update(root1.children)
         elif rank1 > rank2:
             root2.parent = root1
             root1.children.add(root2)
-            root1.children.update(list(root2.children))
+            root1.children.update(root2.children)
         else:
             root1.parent = root2
             root2.rank = rank2 + 1
             root2.children.add(root1)
-            root2.children.update(list(root1.children))
+            root2.children.update(root1.children)
 
     def getConnected(self, coord):
         """
@@ -105,12 +115,12 @@ class DisjointSet:
         param1: [x,y] - name of square to find connected components from
         return: [[x,y]] - list of connected squares
         """
-        # TODO: this currently only return one level, it must be recursive
-        child = self.map[str(coord)]
+        child = self.map[coord[0], coord[1]]
         if child is None:
             return [coord]
         root = self.find(child)
-        return [eval(node.name) for node in root.children] + [eval(root.name)]
+
+        return [node.pos for node in root.children] + [root.pos]
 
     def areConnected(self, coord1, coord2):
         """
@@ -120,8 +130,8 @@ class DisjointSet:
         param2: [x,y] - second node position
         return: bool - True if connected, False otherwise
         """
-        node1 = self.map[str(coord1)]
-        node2 = self.map[str(coord2)]
+        node1 = self.map[coord1[0], coord1[1]]
+        node2 = self.map[coord2[0], coord2[1]]
         if node1 is None or node2 is None:
             return False
 
@@ -134,7 +144,7 @@ class DisjointSet:
         param1: [x,y] - name of the square to find
         return: Node - object corresponding to square
         """
-        return self.map[str(coord)]
+        return self.map[coord[0], coord[1]]
 
     def toString(self, root):
         """
@@ -142,17 +152,6 @@ class DisjointSet:
 
         param1: string - name of root to display from
         """
-        print('\t'*(5 - root.rank) + root.name) # NOTE: Incredibly crude implementation
+        print('\t'*(5 - root.rank) + str(root.pos)) # NOTE: Incredibly crude implementation
         for child in root.children:
             self.toString(child)
-
-
-class Node:
-    """Represents an abstract node in a
-    connected component."""
-
-    def __init__(self, name):
-        self.name = name
-        self.parent = None
-        self.children = set()
-        self.rank = 0
