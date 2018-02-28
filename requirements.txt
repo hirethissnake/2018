@@ -4,3 +4,4 @@ requests
 codecov
 numpy
 scipy
+boddle

@@ -9,6 +9,7 @@ if __name__ == '__main__':
     start_dir = '.'
     suite = loader.discover(start_dir)
 
-    runner = unittest.TextTestRunner(verbosity=2)
+    # Force high verbosity and hide internal prints during tests
+    runner = unittest.TextTestRunner(verbosity=2, buffer=True)
     result = runner.run(suite)
     sys.exit(not result.wasSuccessful())
