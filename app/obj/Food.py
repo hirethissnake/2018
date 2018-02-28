@@ -15,7 +15,6 @@ class Food:
         param1: [[x, y]] - list of all food on the board
         """
         if 'data' in foodList:
-            #self.positions = list(map(lambda point: [point['x'], point['y']], foodList['data']))
             self.positions = list(map(lambda point: [point['x'], point['y']], foodList['data']))
         else:
             self.positions = [[]]

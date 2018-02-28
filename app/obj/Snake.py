@@ -36,7 +36,7 @@ class Snake:
         # old
         self.oldSize = data['length']
         self.oldHealthPoints = data['health']
-        self.oldCoords = [list(map(lambda point: [point['x'], point['y']], data['body']['data']))]
+        self.oldCoords = self.coords
         # snake personality
         if 'taunt' in data:
             self.taunt = data['taunt']
