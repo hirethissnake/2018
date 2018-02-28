@@ -32,6 +32,48 @@ def log(msg, level):
     print('{}{}{}'.format(colors[level], msg, colors[0]))
 
 
+def emergencyStart(gameId, height, width):
+    """
+    Start a game in the middle of it happening.
+    """
+    log('Emergency game start', 1)
+    data = {
+        'height': height,
+        'width': width
+    }
+    battle = Game(data)
+    gameDict[gameId] = battle
+
+
+def getGameDecisions(currentGame):
+    """
+    Gets the next move and taunt from the game given by currentGame.
+    Requires currentGame to exist in gameDict.
+
+    returns: (str, str) - next move, taunt
+    """
+    # Default move and taunt
+    nextMove = 'up'
+    nextTaunt = 'oh_noes!'
+    battle = gameDict[currentGame]
+    # Update Game with new game state
+    startTime = time.time()
+
+    # Request next move
+    try:
+        nextMove = battle.getNextMove()
+        nextTaunt = battle.getTaunt()
+    except Exception as e:
+        log('ERROR: {}'.format(e), 2)
+
+    if VERBOSE:
+        endTime = time.time()
+        log('Processing time: {} ms'.format((endTime - startTime) * 1000), 0)
+        log('Move chosen: {}'.format(nextMove), 0)
+
+    return (nextMove, nextTaunt)
+
+
 @route('/static/<path:path>')
 def static(path):
     """
@@ -78,9 +120,6 @@ def move():
     Respond to POST /move with an adequate choice of movement.
     """
     data = request.json
-    # Default move and taunt
-    nextMove = 'up'
-    nextTaunt = 'oh_noes!'
     currentGame = None
 
     log('We received a move request.', 0)
@@ -94,30 +133,23 @@ def move():
     # get currentGame from gameDict
     if currentGame in gameDict:
         battle = gameDict[currentGame]
-        # Update Game with new game state
-        startTime = time.time()
         battle.update(data)
-        # Request next move
-        try:
-            nextMove = battle.getNextMove()
-            nextTaunt = battle.getTaunt()
-        except Exception as e:
-            log('ERROR: {}'.format(e), 2)
-
-        if VERBOSE:
-            endTime = time.time()
-            log('Processing time: {} ms'.format((endTime - startTime) * 1000), 0)
-            log('Move chosen: {}'.format(nextMove), 0)
     else:
+        # Handle missing games gracefully
         log('ERROR: Received request for game that does not exist\n' +
-        'To avoid collateral damage to other games, responding with default move "up"', 2)
+        'Running emergency game start routine to get best-guess move', 2)
 
+        emergencyStart(currentGame, data['height'], data['width'])
+        battle = gameDict[currentGame]
+
+    nextMove, nextTaunt = getGameDecisions(currentGame)
     sendingData = {
         'move': nextMove,
         'taunt': nextTaunt
     }
 
     return sendingData
+
 
 if __name__ == '__main__':
     run(host=os.getenv('IP', '0.0.0.0'), port=os.getenv('PORT', '8080'))
