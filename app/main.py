@@ -129,7 +129,7 @@ def move():
         currentGame = data['game_id']
     else:
         log('No game_id in request, making no move.', 1)
-        return
+        return None
 
     # get currentGame from gameDict
     if currentGame in gameDict:

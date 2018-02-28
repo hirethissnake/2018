@@ -75,7 +75,7 @@ class TestMain(unittest.TestCase):
             self.fail(failMsg)
         except Exception:
             self.fail(failMsg)
-        
+
     def test_get_game_decision(self):
         """
         Test game decision method during nominal gameplay.
@@ -91,7 +91,7 @@ class TestMain(unittest.TestCase):
         nextMove, nextTaunt = main.getGameDecisions(game_id)
         self.assertIn(nextMove.lower(), moves)
         self.assertEqual(type(nextTaunt), str)
-    
+
     def test_get_game_decision_exception(self):
         """
         Test game decision method when an error is thrown internally.
@@ -100,12 +100,12 @@ class TestMain(unittest.TestCase):
         mockBattle = Mock()
         # Test getNextMove throwing an error internally
         mockBattle.getNextMove.side_effect = KeyError('Value not found on board')
-        
+
         main.gameDict[game_id] = mockBattle
         nextMove, nextTaunt = main.getGameDecisions(game_id)
-        self.assertEqual(nextMove.lower(), 'up')        # up is the default move if an error is thrown
+        self.assertEqual(nextMove.lower(), 'up')    # up is the default move if an error is thrown
         self.assertEqual(type(nextTaunt), str)
- 
+
     # def test_static_response(self):
     #     """
     #     Make sure we can make requests to static files
@@ -147,7 +147,7 @@ class TestMain(unittest.TestCase):
                 'name': 'sneakysnake',
                 'health_points': 100,
                 'coords': [
-                    [3, 3], 
+                    [3, 3],
                     [3, 4],
                     [4, 4]
                 ]
@@ -224,7 +224,7 @@ class TestMain(unittest.TestCase):
                 'name': 'sneakysnake',
                 'health_points': 100,
                 'coords': [
-                    [3, 3], 
+                    [3, 3],
                     [3, 4],
                     [4, 4]
                 ]
