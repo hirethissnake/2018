@@ -29,13 +29,14 @@ class Snake:
 
         # often updated
         self.identifier = data['id']
-        self.coords = data['body']['data']
+        self.coords = list(map(lambda point: [point['x'], point['y']], data['body']['data']))
+
         self.healthPoints = data['health']
         self.size = data['length']
         # old
         self.oldSize = data['length']
         self.oldHealthPoints = data['health']
-        self.oldCoords = [data['body']['data']]
+        self.oldCoords = [list(map(lambda point: [point['x'], point['y']], data['body']['data']))]
         # snake personality
         if 'taunt' in data:
             self.taunt = data['taunt']
@@ -58,7 +59,7 @@ class Snake:
         self.oldSize = self.size
         self.size = data['length']
 
-        self.coords = data['body']['data']
+        self.coords = list(map(lambda point: [point['x'], point['y']], data['body']['data']))
 
         if 'taunt' in data:
             self.taunt = data['taunt']

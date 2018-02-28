@@ -20,13 +20,22 @@ class TestSnake(unittest.TestCase):
             'body': {
                 'object': 'list',
                 'data': [
-                    [0, 1],
-                    [1, 1]
+                    {
+                        'object': 'point',
+                        'x': 0,
+                        'y': 1
+                    },
+                    {
+                        'object': 'point',
+                        'x': 1,
+                        'y': 1
+                    }
                 ]
             },
             'health': 75
         }
         s1 = Snake(initParams)
+        initParams['body']['data'] = list(map(lambda point: [point['x'], point['y']], initParams['body']['data']))
 
         size_expected = len(initParams['body']['data'])
         health_expected = initParams['health']
@@ -52,9 +61,21 @@ class TestSnake(unittest.TestCase):
             'body': {
                 'object': 'list',
                 'data': [
-                    [0, 1],
-                    [1, 1],
-                    [1, 2]
+                    {
+                        'object': 'point',
+                        'x': 0,
+                        'y': 1
+                    },
+                    {
+                        'object': 'point',
+                        'x': 1,
+                        'y': 1
+                    },
+                    {
+                        'object': 'point',
+                        'x': 1,
+                        'y': 2
+                    }
                 ]
             },
             'health': 75
@@ -63,9 +84,21 @@ class TestSnake(unittest.TestCase):
             'body': {
                 'object': 'list',
                 'data': [
-                    [0, 0],
-                    [0, 1],
-                    [1, 1]
+                    {
+                        'object': 'point',
+                        'x': 0,
+                        'y': 0
+                    },
+                    {
+                        'object': 'point',
+                        'x': 0,
+                        'y': 1
+                    },
+                    {
+                        'object': 'point',
+                        'x': 1,
+                        'y': 1
+                    }
                 ]
             },
             'length': 3,
@@ -74,6 +107,8 @@ class TestSnake(unittest.TestCase):
 
         s1 = Snake(initParams)
         s1.update(updateParams)
+        initParams['body']['data'] = list(map(lambda point: [point['x'], point['y']], initParams['body']['data']))
+        updateParams['body']['data'] = list(map(lambda point: [point['x'], point['y']], updateParams['body']['data']))
 
         headPosition_expected = updateParams['body']['data'][0]
         tailPosition_expected = updateParams['body']['data'][-1]
@@ -91,16 +126,34 @@ class TestSnake(unittest.TestCase):
             'body': {
                 'object': 'list',
                 'data': [
-                    [1, 0],
-                    [0, 0],
-                    [0, 1],
-                    [1, 1]
+                    {
+                        'object': 'point',
+                        'x': 1,
+                        'y': 0
+                    },
+                    {
+                        'object': 'point',
+                        'x': 0,
+                        'y': 0
+                    },
+                    {
+                        'object': 'point',
+                        'x': 0,
+                        'y': 1
+                    },
+                    {
+                        'object': 'point',
+                        'x': 1,
+                        'y': 1
+                    },
                 ]
             },
             'length': 4,
             'health': 100
         }
+
         s1.update(updateParams)
+        updateParams['body']['data'] = list(map(lambda point: [point['x'], point['y']], updateParams['body']['data']))
 
         length_expected = len(updateParams['body']['data'])
 
@@ -115,9 +168,21 @@ class TestSnake(unittest.TestCase):
             'body': {
                 'object': 'list',
                 'data': [
-                    [0, 1],
-                    [1, 1],
-                    [1, 2]
+                    {
+                        'object': 'point',
+                        'x': 0,
+                        'y': 1
+                    },
+                    {
+                        'object': 'point',
+                        'x': 1,
+                        'y': 1
+                    },
+                    {
+                        'object': 'point',
+                        'x': 1,
+                        'y': 2
+                    }
                 ]
             },
             'length': 3,
@@ -127,9 +192,21 @@ class TestSnake(unittest.TestCase):
             'body': {
                 'object': 'list',
                 'data': [
-                    [0, 0],
-                    [0, 1],
-                    [1, 1]
+                    {
+                        'object': 'point',
+                        'x': 0,
+                        'y': 0
+                    },
+                    {
+                        'object': 'point',
+                        'x': 0,
+                        'y': 1
+                    },
+                    {
+                        'object': 'point',
+                        'x': 1,
+                        'y': 1
+                    }
                 ]
             },
             'length': 3,

@@ -21,18 +21,27 @@ class TestSnake(unittest.TestCase):
         Test the Food init function.
         """
         self.assertEqual(self.food.getPositions(), [[]])
-
         world = {
             'object': 'world',
             'food': {
                 'object': 'list',
                 'data': [
-                    [1, 1], [2, 2]
+                    {
+                        'object': 'point',
+                        'x': 1,
+                        'y': 1
+                    },
+                    {
+                        'object': 'point',
+                        'x': 2,
+                        'y': 2
+                    }
                 ]
             }
         }
 
-        self.food = Food(world['food'])
+        self.food.update(world['food'])
+        world['food']['data'] = list(map(lambda point: [point['x'], point['y']], world['food']['data']))
         self.assertEqual(self.food.getPositions(), world['food']['data'])
 
         self.food = Food([[]])
@@ -48,7 +57,11 @@ class TestSnake(unittest.TestCase):
             'food': {
                 'object': 'list',
                 'data': [
-                    [0, 0]
+                    {
+                        'object': 'point',
+                        'x': 0,
+                        'y': 0
+                    }
                 ]
             }
         }
@@ -57,7 +70,11 @@ class TestSnake(unittest.TestCase):
             'food': {
                 'object': 'list',
                 'data': [
-                    [2, 2]
+                    {
+                        'object': 'point',
+                        'x': 2,
+                        'y': 2
+                    }
                 ]
             }
         }
@@ -66,15 +83,37 @@ class TestSnake(unittest.TestCase):
             'food': {
                 'object': 'list',
                 'data': [
-                    [0, 0], [1, 1], [2, 2], [3, 3]
+                    {
+                        'object': 'point',
+                        'x': 0,
+                        'y': 0
+                    },
+                    {
+                        'object': 'point',
+                        'x': 1,
+                        'y': 1
+                    },
+                    {
+                        'object': 'point',
+                        'x': 2,
+                        'y': 2
+                    },
+                    {
+                        'object': 'point',
+                        'x': 3,
+                        'y': 3
+                    },
                 ]
             }
         }
         self.food.update(world1['food'])
+        world1['food']['data'] = list(map(lambda point: [point['x'], point['y']], world1['food']['data']))
         self.assertEqual(self.food.getPositions(), world1['food']['data'])
         self.food.update(world2['food'])
+        world2['food']['data'] = list(map(lambda point: [point['x'], point['y']], world2['food']['data']))
         self.assertEqual(self.food.getPositions(), world2['food']['data'])
         self.food.update(world3['food'])
+        world3['food']['data'] = list(map(lambda point: [point['x'], point['y']], world3['food']['data']))
         self.assertEqual(self.food.getPositions(), world3['food']['data'])
 
 
