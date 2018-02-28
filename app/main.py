@@ -20,12 +20,13 @@ def log(msg, level):
     1 - warning,
     2 - critical error
     """
-    # 0 - Notification, 1 - Warning, 2 - Critical error
     levels = [0, 1, 2]
+    # Default text color, yellow, red
     colors = ['\033[0m', '\033[93m', '\033[91m']
 
+    # default to level 0
     if level not in levels:
-        level = min(level)
+        level = 0
 
     # Print text in colored version, then default color
     print('{}{}{}'.format(colors[level], msg, colors[0]))
@@ -119,5 +120,4 @@ def move():
     return sendingData
 
 if __name__ == '__main__':
-    # TODO: Set VERBOSE based on environment variable or command line argument
     run(host=os.getenv('IP', '0.0.0.0'), port=os.getenv('PORT', '8080'))
