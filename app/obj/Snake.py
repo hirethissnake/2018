@@ -52,13 +52,11 @@ class Snake:
         healthPoints = data['health']
         if healthPoints > 100 or healthPoints < 0:
             raise ValueError('health_points must be between 100 and 0')
-
         self.oldHealthPoints = self.healthPoints
         self.healthPoints = healthPoints
 
-        size = data['length']
         self.oldSize = self.size
-        self.size = size
+        self.size = data['length']
 
         self.coords = data['body']['data']
 
