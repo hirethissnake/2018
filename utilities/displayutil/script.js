@@ -20,8 +20,8 @@ var openFile = function(event) {
         turnData = JSON.parse(text);
         let status = document.getElementById("status")
 
-        for (member in turnData[0].snakes) {
-            const name = turnData[0].snakes[member].name
+        for (member in turnData[0].snakes.data) {
+            const name = turnData[0].snakes.data[member].name
             snakeStat = document.createElement("div")
             snakeStat.setAttribute("id", name)
             snakeStat.style.backgroundColor = snakeColours[member];
@@ -77,9 +77,9 @@ function turnDisplay(curTurn) {
 }
 
 function displayHealth(curTurn){
-    for (member in turnData[curTurn].snakes) {
-        const name = turnData[curTurn].snakes[member].name
-        const health = turnData[curTurn].snakes[member].health_points
+    for (member in turnData[curTurn].snakes.data) {
+        const name = turnData[curTurn].snakes.data[member].name
+        const health = turnData[curTurn].snakes.data[member].health
         document.getElementById(name).innerText = name+"\'s "+"health: "+health
     }
 }
@@ -137,15 +137,15 @@ function renderTurn(turnToRender) {
     const curTurn = turnData[turnToRender-1]
 
     //Add food for new turn
-    for (x in curTurn.food){
-        const kibbles = curTurn.food[x];
+    for (x in curTurn.food.data){
+        const kibbles = curTurn.food.data[x];
         document.getElementById(kibbles[0]+','+kibbles[1]).style.backgroundColor = "rgb(76, 175, 80)";
     }
     //Add snakes for new turn
-    for (x in curTurn.snakes){
-        const curSnake = curTurn.snakes[x];
-        for (k in curSnake.coords){
-            const curCoord = curSnake.coords[k];
+    for (x in curTurn.snakes.data){
+        const curSnake = curTurn.snakes.data[x];
+        for (k in curSnake.body.data){
+            const curCoord = curSnake.body.data[k];
             document.getElementById(curCoord[0]+','+curCoord[1]).style.backgroundColor = snakeColours[x];
             if (k == 0) {
                 document.getElementById(curCoord[0]+','+curCoord[1]).innerText = snakeFaces[x];

@@ -10,18 +10,17 @@ from app.Board import Board
 
 
 class Game:
-    """Allow for several Battlesnake games to be played at once by providing
-    several different Game objects.
+    """
+    World object has following top level attributes:
 
-    Has following attributes:
-    weightGrid      (board)     - Board object
-    width           (int)       - Board width
-    height          (int)       - Board height
-    you             (string)    - UUID representing what our snake's ID is
-    food            (array)     - array of coord arrays
-    turn            (int)       - 0-indexed int representing completed turns
-    snakes          (dict)      - dict of Snake objects currently in play
-    deadSnakes      (dict)      - dict of Snake objects that no longer compete"""
+    weightGrid      (board)          - Board object
+    width           (int)            - Board width
+    height          (int)            - Board height
+    you             (Snake)          - Snake object representing our snake
+    food            (List<Point>]     - List object containing an array of points
+    turn            (int)            - 0-indexed int representing completed turns
+    snakes          (List<Snake>)    - dict of Snake objects currently in play
+    """
 
     def __init__(self, data):
         """
@@ -37,7 +36,6 @@ class Game:
         self.us = ''
         self.food = []
         self.turn = 0
-        self.deadSnakes = {}
         self.machine = None
         self.processor = None
 
@@ -45,13 +43,13 @@ class Game:
         """
         Perform necessary actions upon receiving the first
         dictionary of the game
-        
+
         param1: dictionary - all data from Battlesnake server.
         """
-        for snake in data['snakes']:
+        for snake in data['snakes']['data']:
             snakeId = snake['id']
             self.snakes[snakeId] = Snake(snake)
-        
+
         self.us = data['you']['id']
         self.food = Food(data['food'])
         self.machine = StateMachine(self.board, self.snakes, self.us, self.food)
@@ -68,20 +66,12 @@ class Game:
             return
 
         # update all of our snakes
-        for snake in data['snakes']:
+        for snake in data['snakes']['data']:
             snakeId = snake['id']
             self.snakes[snakeId].update(snake)
 
         self.food.update(data['food'])
         self.turn = data['turn']
-
-        # remove dead snakes
-        if 'dead_snakes' in data:
-            for snake in data['dead_snakes']:
-                snakeId = snake['id']
-                if snakeId in self.snakes:
-                    del self.snakes[snakeId]
-                    self.deadSnakes[snakeId] = snake
 
     def getNextMove(self):
         """

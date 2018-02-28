@@ -8,21 +8,24 @@ class Food:
     positions       [[x,y]]  - list of food positions
     """
 
-    def __init__(self, positions):
+    def __init__(self, foodList):
         """
         Initialize the Food class.
 
         param1: [[x, y]] - list of all food on the board
         """
-        self.positions = positions
+        if 'data' in foodList:
+            self.positions = list(map(lambda point: [point['x'], point['y']], foodList['data']))
+        else:
+            self.positions = [[]]
 
-    def update(self, positions):
+    def update(self, foodList):
         """
         Overwrite the list of food positions.
 
         param1: [[x, y]] - list of all food on the board
         """
-        self.positions = positions
+        self.positions = list(map(lambda point: [point['x'], point['y']], foodList['data']))
 
     def getPositions(self):
         """
