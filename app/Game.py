@@ -87,11 +87,10 @@ class Game:
         """
         Use all algorithms to determine the next best move for our snake.
         """
-        return 'up' # Remove this when Board.py is complete
-
         self.board.resetWeights()
         state = self.machine.getState()
-        nextMove = []
+        # Needs to be set to an [int, int]
+        nextMove = None
 
         if state is 'IDLE':
             # run algorithms here
@@ -157,8 +156,8 @@ class Game:
                 nodeValid = True
         nextMove = self.processor.weightEnclosedSpaces(target)
         """
-        direction = self.processor.nodeToDirection(nextMove, self.us)
-        return 'down'
+        direction = self.nodeToDirection(nextMove, self.us)
+        return direction
 
     def nodeToDirection(self, node, identifer):
         """
