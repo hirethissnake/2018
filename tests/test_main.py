@@ -97,7 +97,7 @@ class TestMain(unittest.TestCase):
         default_move = 'up'
         default_taunt = 'oh_noes!'
         mock_battle = Mock()
-        # Test getnext_move throwing an error internally
+        # Test getNextMove throwing an error internally
         mock_battle.getNextMove.side_effect = KeyError('Value not found on board')
 
         main.gameDict[game_id] = mock_battle
@@ -151,7 +151,7 @@ class TestMain(unittest.TestCase):
 
         # Create a mock Battle in the game dictionary so games seem to be in progress
         mock_battle = Mock()
-        mock_battle.getnext_move.return_value = 'down'
+        mock_battle.getNextMove.return_value = 'down'
         mock_battle.getTaunt.return_value = 'hi there friend'
         main.gameDict[game_id] = mock_battle
 
