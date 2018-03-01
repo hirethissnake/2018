@@ -25,12 +25,14 @@ class TestDisjointSet(unittest.TestCase):
         Ensure proper default state.
         """
         self.assertEqual(self.set.board, self.board)
-        connected = self.set.getConnected([0, 0])
+        connected = self.set.getConnectedToNode([0, 0])
         for x in range(self.board.width):
             for y in range(self.board.width):
+                if [x, y] == [0, 0]:
+                    continue
                 self.assertTrue([x, y] in connected)
 
-    def test_update_all_walls(self):
+    def test_get_connected_all_walls(self):
         """
         Ensure basic update is performed properly.
         """
@@ -38,11 +40,31 @@ class TestDisjointSet(unittest.TestCase):
         self.set.update()
         for x in range(self.board.width):
             for y in range(self.board.height):
-                self.assertTrue(len(self.set.getConnected([x, y])), 1)
+                self.assertEqual(self.set.getConnectedToWall([x, y]), [])
 
-    def test_update_real_board(self):
+    def test_error_conditions(self):
         """
-        Ensure more complex features of update work.
+        Ensure basic update is performed properly.
+        """
+        self.board.getWeight.return_value = 0
+        self.set.update()
+        for x in range(self.board.width):
+            for y in range(self.board.height):
+                self.assertRaises(ValueError, self.set.getConnectedToNode, [x, y])
+                if [x, y] != [0, 0]:
+                    self.assertRaises(ValueError, self.set.pathExistsFromNode, [x, y], [0, 0])
+
+        self.board.getWeight.return_value = 100
+        self.set.update()
+        for x in range(self.board.width):
+            for y in range(self.board.height):
+                self.assertRaises(ValueError, self.set.getConnectedToWall, [x, y])
+                if [x, y] != [0, 0]:
+                    self.assertRaises(ValueError, self.set.pathExistsFromWall, [x, y], [0, 0])
+
+    def test_no_path_across_wall(self):
+        """
+        Make sure no path exists outside of an enclosed space.
         """
         board = Board(10, 10)
         dset = DisjointSet(board)
@@ -52,19 +74,33 @@ class TestDisjointSet(unittest.TestCase):
         board.setWeights(wall, 0) # disconnect top left
 
         dset.update()
-        self.assertEqual(sorted(dset.getConnected([0,0])), enclosedSpace)
+        self.assertEqual(sorted(dset.getConnectedToNode([0,0])), enclosedSpace[1:])
 
         for x in range(board.width):
             for y in range(board.height):
-                if [x, y] not in enclosedSpace:
+                if [x, y] not in enclosedSpace and [x, y] not in wall:
                     for coord in enclosedSpace:
-                        self.assertFalse(dset.areConnected(coord, [x, y]))
+                        self.assertFalse(dset.pathExistsFromNode(coord, [x, y]))
+
+    def test_path_within_bounds(self):
+        """
+        Make sure a path exists inside an enclosed space.
+        """
+        board = Board(10, 10)
+        dset = DisjointSet(board)
+        enclosedSpace = [[0, 0], [1, 0], [1, 1], [2, 0], [2, 1], [3, 0]]
+        wall = [[0, 1], [1, 2], [2, 2], [3, 2], [3, 1], [4, 0]]
+        
+        board.setWeights(wall, 0) # disconnect top left
+
+        dset.update()
+        self.assertEqual(sorted(dset.getConnectedToNode([0,0])), enclosedSpace[1:])
 
         for coord1 in enclosedSpace:
             for coord2 in enclosedSpace:
-                self.assertTrue(dset.areConnected(coord1, coord2))
+                self.assertTrue(dset.pathExistsFromNode(coord1, coord2))
 
-    def test_update_worst_case(self):
+    def test_worst_case(self):
         """
         Test update with a crafted set of walls to maximize data structure height.
         """
@@ -86,7 +122,24 @@ class TestDisjointSet(unittest.TestCase):
             for y in range(board.height):
                 if [x, y] not in wall:
                     freeSpace.append([x, y])
-        self.assertTrue(sorted(freeSpace) == sorted(dset.getConnected([0, 0])))
+        self.assertTrue(sorted(freeSpace)[1:] == sorted(dset.getConnectedToNode([0, 0])))
+
+    def test_wall_connected_to_both_sides(self):
+        """
+        Make a wall can reach enclosed spaces on both sides.
+        """
+        board = Board(10, 10)
+        dset = DisjointSet(board)
+        enclosedSpace = [[0, 0], [1, 0], [1, 1], [2, 0], [2, 1], [3, 0]]
+        wall = [[0, 1], [1, 2], [2, 2], [3, 1], [4, 0]]
+        
+        board.setWeights(wall, 0) # disconnect top left
+
+        dset.update()
+        self.assertEqual(sorted(dset.getConnectedToNode([0,0])), enclosedSpace[1:])
+
+        for coord in wall:
+            self.assertTrue(dset.pathExistsFromWall(coord, [0, 0]))
 
 
 if __name__ == "__main__":
