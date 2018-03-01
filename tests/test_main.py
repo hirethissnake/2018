@@ -69,10 +69,6 @@ class TestMain(unittest.TestCase):
         try:
             main.log('Test level higher than specified.', 4)
             main.log('Test level lower than specified.', -1)
-        except IndexError:
-            self.fail(failMsg)
-        except KeyError:
-            self.fail(failMsg)
         except Exception:
             self.fail(failMsg)
 
@@ -81,30 +77,33 @@ class TestMain(unittest.TestCase):
         Test game decision method during nominal gameplay.
         """
         game_id = 'game_id_test'
+        taunt = 'hi there friend'
         moves = ['up', 'down', 'right', 'left']
-        mockBattle = Mock()
+        mock_battle = Mock()
         # Default move in getGameDecision is up, so need to pick something else for the mock
-        mockBattle.getNextMove.return_value = 'down'
-        mockBattle.getTaunt.return_value = 'hi there friend'
+        mock_battle.getnext_move.return_value = 'down'
+        mock_battle.getTaunt.return_value = taunt
 
-        main.gameDict[game_id] = mockBattle
-        nextMove, nextTaunt = main.getGameDecisions(game_id)
-        self.assertIn(nextMove.lower(), moves)
-        self.assertEqual(type(nextTaunt), str)
+        main.gameDict[game_id] = mock_battle
+        next_move, next_taunt = main.getGameDecisions(game_id)
+        self.assertIn(next_move, moves)
+        self.assertEqual(next_taunt, taunt)
 
     def test_get_game_decision_exception(self):
         """
         Test game decision method when an error is thrown internally.
         """
         game_id = 'game_id_test'
-        mockBattle = Mock()
-        # Test getNextMove throwing an error internally
-        mockBattle.getNextMove.side_effect = KeyError('Value not found on board')
+        default_move = 'up'
+        default_taunt = 'oh_noes!'
+        mock_battle = Mock()
+        # Test getnext_move throwing an error internally
+        mock_battle.getnext_move.side_effect = KeyError('Value not found on board')
 
-        main.gameDict[game_id] = mockBattle
-        nextMove, nextTaunt = main.getGameDecisions(game_id)
-        self.assertEqual(nextMove.lower(), 'up')    # up is the default move if an error is thrown
-        self.assertEqual(type(nextTaunt), str)
+        main.gameDict[game_id] = mock_battle
+        next_move, next_taunt = main.getGameDecisions(game_id)
+        self.assertEqual(next_move, default_move)    # up is the default move if an error is thrown
+        self.assertEqual(next_taunt, default_taunt)
 
     # def test_static_response(self):
     #     """
@@ -160,10 +159,10 @@ class TestMain(unittest.TestCase):
         moves = ['up', 'down', 'left', 'right']
 
         # Create a mock Battle in the game dictionary so games seem to be in progress
-        mockBattle = Mock()
-        mockBattle.getNextMove.return_value = 'down'
-        mockBattle.getTaunt.return_value = 'hi there friend'
-        main.gameDict[game_id] = mockBattle
+        mock_battle = Mock()
+        mock_battle.getnext_move.return_value = 'down'
+        mock_battle.getTaunt.return_value = 'hi there friend'
+        main.gameDict[game_id] = mock_battle
 
         with boddle(json=paramData, headers=headers):
             response = main.move()
