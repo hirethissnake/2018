@@ -288,31 +288,6 @@ class Processor:
         #Do they need food? Do they have it in the trapped location?
         #How long are we? Can we effectively block them for long enough?
 
-    def nodeToDirection(self, node, identifer):
-        """
-        Convert a coord array into an up, down, left, right direction.
-        param1: [int,int] - x,y coords of a node.
-        param2: string - id of some snake in the game (ie, in snakes{})
-
-        Raises: ValueError
-            if: node is not adjacent to the snakes head
-
-        return: string - direction to go
-        """
-        snake = self.snakes[identifer]
-        head = snake.getHeadPosition()
-
-        if node[0] == (head[0] + 1):
-            return 'right'
-        if node[0] == (head[0] - 1):
-            return 'left'
-        if node[1] == (head[1] + 1):
-            return 'down'
-        if node[1] == (head[1] - 1):
-            return 'up'
-        else:
-            raise ValueError('node must be adjacent')
-
     def showBoard(self):
         """Use to show board with weight and colours """
         self.board.showWeights(True, True)

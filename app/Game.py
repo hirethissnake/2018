@@ -73,6 +73,16 @@ class Game:
         self.food.update(data['food'])
         self.turn = data['turn']
 
+    def getTaunt(self):
+        """
+        Return taunt for the move request.
+        """
+        taunts = ['Do you have any non-GMO food?', 'War. War never changes', 'Sssssslithering',\
+         'Snakes? I hate snakes', 'Where can a snake get a bite to eat around here', 'up', 'down',\
+          'left', 'right', 'Trying to catch garter snakes']
+
+        return random.choice(taunts)
+
     def getNextMove(self):
         """
         Use all algorithms to determine the next best move for our snake.
@@ -147,15 +157,30 @@ class Game:
                 nodeValid = True
         nextMove = self.processor.weightEnclosedSpaces(target)
         """
+        direction = self.processor.nodeToDirection(nextMove, self.us)
+        return 'down'
 
-        return self.processor.nodeToDirection(nextMove, self.us)
-
-    def getTaunt(self):
+    def nodeToDirection(self, node, identifer):
         """
-        Return taunt for the move request.
-        """
-        taunts = ['Do you have any non-GMO food?', 'War. War never changes', 'Sssssslithering',\
-         'Snakes? I hate snakes', 'Where can a snake get a bite to eat around here', 'up', 'down',\
-          'left', 'right', 'Trying to catch garter snakes']
+        Convert a coord array into an up, down, left, right direction.
+        param1: [int,int] - x,y coords of a node.
+        param2: string - id of some snake in the game (ie, in snakes{})
 
-        return random.choice(taunts)
+        Raises: ValueError
+            if: node is not adjacent to the snakes head
+
+        return: string - direction to go
+        """
+        snake = self.snakes[identifer]
+        head = snake.getHeadPosition()
+
+        if node[0] == (head[0] + 1):
+            return 'right'
+        if node[0] == (head[0] - 1):
+            return 'left'
+        if node[1] == (head[1] + 1):
+            return 'down'
+        if node[1] == (head[1] - 1):
+            return 'up'
+        else:
+            raise ValueError('node must be adjacent')
