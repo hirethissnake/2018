@@ -65,12 +65,12 @@ class TestMain(unittest.TestCase):
         Test log method, given an invalid level.
         Test for thrown errors.
         """
-        failMsg = 'Log threw an error'
+        fail_msg = 'Log threw an error'
         try:
             main.log('Test level higher than specified.', 4)
             main.log('Test level lower than specified.', -1)
         except Exception:
-            self.fail(failMsg)
+            self.fail(fail_msg)
 
     def test_get_game_decision(self):
         """
@@ -81,7 +81,7 @@ class TestMain(unittest.TestCase):
         moves = ['up', 'down', 'right', 'left']
         mock_battle = Mock()
         # Default move in getGameDecision is up, so need to pick something else for the mock
-        mock_battle.getnext_move.return_value = 'down'
+        mock_battle.getNextMove.return_value = 'down'
         mock_battle.getTaunt.return_value = taunt
 
         main.gameDict[game_id] = mock_battle
@@ -98,21 +98,12 @@ class TestMain(unittest.TestCase):
         default_taunt = 'oh_noes!'
         mock_battle = Mock()
         # Test getnext_move throwing an error internally
-        mock_battle.getnext_move.side_effect = KeyError('Value not found on board')
+        mock_battle.getNextMove.side_effect = KeyError('Value not found on board')
 
         main.gameDict[game_id] = mock_battle
         next_move, next_taunt = main.getGameDecisions(game_id)
         self.assertEqual(next_move, default_move)    # up is the default move if an error is thrown
         self.assertEqual(next_taunt, default_taunt)
-
-    # def test_static_response(self):
-    #     """
-    #     Make sure we can make requests to static files
-    #     """
-    #     path = '/static/head_photo'
-    #     with boddle(path=path):
-    #         response = main.static(path)
-    #         print(response)
 
     def test_move_responses(self):
         """
