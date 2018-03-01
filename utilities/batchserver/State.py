@@ -103,7 +103,7 @@ class State:
 
 
     def getPersonalizedState(self, name): # show 'you' for correct snake
-        self.state['you']['name'] = list(filter(lambda mySnake: mySnake['name'] == name, self.state['snakes']['data']))
+        self.state['you'] = list(filter(lambda mySnake: mySnake['name'] == name, self.state['snakes']['data']))[0]
         return json.dumps(self.state)
 
 
