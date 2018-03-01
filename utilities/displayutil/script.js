@@ -8,8 +8,10 @@ let tableWidth = 0;
 let tableHeight = 0;
 let turnCounter = 0;
 let interLength = 200;
-let interID;
 let paused = true;
+let interID 
+let pickedColor = {}
+let pickedFace = {}
 
 var openFile = function(event) {
     const input = event.target;
@@ -27,6 +29,7 @@ var openFile = function(event) {
             snakeStat.style.backgroundColor = snakeColours[member]
 
             pickedColor[name] = snakeColours[member]
+
             pickedFace[name] = snakeFaces[member]
 
             status.appendChild(snakeStat)

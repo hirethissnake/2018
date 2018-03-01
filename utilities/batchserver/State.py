@@ -17,9 +17,7 @@ class State:
         self.state = {
             'object': 'world',
             'id': 'gameid',
-        	'you': {
-                'name': ''
-            },
+        	'you': {},
             'snakes': {
                 'object': 'list',
                 'data': []
@@ -40,7 +38,9 @@ class State:
                 'taunt': 'gotta go!', 
                 'name': name, 
                 'id': name, 
-                'health': 100, 
+                'length': 1,
+                'health': 100,
+                'object': 'snake',
                 'body': {
                     'object': 'list',
                     'data': []
@@ -99,6 +99,7 @@ class State:
 
             if snake['body']['data'][0] in self.state['food']['data']: # food actually removed in updateState()
                 self.extend[snakeName] += 1
+                snake['length'] += 1
 
 
     def getPersonalizedState(self, name): # show 'you' for correct snake
@@ -108,7 +109,7 @@ class State:
 
     def updateState(self):
         toBeKilled = set() # this is a set to avoid duplicates from multiple iterations (may not be necessary)
-
+        
         for snake in self.state['snakes']['data']:
 
             headPos = snake['body']['data'][0]
