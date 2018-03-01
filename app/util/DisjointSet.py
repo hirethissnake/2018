@@ -131,7 +131,7 @@ class DisjointSet:
             raise ValueError('Node is a wall')
         root = self.find(child)
 
-        returnable = ([node.pos for node in root.children] + [root.pos])
+        returnable = [node.pos for node in root.children] + [root.pos]
         returnable.remove(coord)
         return returnable
 
@@ -157,7 +157,7 @@ class DisjointSet:
 
     def pathExistsFromNode(self, coord1, coord2):
         """
-        Determine if 2 squares are connected.
+        Determine if 2 non-wall squares are connected.
 
         param1: [x,y] - first node position
         param2: [x,y] - second node position
@@ -174,8 +174,8 @@ class DisjointSet:
         """
         Determine if a wall square and a free square are connected.
 
-        param1: [x,y] - first node position (wall)
-        param2: [x,y] - second node position (not wall)
+        param1: [x,y] - wall node position
+        param2: [x,y] - free-space node position
         return: bool - True if connected, False otherwise
         """
         node1 = self.map[coord1[0], coord1[1]]
