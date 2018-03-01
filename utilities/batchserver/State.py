@@ -58,7 +58,12 @@ class State:
                 for occupiedLoc in occupied:
                     if possibleLoc[0] == occupiedLoc[0] and possibleLoc[1] == occupiedLoc[1]:
                         valid = False
-            self.state['snakes']['data'][i]['body']['data'].append(possibleLoc)
+            possPoint = {
+                'object': 'point',
+                'x': possibleLoc[0],
+                'y': possibleLoc[1]
+            }
+            self.state['snakes']['data'][i]['body']['data'].append(possPoint)
             occupied.append(possibleLoc)
 
         self.state['food']['data'] = [] #declare here so that below function call works
@@ -73,13 +78,17 @@ class State:
             # the list comprehensions apply the [*,*] transformation to the current head
             currentHead = snake['body']['data'][0]
             if move == 'up':
-                snake['body']['data'].insert(0, [sum(x) for x in zip(currentHead, [0,-1])])
+                currentHead['y'] -= 1
+                snake['body']['data'].insert(0, currentHead)
             elif move == 'right':
-                snake['body']['data'].insert(0, [sum(x) for x in zip(currentHead, [1,0])])
+                currentHead['x'] += 1
+                snake['body']['data'].insert(0, currentHead)
             elif move == 'down':
-                snake['body']['data'].insert(0, [sum(x) for x in zip(currentHead, [0,1])])
+                currentHead['y'] += 1
+                snake['body']['data'].insert(0, currentHead)
             elif move == 'left':
-                snake['body']['data'].insert(0, [sum(x) for x in zip(currentHead, [-1,0])])
+                currentHead['x'] -= 1
+                snake['body']['data'].insert(0, currentHead)
 
             # the 'extend' variable is used as per the battlesnake spec when we move
             # forward next, our tail stays in place
@@ -93,7 +102,7 @@ class State:
 
 
     def getPersonalizedState(self, name): # show 'you' for correct snake
-        self.state['you']['name'] = name
+        self.state['you']['name'] = list(filter(lambda mySnake: mySnake['name'] == name, self.state['snakes']['data']))
         return json.dumps(self.state)
 
 
@@ -113,7 +122,7 @@ class State:
                 toBeKilled.add(snake['name'])
                 continue
 
-            if(headPos[0] < 0 or headPos[0] > (self.width - 1) or headPos[1] < 0 or headPos[1] > (self.height - 1)):
+            if(headPos['x'] < 0 or headPos['x'] > (self.width - 1) or headPos['y'] < 0 or headPos['y'] > (self.height - 1)):
                 print('wall hit')
                 toBeKilled.add(snake['name'])
                 continue
@@ -131,8 +140,8 @@ class State:
                     continue
                     
                 colliderHead = colliderCoords[0] # hit head and this snake is smaller
-                if snake != collider and headPos[0] == colliderHead[0] and headPos[1] == colliderHead[1]:
-                    if len(snake['body']['data']) + self.extend[snake['name']] < len(collider['body']['data']) + self.extend[collider['name']]:
+                if snake != collider and headPos['x'] == colliderHead['x'] and headPos['y'] == colliderHead['y']:
+                    if snake['length'] + self.extend[snake['name']] < collider['length'] + self.extend[collider['name']]:
                         print('collided with larger snake head')
                         toBeKilled.add(snake['name'])
 
@@ -165,13 +174,19 @@ class State:
                 if possibleLoc in occupied:
                     valid = False
 
-            self.state['food']['data'].append(possibleLoc) # we have found a free spot
+            possPoint = {
+                'object': 'point',
+                'x': possibleLoc[0],
+                'y': possibleLoc[1]
+            }
+            self.state['food']['data'].append(possPoint) # we have found a free spot
             occupied.append(possibleLoc)
 
 
     def getOccupied(self): # list of squares that have stuff in
         occupied = []
         for snake in self.state['snakes']['data']:
-            occupied += snake['body']['data']
-        occupied += self.state['food']['data']
+            pointCoords = list(map(lambda point: [point['x'], point['y']], snake['body']['data']))
+            occupied += pointCoords
+        occupied += list(map(lambda point: [point['x'], point['y']], self.state['food']['data']))
         return occupied
