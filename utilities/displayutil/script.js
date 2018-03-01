@@ -14,17 +14,20 @@ let paused = true;
 var openFile = function(event) {
     const input = event.target;
 
-    const reader = new FileReader();
+    const reader = new FileReader()
     reader.onload = function(){
-        const text = reader.result;
-        turnData = JSON.parse(text);
+        const text = reader.result
+        turnData = JSON.parse(text)
         let status = document.getElementById("status")
 
         for (member in turnData[0].snakes.data) {
             const name = turnData[0].snakes.data[member].name
             snakeStat = document.createElement("div")
             snakeStat.setAttribute("id", name)
-            snakeStat.style.backgroundColor = snakeColours[member];
+            snakeStat.style.backgroundColor = snakeColours[member]
+
+            pickedColor[name] = snakeColours[member]
+            pickedFace[name] = snakeFaces[member]
 
             status.appendChild(snakeStat)
         }
@@ -138,17 +141,17 @@ function renderTurn(turnToRender) {
 
     //Add food for new turn
     for (x in curTurn.food.data){
-        const kibbles = curTurn.food.data[x];
-        document.getElementById(kibbles[0]+','+kibbles[1]).style.backgroundColor = "rgb(76, 175, 80)";
+        const kibbles = curTurn.food.data[x]
+        document.getElementById(kibbles['x']+','+kibbles['y']).style.backgroundColor = "rgb(76, 175, 80)"
     }
     //Add snakes for new turn
     for (x in curTurn.snakes.data){
-        const curSnake = curTurn.snakes.data[x];
+        const curSnake = curTurn.snakes.data[x]
         for (k in curSnake.body.data){
-            const curCoord = curSnake.body.data[k];
-            document.getElementById(curCoord[0]+','+curCoord[1]).style.backgroundColor = snakeColours[x];
+            const curCoord = curSnake.body.data[k]
+            document.getElementById(curCoord['x']+','+curCoord['y']).style.backgroundColor = pickedColor[curSnake.name]
             if (k == 0) {
-                document.getElementById(curCoord[0]+','+curCoord[1]).innerText = snakeFaces[x];
+                document.getElementById(curCoord['x']+','+curCoord['y']).innerText = pickedFace[curSnake.name]
             }
         }
     }
