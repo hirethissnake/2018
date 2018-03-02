@@ -179,11 +179,35 @@ class Game:
 
             # now we have a list of directions which will provide us with the
             # most maneuverability
-            nextMove = []
+
+            # reset weights around snake heads for path finding
+            for snake in self.snakes:
+                if snake == self.us
+                    continue
+                if snake.getSize() < self.us.getSize():
+                    self.board.setWeights(self.set.getSurrounding(snake.getHeadPosition()), 100)
+                else:
+                    self.board.setWeights(self.set.getSurrounding(snake.getHeadPosition()), 1)
+            self.set.update()
+
+            # kill small snakes if they're there
+            for coord in maxSpaceCoords:
+                if nextMove:
+                    break
+                for snake in self.snakes:
+                    if nextMove:
+                        break
+                    otherHead = snake.getHeadPosition()
+                    if self.set.pathExistsFromWall(otherHead, coord):
+                        if self.board.optimumPathLength(headPos, otherHead) < 3:
+                            nextMove = coord
+
+            # if we have a move, return
+            if nextMove:
+                break
 
             # if we can trap a snake in one of these directions, let's slaughter 'em
             # this operation may be expensive, so we will have to check the times
-
             for coord in maxSpaceCoords:
                 # figure out which direction the coord represents
                 xDiff = coord[0] - headPos[0]
@@ -250,7 +274,7 @@ class Game:
                 if not nextMove:
                     break
 
-            # we did not find a trapping move, so follow our tail
+            # we did not find a trapping move, find food
             if not nextMove:
                 #TODO
                 pass
