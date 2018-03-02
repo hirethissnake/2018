@@ -179,9 +179,83 @@ class Game:
 
             # now we have a list of directions which will provide us with the
             # most maneuverability
-            nextMove = maxSpaceCoords[0] # temporary
+            nextMove = []
 
-            
+            # if we can trap a snake in one of these directions, let's slaughter 'em
+            # this operation may be expensive, so we will have to check the times
+
+            for coord in maxSpaceCoords:
+                # figure out which direction the coord represents
+                xDiff = coord[0] - headPos[0]
+                yDiff = coord[1] - headPos[1]
+
+                #Only worth attacking a snake if we are close to a wall
+                wallPath = []
+                if xDiff == -1: #left
+                    try:
+                        if self.set.pathExistsFromWall(headPos, [0, headPos[1]]):
+                            wallPath = self.board.optimumPath(headPos, [0, headPos[1]])
+                    except ValueError:
+                        pass
+                if xDiff == 1: #right
+                    try:
+                        if self.set.pathExistsFromWall(headPos, [self.width - 1, headPos[1]]):
+                            wallPath = self.board.optimumPath(headPos, [self.width - 1, headPos[1]])
+                    except ValueError:
+                        pass
+                if yDiff == -1: #up
+                    try:
+                        if self.set.pathExistsFromWall(headPos, [headPos[0], 0]):
+                            wallPath = self.board.optimumPath(headPos, [headPos[0], 0])
+                    except ValueError:
+                        pass
+                if yDiff == 1: #down
+                    try:
+                        if self.set.pathExistsFromWall(headPos, [headPos[0], self.height - 1]):
+                            wallPath = self.board.optimumPath(headPos, [headPos[0], self.height - 1])
+                    except ValueError:
+                        pass
+
+                wallPathLen = len(wallPath)
+                # no path to wall in this direction, or too far
+                if not wallPath or wallPathLen > 3:
+                    continue
+
+                # check how far we are from other snakes, and whether we can trap them
+                for snake in self.snakes:
+                    if snake == us:
+                        continue
+                    otherHead = snake.getHeadPosition()
+                    if self.set.pathExistsFromWall(otherHead, coord):
+                        if self.board.optimumPathLength(headPos, otherHead) <= wallPathLen:
+                            continue
+
+                        # mock our snake taking this path, see if it traps the snake
+                        weights = []
+                        for wallCoord in wallPath:
+                            weights.append(self.board.getWeight(wallCoord))
+                            self.board.setWeight(wallCoord, 0)
+                        self.set.update()
+
+                        # if we can likely trap it
+                        if len(self.set.getConnectedToWall(otherHead)) < us.getSize():
+                            nextMove = coord
+
+                        # reset the board weights
+                        for i in range(wallPathLen):
+                            self.board.setWeight(wallPath[i], weights[i])
+                        self.set.update()
+                    
+                # we have found a trapping move
+                if not nextMove:
+                    break
+
+            # we did not find a trapping move, so follow our tail
+            if not nextMove:
+                #TODO
+                pass
+
+
         elif state is 'HUNGRY':
             # eat food here
             pass
