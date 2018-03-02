@@ -6,6 +6,7 @@ from app.obj.Snake import Snake
 from app.obj.Food import Food
 from app.util.StateMachine import StateMachine
 from app.util.Processor import Processor
+from app.util.DisjointSet import DisjointSet
 from app.Board import Board
 
 
@@ -36,6 +37,7 @@ class Game:
         self.us = ''
         self.food = []
         self.turn = 0
+        self.set = None
         self.machine = None
         self.processor = None
 
@@ -52,8 +54,10 @@ class Game:
 
         self.us = data['you']['id']
         self.food = Food(data['food'])
-        self.machine = StateMachine(self.board, self.snakes, self.us, self.food)
+        self.set = DisjointSet(self.board)
+        self.machine = StateMachine(self.board, self.set, self.snakes, self.us, self.food)
         self.processor = Processor(self.board, self.snakes, self.us, self.food)
+        self.weightSnakes()
 
     def update(self, data):
         """
@@ -72,6 +76,19 @@ class Game:
 
         self.food.update(data['food'])
         self.turn = data['turn']
+        self.weightSnakes()
+
+    def weightSnakes(self):
+        """
+        Perform state-independent weighting of snake bodies. If a specific state requires
+        different waiting of snake heads or tails, then they may perform weighting manually.
+        """
+        self.board.resetWeights()
+
+        for snake in self.snakes:
+            self.board.setWeights(snake.getAllPositions(), 0)
+
+        self.set.update()
 
     def getTaunt(self):
         """
@@ -87,10 +104,10 @@ class Game:
         """
         Use all algorithms to determine the next best move for our snake.
         """
-        self.board.resetWeights()
         state = self.machine.getState()
+
         # Needs to be set to an [int, int]
-        nextMove = None
+        nextMove = []
 
         if state is 'IDLE':
             # run algorithms here

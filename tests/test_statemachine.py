@@ -17,13 +17,15 @@ class TestStateMachine(unittest.TestCase):
         """
         self.board = Mock()
         self.food = Mock()
+        self.set = Mock()
+        self.set.getConnectedToWall.return_value = [[0, 0]] * 100
 
         otherSnake = Mock()
         ourSnake = Mock()
         self.us = "glorious-us-uuid"
         self.snakes = {"mean-snake-uuid": otherSnake, self.us: ourSnake}
 
-        self.machine = StateMachine(self.board, self.snakes, self.us, self.food)
+        self.machine = StateMachine(self.board, self.set, self.snakes, self.us, self.food)
 
     def test_initialization(self):
         """

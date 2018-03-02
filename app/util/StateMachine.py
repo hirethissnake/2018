@@ -15,7 +15,7 @@ class StateMachine:
     food            Food          - Food object representing food coordinates
     """
 
-    def __init__(self, board, snakes, us, food):
+    def __init__(self, board, disjointset, snakes, us, food):
         """
         Initialize the state machine.
         
@@ -26,6 +26,7 @@ class StateMachine:
         """
         self.state = State.IDLE
         self.board = board
+        self.set = disjointset
         self.snakes = snakes
         self.us = us
         self.food = food
@@ -117,12 +118,15 @@ class StateMachine:
 
     def availableSpaceLess(self, value):
         """
-        Determine if a snake has health lower than 'value'
+        Determine if a snake has less than 'value' available space
 
         param1: value - value to compare against
         return: boolean - True if health less than 'value'
         """
-        return False
+        ourSnake = self.snakes[self.us]
+        connected = self.set.getConnectedToWall(ourSnake.getHeadPosition())
+
+        return len(connected) < value
 
 
 class State(Enum):
