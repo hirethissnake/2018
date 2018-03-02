@@ -130,8 +130,58 @@ class Game:
         nextMove = []
 
         if state is 'IDLE':
-            # run algorithms here
-            pass
+            
+            us = self.snakes[self.us]
+            headPos = us.getHeadPosition()
+
+            # we have already weighted snakes, so make sure we don't
+            # make a turn that will trap us
+
+            x = headPos[0]
+            y = headPos[1]
+            surrounding = []
+            if (x - 1) >= 0:
+                surrounding.append([x - 1, y])
+            else:
+                # empty lists ensure we know which direction corresponds
+                # to which coordinate
+                surrounding.append([])
+            if (x + 1) < self.board.width:
+                surrounding.append([x + 1, y])
+            else:
+                surrounding.append([])
+            if (y + 1) < self.board.height:
+                surrounding.append([x, y + 1])
+            else:
+                surrounding.append([])
+            if (y - 1) >= 0:
+                surrounding.append([x, y - 1])
+            else:
+                surrounding.append([])
+
+            maxSpaceCoords = []
+            maxSpaceLen = 0
+            for coord in surrounding:
+                if coord == []:
+                    continue
+                    
+                # due to IDLE state, there must be at least 1 non-wall node
+                weight = self.board.getWeight(coord)
+                if weight == 0:
+                    continue
+
+                availableSpace = len(self.set.getConnectedToNode(coord))
+                if maxSpaceLen < availableSpace:
+                    maxSpaceCoords = [coord]
+                    maxSpaceLen = availableSpace
+                elif maxSpaceLen == availableSpace:
+                    maxSpaceCoords.append(coord)
+
+            # now we have a list of directions which will provide us with the
+            # most maneuverability
+            nextMove = maxSpaceCoords[0] # temporary
+
+            
         elif state is 'HUNGRY':
             # eat food here
             pass
