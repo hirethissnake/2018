@@ -499,15 +499,24 @@ function json(){
     "width": tableSize,
     "game_id": "gameid",
     "food":  (
-      function() {
-        var ret = [];
-        for(var i = 0; i < food.length; i++){
-          var coords = food[i].id.split(",");
-          ret.push([parseInt(coords[0]), parseInt(coords[1])]);
+        function () {
+            var foodList = [];
+            for (var i = 0; i < food.length; i++) {
+                var coords = food[i].id.split(",");
+                foodList.push([parseInt(coords[0]), parseInt(coords[1])]);
+            }
+            console.log(foodList)
+            let foodPoints = foodList.map((coord) => {
+                const point = {
+                    'object': 'point',
+                    'x': coord[0] * 1,
+                    'y': coord[1] * 1
+                }
+                return point
+            })
+            console.log(foodPoints)
+            return foodPoints
         }
-        return ret;
-      }
     )(),
-    "dead_snakes": []
   }
 }
