@@ -35,7 +35,7 @@ class Game:
 
         self.snakes = {}
         self.us = ''
-        self.food = []
+        self.food = None
         self.turn = 0
         self.set = None
         self.machine = None
@@ -52,7 +52,7 @@ class Game:
             snakeId = snake['id']
             self.snakes[snakeId] = Snake(snake)
 
-        self.us = Snake(data['you']['id'])
+        self.us = Snake(data['you'])
         self.food = Food(data['food'])
         self.set = DisjointSet(self.board)
         self.machine = StateMachine(self.board, self.set, self.snakes, self.us, self.food)
@@ -85,7 +85,7 @@ class Game:
         """
         self.board.resetWeights()
 
-        for snake in self.snakes:
+        for _, snake in self.snakes.items():
             self.board.setWeights(snake.getAllPositions(), 0)
             if snake != self.us and snake.getSize() < self.us.getSize():
                 self.board.setWeights(self.set.getSurrounding(snake.getHeadPosition()), 0)
