@@ -2,6 +2,7 @@
 passing data to the right places, and returning the best move given a game dictionary."""
 
 import random
+import sys
 from app.obj.Snake import Snake
 from app.obj.Food import Food
 from app.util.StateMachine import StateMachine
@@ -182,7 +183,7 @@ class Game:
 
             # reset weights around snake heads for path finding
             for snake in self.snakes:
-                if snake == self.us
+                if snake == self.us:
                     continue
                 if snake.getSize() < self.us.getSize():
                     self.board.setWeights(self.set.getSurrounding(snake.getHeadPosition()), 100)
@@ -204,7 +205,7 @@ class Game:
 
             # if we have a move, return
             if nextMove:
-                break
+                return self.nodeToDirection(nextMove, self.us)
 
             # if we can trap a snake in one of these directions, let's slaughter 'em
             # this operation may be expensive, so we will have to check the times
@@ -274,11 +275,25 @@ class Game:
                 if not nextMove:
                     break
 
+            if nextMove:
+                return self.nodeToDirection(nextMove, self.us)
+            
             # we did not find a trapping move, find food
-            if not nextMove:
-                #TODO
-                pass
+            foodList = self.food.getPositions()
+            closestFoodDistance = sys.maxsize
+            closestFoodPath = None
 
+            for coord in maxSpaceCoords:
+                for food in foodList:
+                    if self.set.pathExistsFromWall(headPos, food):
+                        path = self.board.optimumPath(headPos, food)
+                        pathLen = len(path)
+                        if pathLen < closestFoodDistance:
+                            closestFoodDistance = pathLen
+                            closestFoodPath = path
+            nextMove = closestFoodPath[0]
+
+            return self.nodeToDirection(nextMove, self.us)
 
         elif state is 'HUNGRY':
             # eat food here
