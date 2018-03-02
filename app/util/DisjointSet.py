@@ -49,20 +49,31 @@ class DisjointSet:
                 newNode = Node([x, y])
                 self.map[x, y] = newNode
                 
-                surrounding = []
-                if (x - 1) >= 0:
-                    surrounding.append([x - 1, y])
-                if (x + 1) < boardWidth:
-                    surrounding.append([x + 1, y])
-                if (y + 1) < boardHeight:
-                    surrounding.append([x, y + 1])
-                if (y - 1) >= 0:
-                    surrounding.append([x, y - 1])
-                
+                surrounding = self.getSurrounding([x, y])                
                 for coord in surrounding:
                     adjacentNode = self.map[coord[0], coord[1]]
                     if adjacentNode is not None:
                         self.union(adjacentNode, newNode)
+
+    def getSurrounding(self, coord):
+        """
+        Find the squares surrounding a coordinate.
+        
+        param1: [x,y] - square to search around
+        return: [[x,y]] - surrounding squares
+        """
+        x = coord[0]
+        y = coord[1]
+        surrounding = []
+        if (x - 1) >= 0:
+            surrounding.append([x - 1, y])
+        if (x + 1) < self.board.width:
+            surrounding.append([x + 1, y])
+        if (y + 1) < self.board.height:
+            surrounding.append([x, y + 1])
+        if (y - 1) >= 0:
+            surrounding.append([x, y - 1])
+        return surrounding
 
     def find(self, child):
         """
@@ -71,6 +82,8 @@ class DisjointSet:
         param1: Node - child to find the root of
         return: Node - root of the child
         """
+        if child is None:
+            return None
         parent = child.parent
         if parent is None:
             return child
@@ -106,23 +119,45 @@ class DisjointSet:
             root2.children.add(root1)
             root2.children.update(root1.children)
 
-    def getConnected(self, coord):
+    def getConnectedToNode(self, coord):
         """
-        Return list of squares connected to the provided one.
+        Return list of squares connected to the provided non-wall position.
 
         param1: [x,y] - name of square to find connected components from
         return: [[x,y]] - list of connected squares
         """
         child = self.map[coord[0], coord[1]]
         if child is None:
-            return [coord]
+            raise ValueError('Node is a wall')
         root = self.find(child)
 
-        return [node.pos for node in root.children] + [root.pos]
+        returnable = [node.pos for node in root.children] + [root.pos]
+        returnable.remove(coord)
+        return returnable
 
-    def areConnected(self, coord1, coord2):
+    def getConnectedToWall(self, coord):
         """
-        Determine if 2 nodes are connected.
+        Return list of squares connected to the provided wall position.
+
+        param1: [x,y] - name of wall to find connected components from
+        return: [[x,y]] - list of connected squares
+        """
+        child = self.map[coord[0], coord[1]]
+        if child is not None:
+            raise ValueError('Node is not a wall')
+
+        surroundingCoords = self.getSurrounding(coord)
+        surroundingRoots = [self.find(self.getNode(coord)) for coord in surroundingCoords]
+        surroundingFiltered = set([node for node in surroundingRoots if node is not None])
+
+        reachable = []
+        for node in surroundingFiltered:
+            reachable += self.getConnectedToNode(node)
+        return reachable
+
+    def pathExistsFromNode(self, coord1, coord2):
+        """
+        Determine if 2 non-wall squares are connected.
 
         param1: [x,y] - first node position
         param2: [x,y] - second node position
@@ -131,9 +166,35 @@ class DisjointSet:
         node1 = self.map[coord1[0], coord1[1]]
         node2 = self.map[coord2[0], coord2[1]]
         if node1 is None or node2 is None:
-            return False
-
+            raise ValueError('One of the nodes is a wall')
+        
         return self.find(node1) == self.find(node2)
+    
+    def pathExistsFromWall(self, coord1, coord2):
+        """
+        Determine if a wall square and a free square are connected.
+
+        param1: [x,y] - wall node position
+        param2: [x,y] - free-space node position
+        return: bool - True if connected, False otherwise
+        """
+        node1 = self.map[coord1[0], coord1[1]]
+        node2 = self.map[coord2[0], coord2[1]]
+        if node1 is not None:
+            raise ValueError('First node must be a wall')
+        if node2 is None:
+            raise ValueError('Second node cannot be a wall')
+
+        surroundingCoords = self.getSurrounding(coord1)
+        surroundingRoots = [self.find(self.getNode(coord)) for coord in surroundingCoords]
+        surroundingFiltered = set([node for node in surroundingRoots if node is not None])
+        
+        connected = False
+        for root in surroundingFiltered:
+            if self.find(root) == self.find(node2):
+                connected = True
+                
+        return connected
 
     def getNode(self, coord):
         """
