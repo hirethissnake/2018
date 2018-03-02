@@ -291,7 +291,7 @@ class Game:
                         if pathLen < closestFoodDistance:
                             closestFoodDistance = pathLen
                             closestFoodPath = path
-            nextMove = closestFoodPath[0]
+            nextMove = closestFoodPath[1]
 
             return self.nodeToDirection(nextMove, self.us)
 
