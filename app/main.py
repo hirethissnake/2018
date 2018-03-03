@@ -30,7 +30,7 @@ def log(msg, level):
         level = 0
 
     # Print text in colored version, then default color
-    #print('{}{}{}'.format(colors[level], msg, colors[0]))
+    print('{}{}{}'.format(colors[level], msg, colors[0]))
 
 
 def emergencyStart(gameId, height, width):

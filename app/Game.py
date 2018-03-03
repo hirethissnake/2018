@@ -280,10 +280,14 @@ class Game:
             foodList = self.food.getPositions()
             closestFoodDistance = sys.maxsize
             closestFoodPath = None
-            print("fooin\n\n\n\n\n\n\n")
+            print(maxSpaceCoords)
             for coord in maxSpaceCoords:
                 for food in foodList:
-                    if self.board.getWeight(food) != 0:
+                    if self.board.getWeight(food) != 0 and not nextMove:
+                        if coord == food:
+                            nextMove = food
+                            return self.nodeToDirection(nextMove, self.us)
+
                         if self.set.pathExistsFromNode(coord, food):
                             path = self.board.optimumPath(coord, food)
                             pathLen = 0
@@ -297,6 +301,7 @@ class Game:
                 nextMove = maxSpaceCoords[0]
             else:
                 nextMove = closestFoodPath[0]
+            print(nextMove)
 
             return self.nodeToDirection(nextMove, self.us)
 
