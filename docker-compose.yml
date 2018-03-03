@@ -6,6 +6,7 @@ services:
       - "8080:8080"
     volumes:
       - ./app:/data/app
+      - ./static:/data/static
     command:
       python -m app.main
     tty: true
@@ -15,6 +16,7 @@ services:
       - "8081:8080"
     volumes:
       - ./app:/data/app
+      - ./static:/data/static
     command:
       python -m app.main
     tty: true
@@ -24,6 +26,7 @@ services:
       - "8082:8080"
     volumes:
       - ./app:/data/app
+      - ./static:/data/static
     command:
       python -m app.main
     tty: true
