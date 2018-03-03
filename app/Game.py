@@ -34,7 +34,8 @@ class Game:
         self.board = Board(self.width, self.height)
 
         self.snakes = {}
-        self.us = ''
+        self.us = None
+        self.usName = ''
         self.food = None
         self.turn = 0
         self.set = None
@@ -52,7 +53,8 @@ class Game:
             snakeId = snake['id']
             self.snakes[snakeId] = Snake(snake)
 
-        self.us = Snake(data['you'])
+        self.usName = data['you']['id']
+        self.us = self.snakes[self.usName]
         self.food = Food(data['food'])
         self.set = DisjointSet(self.board)
         self.machine = StateMachine(self.board, self.set, self.snakes, self.us, self.food)
@@ -178,18 +180,17 @@ class Game:
         direction = self.nodeToDirection(nextMove, self.us)
         return direction
 
-    def nodeToDirection(self, node, identifer):
+    def nodeToDirection(self, node, snake):
         """
         Convert a coord array into an up, down, left, right direction.
         param1: [int,int] - x,y coords of a node.
-        param2: string - id of some snake in the game (ie, in snakes{})
+        param2: Snake - snake in the game (ie, in snakes{})
 
         Raises: ValueError
             if: node is not adjacent to the snakes head
 
         return: string - direction to go
         """
-        snake = self.snakes[identifer]
         head = snake.getHeadPosition()
 
         if node[0] == (head[0] + 1):

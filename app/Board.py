@@ -97,8 +97,6 @@ showPath                void        Display graphic of best path between nodes
         param1: [int, int] - node in the form [x, y]
         """
 
-        if not isinstance(u[0], int) or not isinstance(u[1], int):
-            raise ValueError('indices should be integers')
         if u[0] >= self.width or u[0] < 0 or u[1] >= self.height or u[1] < 0:
             raise ValueError('node is out of bounds')
 
@@ -452,6 +450,9 @@ showPath                void        Display graphic of best path between nodes
         param2: [int, int] - end node
         return: int - length of path
         """
+        path = self.optimumPath(u, v)
+        if path == None:
+            return -1
         return len(self.optimumPath(u, v))
 
 

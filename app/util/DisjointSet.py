@@ -152,7 +152,7 @@ class DisjointSet:
 
         reachable = []
         for node in surroundingFiltered:
-            reachable += self.getConnectedToNode(node)
+            reachable += self.getConnectedToNode(node.pos)
         return reachable
 
     def pathExistsFromNode(self, coord1, coord2):

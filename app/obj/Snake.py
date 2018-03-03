@@ -59,7 +59,7 @@ class Snake:
         self.oldSize = self.size
         self.size = data['length']
 
-        self.coords = list(map(lambda point: [point['x'], point['y']], data['body']['data']))
+        self.coords = list(map(lambda point: [int(point['x']), int(point['y'])], data['body']['data']))
 
         if 'taunt' in data:
             self.taunt = data['taunt']

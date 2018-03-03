@@ -46,7 +46,7 @@ class State:
                     'data': []
                 }
             })
-            self.extend[name] = 0
+            self.extend[name] = 3
 
         occupied = []
         for i in range(0, numSnakes): #place randomly on board
