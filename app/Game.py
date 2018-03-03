@@ -112,7 +112,6 @@ class Game:
 
         # Needs to be set to an [int, int]
         nextMove = [0, 0]
-        state = 'TRAPPED'
         if state is 'IDLE':
             # run algorithms here
             pass
