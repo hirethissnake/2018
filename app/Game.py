@@ -126,14 +126,13 @@ class Game:
         Use all algorithms to determine the next best move for our snake.
         """
         state = self.machine.getState()
-
+        state = 'IDLE'
         # Needs to be set to an [int, int]
         nextMove = []
 
         if state is 'IDLE':
             
-            us = self.snakes[self.us]
-            headPos = us.getHeadPosition()
+            headPos = self.us.getHeadPosition()
 
             # we have already weighted snakes, so make sure we don't
             # make a turn that will trap us
@@ -141,30 +140,19 @@ class Game:
             x = headPos[0]
             y = headPos[1]
             surrounding = []
-            if (x - 1) >= 0:
+
+            if (x - 1) >= 0 and self.board.getWeight([x - 1, y]) != 0:
                 surrounding.append([x - 1, y])
-            else:
-                # empty lists ensure we know which direction corresponds
-                # to which coordinate
-                surrounding.append([])
-            if (x + 1) < self.board.width:
+            if (x + 1) < self.board.width and self.board.getWeight([x + 1, y]) != 0:
                 surrounding.append([x + 1, y])
-            else:
-                surrounding.append([])
-            if (y + 1) < self.board.height:
+            if (y + 1) < self.board.height and self.board.getWeight([x, y + 1]) != 0:
                 surrounding.append([x, y + 1])
-            else:
-                surrounding.append([])
-            if (y - 1) >= 0:
+            if (y - 1) >= 0 and self.board.getWeight([x, y - 1]) != 0:
                 surrounding.append([x, y - 1])
-            else:
-                surrounding.append([])
 
             maxSpaceCoords = []
             maxSpaceLen = 0
             for coord in surrounding:
-                if coord == []:
-                    continue
                     
                 # due to IDLE state, there must be at least 1 non-wall node
                 weight = self.board.getWeight(coord)
@@ -182,26 +170,34 @@ class Game:
             # most maneuverability
 
             # reset weights around snake heads for path finding
-            for snake in self.snakes:
+            for _, snake in self.snakes.items():
                 if snake == self.us:
                     continue
+
+                surrounding = self.set.getSurrounding(snake.getHeadPosition())
                 if snake.getSize() < self.us.getSize():
-                    self.board.setWeights(self.set.getSurrounding(snake.getHeadPosition()), 100)
+                    for coord in surrounding:
+                        if self.board.getWeight(coord) != 0:
+                            self.board.setWeight(coord, 100)
                 else:
-                    self.board.setWeights(self.set.getSurrounding(snake.getHeadPosition()), 1)
+                    for coord in surrounding:
+                        if self.board.getWeight(coord) != 0:
+                            self.board.setWeight(coord, 1)
             self.set.update()
 
             # kill small snakes if they're there
             for coord in maxSpaceCoords:
                 if nextMove:
                     break
-                for snake in self.snakes:
+                for _, snake in self.snakes.items():
                     if nextMove:
                         break
-                    otherHead = snake.getHeadPosition()
-                    if self.set.pathExistsFromWall(otherHead, coord):
-                        if self.board.optimumPathLength(headPos, otherHead) < 3:
-                            nextMove = coord
+                    if snake != self.us and snake.getSize() < self.us.getSize():
+                        otherHead = snake.getHeadPosition()
+                        if self.set.pathExistsFromWall(otherHead, coord):
+                            pathLen = self.board.optimumPathLength(headPos, otherHead)
+                            if pathLen > -1 and pathLen < 3:
+                                nextMove = coord
 
             # if we have a move, return
             if nextMove:
@@ -241,14 +237,17 @@ class Game:
                     except ValueError:
                         pass
 
-                wallPathLen = len(wallPath)
                 # no path to wall in this direction, or too far
-                if not wallPath or wallPathLen > 3:
+                if not wallPath:
+                    continue
+
+                wallPathLen = len(wallPath)
+                if wallPathLen > 3:
                     continue
 
                 # check how far we are from other snakes, and whether we can trap them
-                for snake in self.snakes:
-                    if snake == us:
+                for _, snake in self.snakes.items():
+                    if snake == self.us:
                         continue
                     otherHead = snake.getHeadPosition()
                     if self.set.pathExistsFromWall(otherHead, coord):
@@ -263,7 +262,7 @@ class Game:
                         self.set.update()
 
                         # if we can likely trap it
-                        if len(self.set.getConnectedToWall(otherHead)) < us.getSize():
+                        if len(self.set.getConnectedToWall(otherHead)) < self.us.getSize():
                             nextMove = coord
 
                         # reset the board weights
@@ -277,21 +276,30 @@ class Game:
 
             if nextMove:
                 return self.nodeToDirection(nextMove, self.us)
-            
+
+            self.board.setWeight(headPos, 0)
+
             # we did not find a trapping move, find food
             foodList = self.food.getPositions()
             closestFoodDistance = sys.maxsize
             closestFoodPath = None
-
+            print("fooin\n\n\n\n\n\n\n")
             for coord in maxSpaceCoords:
                 for food in foodList:
-                    if self.set.pathExistsFromWall(headPos, food):
-                        path = self.board.optimumPath(headPos, food)
-                        pathLen = len(path)
-                        if pathLen < closestFoodDistance:
-                            closestFoodDistance = pathLen
-                            closestFoodPath = path
-            nextMove = closestFoodPath[1]
+                    if self.board.getWeight(food) != 0:
+                        if self.set.pathExistsFromNode(coord, food):
+                            path = self.board.optimumPath(coord, food)
+                            pathLen = 0
+                            if path != None:
+                                pathLen = len(path)
+                            if pathLen < closestFoodDistance:
+                                closestFoodDistance = pathLen
+                                closestFoodPath = path
+            
+            if closestFoodPath is None:
+                nextMove = maxSpaceCoords[0]
+            else:
+                nextMove = closestFoodPath[0]
 
             return self.nodeToDirection(nextMove, self.us)
 
