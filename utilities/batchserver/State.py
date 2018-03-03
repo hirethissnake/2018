@@ -76,19 +76,23 @@ class State:
 
             # the below expressions add the next head position to the front of the coords list
             # the list comprehensions apply the [*,*] transformation to the current head
-            currentHead = snake['body']['data'][0]
+            nextHead = {
+                'object': 'point',
+                'x': snake['body']['data'][0]['x'],
+                'y': snake['body']['data'][0]['y']
+            }
             if move == 'up':
-                currentHead['y'] -= 1
-                snake['body']['data'].insert(0, currentHead)
+                nextHead['y'] -= 1
+                snake['body']['data'].insert(0, nextHead)
             elif move == 'right':
-                currentHead['x'] += 1
-                snake['body']['data'].insert(0, currentHead)
+                nextHead['x'] += 1
+                snake['body']['data'].insert(0, nextHead)
             elif move == 'down':
-                currentHead['y'] += 1
-                snake['body']['data'].insert(0, currentHead)
+                nextHead['y'] += 1
+                snake['body']['data'].insert(0, nextHead)
             elif move == 'left':
-                currentHead['x'] -= 1
-                snake['body']['data'].insert(0, currentHead)
+                nextHead['x'] -= 1
+                snake['body']['data'].insert(0, nextHead)
 
             # the 'extend' variable is used as per the battlesnake spec when we move
             # forward next, our tail stays in place
@@ -96,11 +100,10 @@ class State:
                 snake['body']['data'] = snake['body']['data'][:-1] # remove tail if no extension
             else:
                 self.extend[snakeName] -= 1
+                snake['length'] += 1
 
             if snake['body']['data'][0] in self.state['food']['data']: # food actually removed in updateState()
                 self.extend[snakeName] += 1
-                snake['length'] += 1
-
 
     def getPersonalizedState(self, name): # show 'you' for correct snake
         self.state['you'] = list(filter(lambda mySnake: mySnake['name'] == name, self.state['snakes']['data']))[0]
