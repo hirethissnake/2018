@@ -455,6 +455,27 @@ showPath                void        Display graphic of best path between nodes
             return -1
         return len(self.optimumPath(u, v))
 
+    def predictivePath(self, curPos, goal):
+
+    #Returns all direct paths between two coords
+    def getDirectPaths(self, curPos, goal, curPaths):
+        pathList = []
+        toGoalX = curPos[0] - goal[0]
+        toGoalY = curPos[1] - goal[1]
+
+        if toGoalX == 0:
+            
+            if toGoalY == 0:
+                return curPaths
+
+        
+    #Returns absolute distance between two coords
+    def directDistance(self, curPos, goal):
+        diffX = abs(curPos[0] - goal[0])
+        diffY = abs(curPos[1] - goal[1])
+        return diffX + diffY
+
+
 
     def showWeights(self, colours, numbers):
         """
