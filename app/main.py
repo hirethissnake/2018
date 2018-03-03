@@ -126,10 +126,10 @@ def move():
     log('We received a move request.', 0)
     if VERBOSE: log(data, 0)
 
-    if 'game_id' in data:
-        currentGame = data['game_id']
+    if 'id' in data:
+        currentGame = data['id']
     else:
-        log('No game_id in request, making no move.', 1)
+        log('No id in request, making no move.', 1)
         return None
 
     # get currentGame from gameDict
