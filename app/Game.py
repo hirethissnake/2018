@@ -72,13 +72,6 @@ class Game:
             self.firstMove(data)
             return
 
-        """
-        # update all of our snakes
-        for snake in data['snakes']['data']:
-            snakeId = snake['id']
-            self.snakes[snakeId].update(snake)
-        """
-
         #for each snake obj from last turn
         toDel = []
         for snakeId in self.snakes:
