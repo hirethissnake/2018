@@ -79,8 +79,7 @@ class Game:
         """
 
         #for each snake obj from last turn
-        for snake in self.snakes:
-            snakeId = snake['id']
+        for snakeId in self.snakes:
             snakeFound = False
 
             #for each new snake obj
@@ -88,10 +87,10 @@ class Game:
                 if dataSnake['id'] == snakeId:
                     #Update snake object
                     snakeFound = True
-                    self.snakes[snakeId] = dataSnake
+                    self.snakes[snakeId].update(dataSnake)
 
             if not snakeFound:
-                del self.snakes['snakeId']
+                del self.snakes[snakeId]
 
         self.food.update(data['food'])
         self.turn = data['turn']
