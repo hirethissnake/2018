@@ -15,7 +15,7 @@ class Processor:
     food            Food            - Food object representing food coordinates
     """
 
-    def __init__(self, board, snakes, us, food):
+    def __init__(self, board, set, snakes, us, food):
         """
         Initialize the processor.
         
@@ -27,7 +27,7 @@ class Processor:
         self.board = board
         self.width = board.width
         self.height = board.height
-
+        self.set = set
         self.snakes = snakes
         self.us = us
         
@@ -291,3 +291,39 @@ class Processor:
     def showBoard(self):
         """Use to show board with weight and colours """
         self.board.showWeights(True, True)
+    def getFarthestLocationTrapped(self, pos):
+        availableToUs = []
+        availableToUs = self.set.getConnectedToWall(pos)
+        print("This is the available nodes to us : ",availableToUs)
+        farthestLocation = []
+        farthestDistance = 0
+        for x in availableToUs:
+            xc = availableToUs[x][0]
+            yc = availableToUs[x][1]
+            distance = (abs(yc - pos[1])/abs(xc - pos[0]))
+            print("THIS IS THE FUCKING DISTANCE ",distance)
+            print()
+            if distance > farthestDistance:
+                farthestLocation = x
+                farthestDistance = distance
+        return farthestLocation
+    def getLongestPath(self,u,v):
+        pass
+        return 0
+    
+    def extendPath(self, u, v):
+        """
+        Used in TRAPPED State. Extends the path between two points to a longer path. Usually u and v are adjacent.
+        param1: [int,int] - x,y coords of a node.
+        param2: [int,int]] - x,y coords of a node.
+
+        return: path - path between u and v.
+        """
+        surrounding = []
+        surrounding = self.set.getSurrounding(u)
+        if len(surrounding != 0):
+            path = self.board.optimumPath(surrounding[0],v)
+            return path
+        else:
+            path = self.board.optimumPath(u,v)
+            return path

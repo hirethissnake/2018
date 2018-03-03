@@ -58,7 +58,7 @@ class Game:
         self.food = Food(data['food'])
         self.set = DisjointSet(self.board)
         self.machine = StateMachine(self.board, self.set, self.snakes, self.us, self.food)
-        self.processor = Processor(self.board, self.snakes, self.us, self.food)
+        self.processor = Processor(self.board, self.set, self.snakes, self.us, self.food)
         self.weightSnakes()
 
     def update(self, data):
@@ -120,8 +120,13 @@ class Game:
             # eat food here
             pass
         elif state is 'TRAPPED':
-            # be claustrophobic here
-            pass
+            oursnake = self.snakes[self.us]
+            current_pos = oursnake.getHeadPosition()
+            goal = self.processor.getFarthestLocationTrapped(current_pos)
+            path = self.board.optimumPath(current_pos,goal)
+            newPath = self.board.optimumPath(current_pos,path[1])
+            del path[1]
+            return 'up'
         elif state is 'STARVING':
             # stuff your face here
             pass
