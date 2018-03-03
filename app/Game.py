@@ -80,6 +80,7 @@ class Game:
         """
 
         #for each snake obj from last turn
+        toDel = []
         for snakeId in self.snakes:
             snakeFound = False
 
@@ -91,7 +92,10 @@ class Game:
                     self.snakes[snakeId].update(dataSnake)
 
             if not snakeFound:
-                del self.snakes[snakeId]
+                toDel.append(snakeId)
+
+        for snakeId in toDel:
+            del self.snakes[snakeId]
 
         self.food.update(data['food'])
         self.turn = data['turn']
