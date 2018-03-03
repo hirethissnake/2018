@@ -306,11 +306,7 @@ class Processor:
                 farthestLocation = x
                 farthestDistance = distance
         return farthestLocation
-    def getLongestPath(self,u,v):
-        pass
-        return 0
-    
-    def extendPath(self, u, v):
+    def extendPath(self, path, u, v, index):
         """
         Used in TRAPPED State. Extends the path between two points to a longer path. Usually u and v are adjacent.
         param1: [int,int] - x,y coords of a node.
@@ -318,11 +314,13 @@ class Processor:
 
         return: path - path between u and v.
         """
-        surrounding = []
         surrounding = self.set.getSurrounding(u)
-        if len(surrounding != 0):
-            path = self.board.optimumPath(surrounding[0],v)
-            return path
-        else:
-            path = self.board.optimumPath(u,v)
-            return path
+        for s in surrounding:
+            if len(surrounding != 0) and s not in path:
+                tempPath = self.board.optimumPath(s,v)
+                leftHandPath = path[0:index+1]
+                rightHandPath = path[index+2:]
+                path = leftHandPath.append(tempPath)
+                path = path.append(rightHandPath)
+                return path
+        return path

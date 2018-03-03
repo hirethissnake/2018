@@ -112,6 +112,7 @@ class Game:
 
         # Needs to be set to an [int, int]
         nextMove = [0, 0]
+        state = 'TRAPPED'
         if state is 'IDLE':
             # run algorithms here
             pass
@@ -123,6 +124,8 @@ class Game:
             current_pos = oursnake.getHeadPosition()
             goal = self.processor.getFarthestLocationTrapped(current_pos)
             path = self.board.optimumPath(current_pos, goal)
+            for i in range(len(path)-1):
+                path = self.processor.extendPath(path,path[i],path[i+1],i)
             nextMove = path[1]
         elif state is 'STARVING':
             # stuff your face here
