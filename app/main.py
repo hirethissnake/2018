@@ -5,6 +5,7 @@ Responds to POST /start and POST /move.
 
 import os
 import time
+import traceback
 from bottle import request, route, post, run, static_file
 from app.Game import Game
 
@@ -63,8 +64,8 @@ def getGameDecisions(currentGame):
     try:
         nextMove = battle.getNextMove()
         nextTaunt = battle.getTaunt()
-    except Exception as e:
-        log('ERROR: {}'.format(e), 2)
+    except:
+        traceback.print_exc()
 
     if VERBOSE:
         endTime = time.time()
