@@ -111,8 +111,8 @@ class Game:
         state = self.machine.getState()
 
         # Needs to be set to an [int, int]
-        nextMove = []
-
+        nextMove = [0, 0]
+        state = 'TRAPPED'
         if state is 'IDLE':
             # run algorithms here
             pass
@@ -120,13 +120,11 @@ class Game:
             # eat food here
             pass
         elif state is 'TRAPPED':
-            oursnake = self.snakes[self.us]
+            oursnake = self.us
             current_pos = oursnake.getHeadPosition()
             goal = self.processor.getFarthestLocationTrapped(current_pos)
-            path = self.board.optimumPath(current_pos,goal)
-            newPath = self.board.optimumPath(current_pos,path[1])
-            del path[1]
-            return 'up'
+            path = self.board.optimumPath(current_pos, goal)
+            nextMove = path[1]
         elif state is 'STARVING':
             # stuff your face here
             pass

@@ -292,15 +292,14 @@ class Processor:
         """Use to show board with weight and colours """
         self.board.showWeights(True, True)
     def getFarthestLocationTrapped(self, pos):
-        availableToUs = []
         availableToUs = self.set.getConnectedToWall(pos)
         print("This is the available nodes to us : ",availableToUs)
         farthestLocation = []
         farthestDistance = 0
         for x in availableToUs:
-            xc = availableToUs[x][0]
-            yc = availableToUs[x][1]
-            distance = (abs(yc - pos[1])/abs(xc - pos[0]))
+            xc = x[0]
+            yc = x[1]
+            distance = abs(yc - pos[1])+abs(xc - pos[0])
             print("THIS IS THE FUCKING DISTANCE ",distance)
             print()
             if distance > farthestDistance:
