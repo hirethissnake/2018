@@ -137,9 +137,6 @@ class State:
 
                 if headPos in colliderCoords[1:]:
                     if snake == collider:
-                        print(headPos)
-                        print(snake['body']['data'])
-                        print(colliderCoords)
                         print('collided with self')
                     else:
                         print('collided with snake body')
