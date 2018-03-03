@@ -71,10 +71,28 @@ class Game:
             self.firstMove(data)
             return
 
+        """
         # update all of our snakes
         for snake in data['snakes']['data']:
             snakeId = snake['id']
             self.snakes[snakeId].update(snake)
+        """
+
+        #for each snake obj from last turn
+        for snake in self.snakes:
+            snakeId = snake['id']
+            snakeFound = False
+
+            #for each new snake obj
+            for dataSnake in data['snakes']['data']:
+                if dataSnake['id'] = snakeId:
+                    #Update snake object
+                    snakeFound = True
+                    self.snakes[snakeId] = dataSnake
+
+            if not snakeFound:
+                del self.snakes['snakeId']
+
 
         self.food.update(data['food'])
         self.turn = data['turn']
