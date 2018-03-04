@@ -122,12 +122,12 @@ class State:
 
             snake['health'] -= 1 # decrement health and check if dead
             if(snake['health'] == 0):
-                print('ran out of food')
+                print(snake['name']+' ran out of food')
                 toBeKilled.add(snake['name'])
                 continue
 
             if(headPos['x'] < 0 or headPos['x'] > (self.width - 1) or headPos['y'] < 0 or headPos['y'] > (self.height - 1)):
-                print('wall hit')
+                print(snake['name']+' hit wall')
                 toBeKilled.add(snake['name'])
                 continue
 
@@ -137,17 +137,20 @@ class State:
 
                 if headPos in colliderCoords[1:]:
                     if snake == collider:
-                        print('collided with self')
+                        print(snake['name']+' collided with self')
                     else:
-                        print('collided with snake body')
+                        print(snake['name']+' collided with snake body')
                     toBeKilled.add(snake['name'])
                     continue
                     
                 colliderHead = colliderCoords[0] # hit head and this snake is smaller
                 if snake != collider and headPos['x'] == colliderHead['x'] and headPos['y'] == colliderHead['y']:
                     if snake['length'] + self.extend[snake['name']] < collider['length'] + self.extend[collider['name']]:
-                        print('collided with larger snake head')
+                        print(snake['name']+' collided with larger snake head')
                         toBeKilled.add(snake['name'])
+                    elif snake['length'] + self.extend[snake['name']] == collider['length'] + self.extend[collider['name']]:
+                        print(snake['name']+' collided with snake of same size')
+                        
 
         for snake in toBeKilled: # kill snakes here as to avoid changing looping dict
             current = [x for x in self.state['snakes']['data'] if x['name'] == snake][0]
