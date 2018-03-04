@@ -122,7 +122,7 @@ class Game:
         """
         Use all algorithms to determine the next best move for our snake.
         """
-        state = self.machine.getState()
+        #state = self.machine.getState()
         state = 'IDLE'
         # Needs to be set to an [int, int]
         nextMove = []
@@ -142,7 +142,7 @@ class Game:
 
         try:
             if state is 'IDLE':
-                raise Exception('we hit a snag')
+                #raise Exception('we hit a snag')
                 headPos = self.us.getHeadPosition()
 
                 # we have already weighted snakes, so make sure we don't
