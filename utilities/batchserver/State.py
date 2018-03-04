@@ -16,7 +16,7 @@ class State:
 
         self.state = {
             'object': 'world',
-            'game_id': 'gameid',
+            'id': 'gameid',
         	'you': {},
             'snakes': {
                 'object': 'list',

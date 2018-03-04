@@ -94,9 +94,9 @@ def start():
     if VERBOSE: log(data, 0)
 
     #Create a game object with the data given, add it to the list of games
-    game_id = data['game_id']
+    id = data['id']
     battle = Game(data)
-    gameDict[game_id] = battle
+    gameDict[id] = battle
 
     head_url = '%s://%s/static/head.png' % (
         request.urlparts.scheme,

@@ -14,7 +14,7 @@ def runGame(gameCounter, outputDirectory, numFood, snakesFile):
     snakes = {}
     differentiationCounter = 0
     for url in snakeUrls:
-        response = requests.post(url + "/start", data=json.dumps({"width": 20, "height": 20, "game_id": "gameid"}), headers={'content-type': 'application/json'})
+        response = requests.post(url + "/start", data=json.dumps({"width": 20, "height": 20, "id": "gameid"}), headers={'content-type': 'application/json'})
         name = eval(response.text)["name"]
         while name in snakes: # add arbitrary number if names are same
             name = eval(response.text)["name"] + str(differentiationCounter)
