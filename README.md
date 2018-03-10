@@ -1,6 +1,5 @@
-## Sneaky Snake
-[![codecov](https://codecov.io/gh/phildenhoff/hirethissnake/branch/master/graph/badge.svg?token=loYR0W8K2L)](https://codecov.io/gh/phildenhoff/hirethissnake) [![Build
-Status](https://travis-ci.com/phildenhoff/hirethissnake.svg?token=zfsf2J47jwdz7GuKxCSd&branch=master)](https://travis-ci.com/phildenhoff/hirethissnake)
+## hirethissnake 2018 
+[![codecov](https://codecov.io/gh/phildenhoff/hirethissnake/branch/master/graph/badge.svg?token=loYR0W8K2L)](https://codecov.io/gh/phildenhoff/hirethissnake) [![Build Status](https://travis-ci.org/hirethissnake/2018.svg?branch=master)](https://travis-ci.org/hirethissnake/2018)
 
 A Battlesnake AI based heavily on graphing algorithms. Written in Python 3.7 by Daniel Frankcom, Eric Showers, Kyle Thorpe, and Phil Denhoff, with contributions from Alex Welsh-Piedrahita.
 
