@@ -1,0 +1,150 @@
+From 3301fdae773a72c4d971d9e91d0f768c88f2688c Mon Sep 17 00:00:00 2001
+From: Phil Denhoff <phildenhoff@gmail.com>
+Date: Fri, 22 Feb 2019 06:35:59 +0000
+Subject: [PATCH] hts will now respond to 2019 API requests
+
+Unfortunately, it doesn't make great choices...
+---
+ app/Game.py      | 12 ++++++------
+ app/main.py      | 10 +++++-----
+ app/obj/Food.py  |  4 ++--
+ app/obj/Snake.py | 10 +++++-----
+ 4 files changed, 18 insertions(+), 18 deletions(-)
+
+diff --git a/app/Game.py b/app/Game.py
+index 7275db8..27eb382 100644
+--- a/app/Game.py
++++ b/app/Game.py
+@@ -28,8 +28,8 @@ class Game:
+ 
+         param1: dict - all data from /start POST.
+         """
+-        self.width = data['width']
+-        self.height = data['height']
++        self.width = data['board']['width']
++        self.height = data['board']['height']
+         self.board = Board(self.width, self.height)
+ 
+         self.snakes = {}
+@@ -46,12 +46,12 @@ class Game:
+ 
+         param1: dictionary - all data from Battlesnake server.
+         """
+-        for snake in data['snakes']['data']:
++        for snake in data['board']['snakes']:
+             snakeId = snake['id']
+             self.snakes[snakeId] = Snake(snake)
+ 
+         self.us = data['you']['id']
+-        self.food = Food(data['food'])
++        self.food = Food(data['board']['food'])
+         self.machine = StateMachine(self.board, self.snakes, self.us, self.food)
+         self.processor = Processor(self.board, self.snakes, self.us, self.food)
+ 
+@@ -66,11 +66,11 @@ class Game:
+             return
+ 
+         # update all of our snakes
+-        for snake in data['snakes']['data']:
++        for snake in data['board']['snakes']:
+             snakeId = snake['id']
+             self.snakes[snakeId].update(snake)
+ 
+-        self.food.update(data['food'])
++        self.food.update(data['board']['food'])
+         self.turn = data['turn']
+ 
+     def getNextMove(self):
+diff --git a/app/main.py b/app/main.py
+index a21c0ae..ceec40d 100755
+--- a/app/main.py
++++ b/app/main.py
+@@ -54,7 +54,7 @@ def getGameDecisions(currentGame):
+     returns: (str, str) - next move, taunt
+     """
+     # Default move and taunt
+-    nextMove = 'up'
++    nextMove = 'down'
+     nextTaunt = 'oh_noes!'
+     battle = gameDict[currentGame]
+     # Update Game with new game state
+@@ -94,7 +94,7 @@ def start():
+     if VERBOSE: log(data, 0)
+ 
+     #Create a game object with the data given, add it to the list of games
+-    game_id = data['game_id']
++    game_id = data['game']['id']
+     battle = Game(data)
+     gameDict[game_id] = battle
+ 
+@@ -126,10 +126,10 @@ def move():
+     log('We received a move request.', 0)
+     if VERBOSE: log(data, 0)
+ 
+-    if 'game_id' in data:
+-        currentGame = data['game_id']
++    if 'game' in data and 'id' in data['game']:
++        currentGame = data['game']['id']
+     else:
+-        log('No game_id in request, making no move.', 1)
++        log('No game.id in request, making no move.', 1)
+         return None
+ 
+     # get currentGame from gameDict
+diff --git a/app/obj/Food.py b/app/obj/Food.py
+index ddde812..e89b32d 100644
+--- a/app/obj/Food.py
++++ b/app/obj/Food.py
+@@ -15,7 +15,7 @@ class Food:
+         param1: [[x, y]] - list of all food on the board
+         """
+         if 'data' in foodList:
+-            self.positions = list(map(lambda point: [point['x'], point['y']], foodList['data']))
++            self.positions = list(map(lambda point: [point['x'], point['y']], foodList))
+         else:
+             self.positions = [[]]
+ 
+@@ -25,7 +25,7 @@ class Food:
+ 
+         param1: [[x, y]] - list of all food on the board
+         """
+-        self.positions = list(map(lambda point: [point['x'], point['y']], foodList['data']))
++        self.positions = list(map(lambda point: [point['x'], point['y']], foodList))
+ 
+     def getPositions(self):
+         """
+diff --git a/app/obj/Snake.py b/app/obj/Snake.py
+index 721e108..3fa46b5 100644
+--- a/app/obj/Snake.py
++++ b/app/obj/Snake.py
+@@ -29,12 +29,12 @@ class Snake:
+ 
+         # often updated
+         self.identifier = data['id']
+-        self.coords = list(map(lambda point: [point['x'], point['y']], data['body']['data']))
++        self.coords = list(map(lambda point: [point['x'], point['y']], data['body']))
+ 
+         self.healthPoints = data['health']
+-        self.size = data['length']
++        self.size = len(self.coords)
+         # old
+-        self.oldSize = data['length']
++        self.oldSize = len(self.coords)
+         self.oldHealthPoints = data['health']
+         self.oldCoords = self.coords
+         # snake personality
+@@ -57,9 +57,9 @@ class Snake:
+         self.healthPoints = healthPoints
+ 
+         self.oldSize = self.size
+-        self.size = data['length']
++        self.size = len(self.coords)
+ 
+-        self.coords = list(map(lambda point: [point['x'], point['y']], data['body']['data']))
++        self.coords = list(map(lambda point: [point['x'], point['y']], data['body']))
+ 
+         if 'taunt' in data:
+             self.taunt = data['taunt']
+-- 
+2.17.1
+
